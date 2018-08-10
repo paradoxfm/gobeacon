@@ -83,12 +83,6 @@
 			"revisionTime": "2018-03-19T08:16:51Z"
 		},
 		{
-			"checksumSHA1": "U6RG/tRZjQdXv/1VT1JhXcoubdU=",
-			"path": "github.com/badoux/checkmail",
-			"revision": "0755fe2dc241caebab64327c352006712f6a55c4",
-			"revisionTime": "2018-04-30T15:31:08Z"
-		},
-		{
 			"checksumSHA1": "BhMowD2DIKSd9qq8Pzh7Y3mh2/w=",
 			"path": "github.com/gin-contrib/sse",
 			"revision": "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae",
