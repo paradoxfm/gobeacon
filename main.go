@@ -50,7 +50,7 @@ func createPhoneApi() (*http.Server) {
 	r := gin.New()
 	auth := controller.CreateHeartGinJWTMiddleware()
 	r.Use(auth.MiddlewareFunc())
-	r.GET("/api/v1/heartbeat", dummyHandler)
+	r.GET("/api/v1/heartbeat", controller.HeartbeatPhone)
 	return initServer(":7777", r)
 }
 
@@ -63,13 +63,14 @@ func createPhoneAdminApi() (*http.Server) {
 	{
 		usr.POST("/signUp", controller.UserCreate)
 		usr.POST("/login", auth.LoginHandler)
-		usr.POST("/password/reset", dummyHandler)
+		usr.POST("/password/reset", controller.UserResetPassword)
 		me := usr.Group("/me")
 		me.Use(mFunc)
 		{
-			usr.GET("", dummyHandler)
-			usr.PUT("/password", dummyHandler)
-			usr.PUT("/push", dummyHandler)
+			usr.GET("", controller.UserGetProfile)
+			usr.PUT("/password", controller.UserChangePassword)
+			usr.PUT("/push", controller.UserUpdatePushId)
+			usr.PUT("/avatar", controller.UserUpdateAvatar)
 			usr.PUT("/refresh", auth.RefreshHandler)
 		}
 	}
@@ -77,24 +78,24 @@ func createPhoneAdminApi() (*http.Server) {
 	trk := v1.Group("/trackers") // api для трекеров
 	trk.Use(mFunc)
 	{
-		trk.POST("", dummyHandler)
-		trk.GET("/:id", dummyHandler)
-		trk.DELETE("/:id", dummyHandler)
-		trk.PUT("/:id", dummyHandler)
-		trk.POST("/:id/avatar", dummyHandler)
-		trk.GET("/:id/geo", dummyHandler)
-		trk.GET("/:id/geo/history", dummyHandler) //date_start date_end
+		trk.POST("", controller.TrackCreate)
+		trk.GET("/:id", controller.TrackGetById)
+		trk.DELETE("/:id", controller.TrackDeleteById)
+		trk.PUT("/:id", controller.TrackUpdate)
+		trk.POST("/:id/avatar", controller.TrackerAvatar)
+		trk.GET("/:id/geo", controller.TrackerLastGeoPosition)
+		trk.GET("/:id/geo/history", controller.TrackerHistory) //date_start date_end
 	}
 
 	zone := v1.Group("/geoZones") // api для гео зон
 	zone.Use(mFunc)
 	{
-		zone.GET("", dummyHandler)
-		zone.POST("", dummyHandler)
-		zone.DELETE("/:id", dummyHandler)
-		zone.GET("/:id", dummyHandler)
-		zone.PUT("/:id", dummyHandler)
-		zone.PUT("/:id/trackers", dummyHandler)
+		zone.GET("", controller.ZoneAllForUser)
+		zone.POST("", controller.ZoneAdd)
+		zone.DELETE("/:id", controller.ZoneDeleteById)
+		zone.GET("/:id", controller.ZoneGetById)
+		zone.PUT("/:id", controller.ZoneUpdate)
+		zone.PUT("/:id/trackers", controller.ZoneSnapTrackList)
 	}
 
 	return initServer(":8070", r)
@@ -114,7 +115,7 @@ func createSwaggerApi() (*http.Server) {
 }
 
 func dummyHandler(c *gin.Context) {
-	c.AbortWithStatus(http.StatusOK)
+	c.AbortWithStatus(http.StatusGone)
 }
 
 func initServer(port string, routes *gin.Engine) (*http.Server) {
