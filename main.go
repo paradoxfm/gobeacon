@@ -48,6 +48,7 @@ func main() {
 
 func createPhoneApi() (*http.Server) {
 	r := gin.New()
+	r.Use(gin.Recovery())
 	auth := controller.CreateHeartGinJWTMiddleware()
 	r.Use(auth.MiddlewareFunc())
 	r.GET("/api/v1/heartbeat", controller.HeartbeatPhone)
@@ -57,6 +58,7 @@ func createPhoneApi() (*http.Server) {
 func createPhoneAdminApi() (*http.Server) {
 	auth := controller.CreateAdminJWTMiddleware()
 	r := gin.New()
+	r.Use(gin.Recovery())
 	v1 := r.Group("/api/v1")  // api первой версии
 	usr := v1.Group("/users") // api для пользователей
 	mFunc := auth.MiddlewareFunc()
@@ -101,17 +103,18 @@ func createPhoneAdminApi() (*http.Server) {
 	return initServer(":8070", r)
 }
 
+func createSwaggerApi() (*http.Server) {
+	r := gin.New()
+	r.Use(gin.Recovery())
+	// документация по сервисам /swagger/index.html
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	return initServer(":8071", r)
+}
+
 func createWatchApi() (*http.Server) {
 	r := gin.New()
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return initServer(":6666", r)
-}
-
-func createSwaggerApi() (*http.Server) {
-	r := gin.New()
-	// документация по сервисам /swagger/index.html
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	return initServer(":8071", r)
 }
 
 func dummyHandler(c *gin.Context) {
