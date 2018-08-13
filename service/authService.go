@@ -16,6 +16,18 @@ func RegistrationUser(r *model.RegistrationRequest) (bool, []string) {
 	return len(errMsg) == 0, errMsg
 }
 
+func ResetPassword(r *model.ResetPasswordRequest) (bool, []string) {
+	var errMsg []string
+
+	return len(errMsg) == 0, errMsg
+}
+
+func ChangePassword(r *model.ChangePasswordRequest) (bool, []string) {
+	var errMsg []string
+
+	return len(errMsg) == 0, errMsg
+}
+
 func convertErrorsToMessages(errs interface{}, errMsg []string) ([]string) {
 	if errs != nil {
 		arrErr := errs.(govalidator.Errors)

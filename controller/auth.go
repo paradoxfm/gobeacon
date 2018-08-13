@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func CreateGinJWTMiddleware() (*jwt.GinJWTMiddleware) {
+func CreateAdminJWTMiddleware() (*jwt.GinJWTMiddleware) {
 	authMiddleware := &jwt.GinJWTMiddleware{// the jwt middleware
 		Realm:         "megazlo.net",
 		Key:           []byte("fkl;jnbLJkN;old"),
@@ -35,3 +35,24 @@ func getAuthenticator(userID string, password string, c *gin.Context) (string, b
 	}
 	return "", false
 }
+
+func CreateHeartGinJWTMiddleware() (*jwt.GinJWTMiddleware) {
+	authMiddleware := &jwt.GinJWTMiddleware{// the jwt middleware
+		Realm:         "megazlo.net",
+		Key:           []byte("fkl;jnbLJkN;old"),
+		Timeout:       time.Hour, // время действия токена после авторизации
+		MaxRefresh:    time.Hour, // время действия токена после обновления
+		Authenticator: func(userID string, password string, c *gin.Context) (string, bool) {
+			if userID == "heart349023" && password == "s156EzI07820CtsfJhu" {
+				return userID, true
+			}
+			return "", false
+		},
+		//Authorizator: getAuthorizator,// проверка на доступ к методам и тп
+		Unauthorized: processUnauthorized,// ответ в случае, если не авторизован или неправильная авторизация
+	}
+
+	return authMiddleware
+}
+
+
