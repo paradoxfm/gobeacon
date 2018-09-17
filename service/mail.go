@@ -4,11 +4,10 @@ import (
 	"net/smtp"
 	"bytes"
 	"html/template"
-	"fmt"
 )
 
 const (
-	Subject   = "Cброс пароля"
+	Subject = "Cброс пароля"
 
 	SMTP_SERVER = "smtp.gmail.com"
 	User        = "ControlCenter66@gmail.com"
@@ -25,22 +24,15 @@ type Request struct {
 
 var auth smtp.Auth
 
-
-func SendNewPassword(email, password string) {
+func sendNewPassword(email, password string) (bool, error) {
 	auth = smtp.PlainAuth("", User, Password, SMTP_SERVER)
-	templateData := struct {
-		Name string
-		URL  string
-	}{
-		Name: "Dhanush",
-		URL:  "http://geektrust.in",
-	}
-	r := NewRequest([]string{email}, Subject, "Hello, World!")
+	templateData := struct{ Password string }{Password: password,}
+	r := NewRequest([]string{email}, Subject, "Сброс пароля!")
 	err := r.parseTemplate("assets/restorePassword.html", templateData)
-	if err != nil {
-		ok, _ := r.sendEmail()
-		fmt.Println(ok)
+	if err == nil {
+		return r.sendEmail()
 	}
+	return false, err
 }
 
 func NewRequest(to []string, subject, body string) *Request {
@@ -52,12 +44,12 @@ func NewRequest(to []string, subject, body string) *Request {
 }
 
 func (r *Request) sendEmail() (bool, error) {
-	mime := "MIME-version: 1.0;\nContent-Type: text/plain; charset=\"UTF-8\";\n\n"
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	subject := "Subject: " + r.subject + "!\n"
 	msg := []byte(subject + mime + "\n" + r.body)
 	addr := "smtp.gmail.com:587"
 
-	if err := smtp.SendMail(addr, auth, "dhanush@geektrust.in", r.to, msg); err != nil {
+	if err := smtp.SendMail(addr, auth, User, r.to, msg); err != nil {
 		return false, err
 	}
 	return true, nil

@@ -2,12 +2,6 @@
 	"server_port":"8070",
     "cassandra_user":"watch",
     "cassandra_password":"qJXOFA%aUMgiwIYR2l%sl}*}9boe0Q2O7OfyKmS|",
-	"cassandra_ip":"192.168.0.111",
-	"cassandra_keyspace":"watch",
-	"es_index": "trackers_log",
-	"es_user":"admes4",
-	"es_password":"v5EUboal",
-	"es_ip":"192.168.0.111",
-	"es_port":"8087",
-	"es_distance": 0.02
+	"cassandra_ip":"185.93.111.59",
+	"cassandra_keyspace":"watch"
 }

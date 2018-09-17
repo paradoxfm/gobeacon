@@ -54,10 +54,12 @@ func getUserId(c *gin.Context) (string) {
 	return claims["id"].(string)
 }
 
-func sendResponse(goodWork bool, err []string, c *gin.Context) {
+func sendResponse(goodWork bool, err []int, c *gin.Context) {
 	if goodWork {
 		c.AbortWithStatus(http.StatusOK)
 	} else {
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"err": err,
+		})
 	}
 }
