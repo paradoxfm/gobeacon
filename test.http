@@ -1,0 +1,25 @@
+### авторизация
+POST http://localhost:8070/api/v1/users/login
+Content-Type: application/json
+
+{
+  "username": "paradoxfm@mail.ru",
+  "password": "90lv9wt9"
+}
+
+### запрос профиля
+GET http://localhost:8070/api/v1/users/me
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjU2NTY3OTIsImlkIjoicGFyYWRveGZtQG1haWwucnUiLCJvcmlnX2lhdCI6MTUzNzI1Njc5Mn0.NK3TFx28NiBSBCoE8E6ud8KuHO96SR0R6Q2Gd5VeqYo
+
+###
+
+POST http://localhost:8070/api/v1/users/password/reset
+Content-Type: application/json
+
+{
+  "email": "paradoxfm@mail.ru"
+}
+
+###
+

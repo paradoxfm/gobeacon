@@ -57,7 +57,7 @@ func createPhoneApi() (*http.Server) {
 
 func createPhoneAdminApi() (*http.Server) {
 	auth := controller.CreateAdminJWTMiddleware()
-	r := gin.New()
+	r := gin.Default()
 	r.Use(gin.Recovery())
 	v1 := r.Group("/api/v1")  // api первой версии
 	usr := v1.Group("/users") // api для пользователей
@@ -69,11 +69,11 @@ func createPhoneAdminApi() (*http.Server) {
 		me := usr.Group("/me")
 		me.Use(mFunc)
 		{
-			usr.GET("", controller.UserGetProfile)
-			usr.PUT("/password", controller.UserChangePassword)
-			usr.PUT("/push", controller.UserUpdatePushId)
-			usr.PUT("/avatar", controller.UserUpdateAvatar)
-			usr.PUT("/refresh", auth.RefreshHandler)
+			me.GET("", controller.UserGetProfile)
+			me.PUT("/password", controller.UserChangePassword)
+			me.PUT("/push", controller.UserUpdatePushId)
+			me.PUT("/avatar", controller.UserUpdateAvatar)
+			me.PUT("/refresh", auth.RefreshHandler)
 		}
 	}
 

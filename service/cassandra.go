@@ -2,16 +2,17 @@ package service
 
 import (
 	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/qb"
-	"log"
-	"gobeacon/model"
 	"github.com/scylladb/gocqlx"
+	"github.com/scylladb/gocqlx/qb"
+	"gobeacon/model"
+	"log"
 	"time"
 )
 
 var session *gocql.Session
 
 var tUsers = "watch.users"
+var tTrackers = "watch.trackers"
 
 func init() {
 	var err error
@@ -38,7 +39,7 @@ func insertNewUser(email string, password string) (error) {
 }
 
 func getUserByEmail(email string) (model.UserDb, error) {
-	stmt, names := qb.Select(tUsers).Columns("id", "email", "password").Where(qb.Eq("email")).Limit(1).ToCql()
+	stmt, names := qb.Select(tUsers).Columns("id", "email", "password", "trackers").Where(qb.Eq("email")).Limit(1).ToCql()
 	var u model.UserDb
 
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"email": email,})
@@ -52,6 +53,15 @@ func updateUserPassword(userId gocql.UUID, password string) (error) {
 
 	err := q.Exec()
 	return err
+}
+
+func getTrackersByUserId(userId gocql.UUID) ([]model.Tracker, error) {
+	stmt, names := qb.Select(tTrackers)/*.Where(qb.In("users")).AllowFiltering()*/.ToCql()
+
+	var trackers []model.Tracker
+	q := gocqlx.Query(session.Query(stmt), names)/*.BindMap(qb.M{"users": []gocql.UUID {userId},})*/
+	err := q.GetRelease(&trackers)
+	return trackers, err
 }
 
 func getTrackerhistory(timeFrom time.Time, timeTo time.Time, trackerId string) ([]interface{}, error) {
