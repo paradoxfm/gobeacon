@@ -47,8 +47,10 @@ func UserUpdateAvatar(c *gin.Context) {
 }
 
 func UserUpdatePushId(c *gin.Context) {
-	req := model.GetProfileRequest{UserId: getUserId(c)}
+	req := model.UpdatePushRequest{UserId: getUserId(c)}
 	c.Bind(&req)
+	result, err := service.UserUpdatePushId(&req)
+	sendObjResponse(result, err, c)
 }
 
 func getUserId(c *gin.Context) (string) {

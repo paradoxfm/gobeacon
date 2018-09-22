@@ -14,6 +14,27 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjU2NTY3O
 
 ###
 
+### обновление push id
+PUT http://localhost:8070/api/v1/users/me/push
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjU2NTY3OTIsImlkIjoicGFyYWRveGZtQG1haWwucnUiLCJvcmlnX2lhdCI6MTUzNzI1Njc5Mn0.NK3TFx28NiBSBCoE8E6ud8KuHO96SR0R6Q2Gd5VeqYo
+
+{
+  "UserId": "f76ddda7-c967-11e7-a930-5452007d877e",
+  "push_id": "sdkjhsdfgkljhsdlfkgjh"
+}
+###
+
+### получение гео зон пользхователя
+GET http://localhost:8070/api/v1/geozones?UserId=f76ddda7-c967-11e7-a930-5452007d877e
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjU2NTY3OTIsImlkIjoicGFyYWRveGZtQG1haWwucnUiLCJvcmlnX2lhdCI6MTUzNzI1Njc5Mn0.NK3TFx28NiBSBCoE8E6ud8KuHO96SR0R6Q2Gd5VeqYo
+
+{
+  "UserId": "f76ddda7-c967-11e7-a930-5452007d877e"
+}
+###
+
 POST http://localhost:8070/api/v1/users/password/reset
 Content-Type: application/json
 

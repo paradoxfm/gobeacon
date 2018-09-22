@@ -22,3 +22,7 @@ const UserWithEmailNotFound = 2000010
 const UserUpdatePwdUnknownError = 2000011
 //Ошибка обправки по email нового пароля пользователя
 const EmailSendError = 2000012
+//Ошибка БД при обновлении push id
+const DbErrorUpdateUserPush = 2000013
+//Ошибка БД не удалось достать трекер из базы
+const DbErrorGetTracker = 2000014

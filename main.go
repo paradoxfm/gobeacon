@@ -1,14 +1,14 @@
 package main
 
 import (
-	"gobeacon/controller"
 	"github.com/gin-gonic/gin"
-	"log"
-	"net/http"
-	_ "gobeacon/docs"
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+	"gobeacon/controller"
+	_ "gobeacon/docs"
 	"golang.org/x/sync/errgroup"
+	"log"
+	"net/http"
 )
 
 var (
@@ -32,11 +32,12 @@ var (
 // @name Authorization
 func main() {
 
-	srvSwag := createSwaggerApi()
+	go createSwaggerApi()
+	//srvSwag := createSwaggerApi()
 	srvPhone := createPhoneApi()
 	srvPhoneAdm := createPhoneAdminApi()
 
-	for _, value := range []*http.Server{srvSwag, srvPhone, srvPhoneAdm} {
+	for _, value := range []*http.Server{/*srvSwag, */srvPhone, srvPhoneAdm} {
 		g.Go(func() error {
 			return value.ListenAndServe()
 		})
@@ -44,6 +45,15 @@ func main() {
 	if err := g.Wait(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func createSwaggerApi() (*http.Server) {
+	r := gin.Default()
+	r.Use(gin.Recovery())
+	// документация по сервисам /swagger/index.html
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.Run(":8071")
+	return initServer(":8071", r)
 }
 
 func createPhoneApi() (*http.Server) {
@@ -89,7 +99,7 @@ func createPhoneAdminApi() (*http.Server) {
 		trk.GET("/:id/geo/history", controller.TrackerHistory) //date_start date_end
 	}
 
-	zone := v1.Group("/geoZones") // api для гео зон
+	zone := v1.Group("/geozones") // api для гео зон
 	zone.Use(mFunc)
 	{
 		zone.GET("", controller.ZoneAllForUser)
@@ -103,14 +113,6 @@ func createPhoneAdminApi() (*http.Server) {
 	return initServer(":8070", r)
 }
 
-func createSwaggerApi() (*http.Server) {
-	r := gin.New()
-	r.Use(gin.Recovery())
-	// документация по сервисам /swagger/index.html
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	return initServer(":8071", r)
-}
-
 func createWatchApi() (*http.Server) {
 	r := gin.New()
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -121,7 +123,7 @@ func dummyHandler(c *gin.Context) {
 	c.AbortWithStatus(http.StatusGone)
 }
 
-func initServer(port string, routes *gin.Engine) (*http.Server) {
+func initServer(port string, routes http.Handler) (*http.Server) {
 	srv := &http.Server{
 		Addr:    port,
 		Handler: routes,

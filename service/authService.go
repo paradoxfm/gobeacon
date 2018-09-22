@@ -2,11 +2,11 @@ package service
 
 import (
 	valid "github.com/asaskevich/govalidator"
-	"gobeacon/model"
 	"github.com/hlandau/passlib"
+	"gobeacon/code"
+	"gobeacon/model"
 	"math/rand"
 	"time"
-	"gobeacon/code"
 )
 
 const defaultPasswordLenght = 8

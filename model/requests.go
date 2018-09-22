@@ -27,6 +27,11 @@ type UpdateAvatarRequest struct {
 
 type UpdatePushRequest struct {
 	UserId string
+	PushId string `json:"push_id"`
+}
+
+type ZoneAllRequest struct {
+	UserId string
 }
 
 type HeartbeatRequest struct {

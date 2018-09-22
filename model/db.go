@@ -45,11 +45,13 @@ type UserTrackers struct {
 	PRIMARY KEY (id)
 );*/
 type GeoZoneDb struct {
-	Id      gocql.UUID  `cql:"id" json:"id" description:"Id геозоны"`
-	UserId  gocql.UUID  `cql:"user_id" json:"user_id" description:"Id пользователя"`
-	Name    string      `cql:"name" json:"name" description:"Имя геозоны"`
-	Created time.Time   `cql:"created_at" json:"createTime" description:"Дата создания"`
-	Points  []ZonePoint `cql:"points" json:"points" description:"Точки полигона"`
+	Id        gocql.UUID          `cql:"id" json:"id" description:"Id геозоны"`
+	UserId    gocql.UUID          `cql:"user_id" json:"user_id" description:"Id пользователя"`
+	Name      string              `cql:"name" json:"name" description:"Имя геозоны"`
+	CreatedAt time.Time           `cql:"created_at" json:"createTime" description:"Дата создания"`
+	UpdatedAt time.Time           `cql:"updated_at" json:"updateTime" description:"Дата обновления"`
+	Points    []ZonePoint         `cql:"points" json:"points" description:"Точки полигона"`
+	Trackers  map[gocql.UUID]bool `cql:"trackers" json:"points" description:"Список привязанных трекеров"`
 }
 
 type ZonePoint struct {
@@ -73,19 +75,20 @@ type ZonePoint struct {
 	PRIMARY KEY (id)
 );*/
 type Tracker struct {
-	Id           gocql.UUID   `cql:"id"`
-	DeviceId     int64        `cql:"device_id"`
-	Imei         int64        `cql:"imei"`
-	Avatar       string       `cql:"avatar"`
-	Name         string       `cql:"name"`
-	DeviceType   int          `cql:"device_type"`
-	SignalSource int          `cql:"signal_source"`
-	Latitude     float32      `cql:"latitude_last"`
-	Longitude    float32      `cql:"longitude_last"`
-	BatteryPower float32      `cql:"battery_power_last"`
-	Users        []gocql.UUID `cql:"users"`
-	Created      time.Time    `cql:"created_at"`
-	Updated      time.Time    `cql:"updated_at"`
+	Id                  gocql.UUID `cql:"id" json:"id"`
+	DeviceId            string     `cql:"device_id" json:"device_id"`
+	Imei                string     `cql:"imei"`
+	Avatar              string     `cql:"avatar" json:"avatar"`
+	Name                string     `cql:"name" json:"name"`
+	DeviceType          int        `cql:"device_type" json:"device_type"`
+	SignalSource        int        `cql:"signal_source" json:"signal_source"`
+	LatitudeLast        float32    `cql:"latitude_last" json:"latitude_last"`
+	LongitudeLast       float32    `cql:"longitude_last" json:"longitude_last"`
+	BatteryPowerLast    float32    `cql:"battery_power_last" json:"battery_power_last"`
+	Users               []string   `cql:"users"`
+	CreatedAt           time.Time  `cql:"created_at" json:"created_at"`
+	UpdatedAt           time.Time  `cql:"updated_at" json:"updated_at"`
+	SignalTimestampLast time.Time  `cql:"signal_timestamp_last" json:"signal_timestamp_last"`
 }
 
 /*> CREATE TABLE avatars (
