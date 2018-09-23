@@ -6,13 +6,9 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"gobeacon/controller"
 	_ "gobeacon/docs"
-	"golang.org/x/sync/errgroup"
 	"log"
 	"net/http"
-)
-
-var (
-	g errgroup.Group
+	"sync"
 )
 
 // @title Swagger Example API
@@ -31,41 +27,40 @@ var (
 // @in header
 // @name Authorization
 func main() {
-
-	go createSwaggerApi()
-	//srvSwag := createSwaggerApi()
-	srvPhone := createPhoneApi()
-	srvPhoneAdm := createPhoneAdminApi()
-
-	for _, value := range []*http.Server{/*srvSwag, */srvPhone, srvPhoneAdm} {
-		g.Go(func() error {
-			return value.ListenAndServe()
-		})
+	servers := map[string]http.Handler{":7777": createPhoneApi(), ":8070": createPhoneAdminApi(), ":8071": createSwaggerApi(),}
+	var wg sync.WaitGroup
+	wg.Add(1)
+	for port, server := range servers {
+		go func(port string, server http.Handler) (err error) {
+			defer log.Fatal(err)
+			err = http.ListenAndServe(port, server)
+			wg.Done()
+			return err
+		}(port, server)
 	}
-	if err := g.Wait(); err != nil {
-		log.Fatal(err)
-	}
+	wg.Wait()
 }
 
-func createSwaggerApi() (*http.Server) {
-	r := gin.Default()
+func createSwaggerApi() (*gin.Engine) {
+	r := gin.New()
 	r.Use(gin.Recovery())
 	// документация по сервисам /swagger/index.html
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	r.Run(":8071")
-	return initServer(":8071", r)
+	//r.Run(":8071")
+	//http.ListenAndServe(":8071", r)
+	return r //initServer(":8071", r)
 }
 
-func createPhoneApi() (*http.Server) {
+func createPhoneApi() (*gin.Engine) {
 	r := gin.New()
 	r.Use(gin.Recovery())
 	auth := controller.CreateHeartGinJWTMiddleware()
 	r.Use(auth.MiddlewareFunc())
 	r.GET("/api/v1/heartbeat", controller.HeartbeatPhone)
-	return initServer(":7777", r)
+	return r // initServer(":7777", r)
 }
 
-func createPhoneAdminApi() (*http.Server) {
+func createPhoneAdminApi() (*gin.Engine) {
 	auth := controller.CreateAdminJWTMiddleware()
 	r := gin.Default()
 	r.Use(gin.Recovery())
@@ -110,23 +105,24 @@ func createPhoneAdminApi() (*http.Server) {
 		zone.PUT("/:id/trackers", controller.ZoneSnapTrackList)
 	}
 
-	return initServer(":8070", r)
+	return r // initServer(":8070", r)
 }
 
-func createWatchApi() (*http.Server) {
+/*func createWatchApi() (*http.Server) {
 	r := gin.New()
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return initServer(":6666", r)
-}
+}*/
 
-func dummyHandler(c *gin.Context) {
+/*func dummyHandler(c *gin.Context) {
 	c.AbortWithStatus(http.StatusGone)
 }
-
-func initServer(port string, routes http.Handler) (*http.Server) {
+*/
+/*func initServer(port string, routes http.Handler) (*http.Server) {
 	srv := &http.Server{
 		Addr:    port,
 		Handler: routes,
 	}
 	return srv
 }
+*/
