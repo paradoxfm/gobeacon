@@ -34,6 +34,10 @@ type ZoneAllRequest struct {
 	UserId string
 }
 
+type TracksByIdsRequest struct {
+	Ids    []string `json:"ids"`
+}
+
 type HeartbeatRequest struct {
 	Datetime     int64   `json:"datetime"`
 	IsGPSSource  bool    `json:"is_gps_source"`

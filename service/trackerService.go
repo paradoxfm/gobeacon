@@ -10,3 +10,21 @@ func GetTrackerById(id string) (interface{}, []int) {
 	}
 	return tracker, err
 }
+
+func GetAllTrackersForUser(userId string) (interface{}, []int) {
+	var err []int
+	trackerList, e := getTrackersByUserId(userId)
+	if e != nil {
+		err = append(err, code.DbErrorGetTracker)
+	}
+	return trackerList, err
+}
+
+func GetTrackersByIds(ids []string) (interface{}, []int) {
+	var err []int
+	trackerList, e := getTrackerByIds(ids)
+	if e != nil {
+		err = append(err, code.DbErrorGetTracker)
+	}
+	return trackerList, err
+}

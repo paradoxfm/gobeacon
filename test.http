@@ -3,36 +3,32 @@ POST http://localhost:8070/api/v1/users/login
 Content-Type: application/json
 
 {
-  "username": "paradoxfm@mail.ru",
+  "email": "paradoxfm@mail.ru",
   "password": "90lv9wt9"
 }
 
 ### запрос профиля
 GET http://localhost:8070/api/v1/users/me
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjU2NTY3OTIsImlkIjoicGFyYWRveGZtQG1haWwucnUiLCJvcmlnX2lhdCI6MTUzNzI1Njc5Mn0.NK3TFx28NiBSBCoE8E6ud8KuHO96SR0R6Q2Gd5VeqYo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYxODMwNzYsIm9yaWdfaWF0IjoxNTM3NzgzMDc2LCJwcml2YXRlX2NsYWltX2lkIjoiNTRkOTYyM2MtMTFhZi0xMWU4LWEyN2QtNTQ1MjAwN2Q4NzdlIn0.b2GMV1o-WTl8kEdvlqug_UT5MOp5tyZW7iS3N_0FiHY
 
 ###
 
 ### обновление push id
 PUT http://localhost:8070/api/v1/users/me/push
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjU2NTY3OTIsImlkIjoicGFyYWRveGZtQG1haWwucnUiLCJvcmlnX2lhdCI6MTUzNzI1Njc5Mn0.NK3TFx28NiBSBCoE8E6ud8KuHO96SR0R6Q2Gd5VeqYo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYxODMwNzYsIm9yaWdfaWF0IjoxNTM3NzgzMDc2LCJwcml2YXRlX2NsYWltX2lkIjoiNTRkOTYyM2MtMTFhZi0xMWU4LWEyN2QtNTQ1MjAwN2Q4NzdlIn0.b2GMV1o-WTl8kEdvlqug_UT5MOp5tyZW7iS3N_0FiHY
 
 {
-  "UserId": "f76ddda7-c967-11e7-a930-5452007d877e",
   "push_id": "sdkjhsdfgkljhsdlfkgjh"
 }
 ###
 
 ### получение гео зон пользхователя
-GET http://localhost:8070/api/v1/geozones?UserId=f76ddda7-c967-11e7-a930-5452007d877e
+GET http://localhost:8070/api/v1/geozones
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjU2NTY3OTIsImlkIjoicGFyYWRveGZtQG1haWwucnUiLCJvcmlnX2lhdCI6MTUzNzI1Njc5Mn0.NK3TFx28NiBSBCoE8E6ud8KuHO96SR0R6Q2Gd5VeqYo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYxODMwNzYsIm9yaWdfaWF0IjoxNTM3NzgzMDc2LCJwcml2YXRlX2NsYWltX2lkIjoiNTRkOTYyM2MtMTFhZi0xMWU4LWEyN2QtNTQ1MjAwN2Q4NzdlIn0.b2GMV1o-WTl8kEdvlqug_UT5MOp5tyZW7iS3N_0FiHY
 
-{
-  "UserId": "f76ddda7-c967-11e7-a930-5452007d877e"
-}
 ###
 
 POST http://localhost:8070/api/v1/users/password/reset
@@ -41,6 +37,13 @@ Content-Type: application/json
 {
   "email": "paradoxfm@mail.ru"
 }
+
+###
+
+### получение всех трекеров пользователя
+GET http://localhost:8070/api/v1/trackers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYxODMwNzYsIm9yaWdfaWF0IjoxNTM3NzgzMDc2LCJwcml2YXRlX2NsYWltX2lkIjoiNTRkOTYyM2MtMTFhZi0xMWU4LWEyN2QtNTQ1MjAwN2Q4NzdlIn0.b2GMV1o-WTl8kEdvlqug_UT5MOp5tyZW7iS3N_0FiHY
 
 ###
 

@@ -27,7 +27,7 @@ import (
 // @in header
 // @name Authorization
 func main() {
-	servers := map[string]http.Handler{":7777": createPhoneApi(), ":8070": createPhoneAdminApi(), ":8071": createSwaggerApi(),}
+	servers := map[string]http.Handler{":7777": createPhoneApi(), ":8070": createPhoneAdminApi(), ":8071": createSwaggerApi()}
 	var wg sync.WaitGroup
 	wg.Add(1)
 	for port, server := range servers {
@@ -85,13 +85,15 @@ func createPhoneAdminApi() (*gin.Engine) {
 	trk := v1.Group("/trackers") // api для трекеров
 	trk.Use(mFunc)
 	{
+		trk.GET("/all", controller.TrackAll)
+		trk.POST("/custom", controller.TrackByIds)
 		trk.POST("", controller.TrackCreate)
-		trk.GET("/:id", controller.TrackGetById)
-		trk.DELETE("/:id", controller.TrackDeleteById)
-		trk.PUT("/:id", controller.TrackUpdate)
-		trk.POST("/:id/avatar", controller.TrackerAvatar)
-		trk.GET("/:id/geo", controller.TrackerLastGeoPosition)
-		trk.GET("/:id/geo/history", controller.TrackerHistory) //date_start date_end
+		trk.GET("/find/:id", controller.TrackGetById)
+		trk.DELETE("/delete/:id", controller.TrackDeleteById)
+		trk.PUT("/update/:id", controller.TrackUpdate)
+		trk.POST("/avatar/:id", controller.TrackerAvatar)
+		trk.GET("/geo/current/:id", controller.TrackerLastGeoPosition)
+		trk.GET("/geo/history/:id", controller.TrackerHistory) //date_start date_end
 	}
 
 	zone := v1.Group("/geozones") // api для гео зон

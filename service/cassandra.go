@@ -49,7 +49,7 @@ func getUserByEmail(email string) (model.UserDb, error) {
 }
 
 func getUserById(id string) (model.UserDb, error) {
-	stmt, names := qb.Select(tUsers).Columns("id", "email", "password", "trackers").Where(qb.Eq("id")).Limit(1).ToCql()
+	stmt, names := qb.Select(tUsers).Columns("id", "email", "password", "avatar", "trackers").Where(qb.Eq("id")).Limit(1).ToCql()
 	var u model.UserDb
 
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": id,})
@@ -73,20 +73,32 @@ func updateUserPassword(userId gocql.UUID, password string) (error) {
 }
 
 func getTrackerById(id string) (model.Tracker, error) {
-	stmt, names := qb.Select(tTrackers).Where(qb.Eq("id")).ToCql()
+	builder := qb.Select(tTrackers)
+	stmt, names := builder.Where(qb.Eq("id")).ToCql()
 
 	var track model.Tracker
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": id})
 	err := q.GetRelease(&track)
- 	return track, err
+	return track, err
 }
 
-func getTrackersByUserId(userId gocql.UUID) ([]model.Tracker, error) {
-	stmt, names := qb.Select(tTrackers) /*.Where(qb.In("users")).AllowFiltering()*/ .ToCql()
+func getTrackerByIds(ids []string) ([]model.Tracker, error) {
+	builder := qb.Select(tTrackers)
+	stmt, names := builder.Where(qb.In("id")).ToCql()
+
+	var track []model.Tracker
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": ids})
+	err := q.SelectRelease(&track)
+	return track, err
+}
+
+func getTrackersByUserId(userId string) ([]model.Tracker, error) {
+	builder := qb.Select(tTrackers)
+	stmt, names := builder.Where(qb.Contains("users")).AllowFiltering().ToCql()
 
 	var trackers []model.Tracker
-	q := gocqlx.Query(session.Query(stmt), names) /*.BindMap(qb.M{"users": []gocql.UUID {userId},})*/
-	err := q.GetRelease(&trackers)
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"users": userId})
+	err := q.SelectRelease(&trackers)
 	return trackers, err
 }
 

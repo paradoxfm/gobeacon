@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/appleboy/gin-jwt"
 	valid "github.com/asaskevich/govalidator"
 	"github.com/hlandau/passlib"
 	"gobeacon/code"
@@ -53,7 +54,7 @@ func ResetPassword(r *model.ResetPasswordRequest) (bool, []int) {
 	if len(err) == 0 {
 		usr, e := getUserByEmail(r.Email)
 		if e != nil {
-			err = append(err, code.UserWithEmailNotFound)//пользователь не найден
+			err = append(err, code.UserWithEmailNotFound) //пользователь не найден
 		} else {
 			newPwd := randomString(defaultPasswordLenght)
 			send, _ := sendNewPassword(r.Email, newPwd)
@@ -61,10 +62,10 @@ func ResetPassword(r *model.ResetPasswordRequest) (bool, []int) {
 				hash, _ := hashPassword(newPwd)
 				dbErr := updateUserPassword(usr.Id, hash)
 
-				if dbErr != nil {//ошибка обновления в базе
+				if dbErr != nil { //ошибка обновления в базе
 					err = append(err, code.UserUpdatePwdUnknownError)
 				}
-			} else {// ошибка отправки email
+			} else { // ошибка отправки email
 				err = append(err, code.EmailSendError)
 			}
 		}
@@ -83,15 +84,15 @@ func validateResetPassword(r *model.ResetPasswordRequest) []int {
 	return err
 }
 
-func LoginUser(email string, pwd string) (string, bool) {
+func LoginUser(email string, pwd string) (interface{}, error) {
 	usr, err := getUserByEmail(email)
 	if err != nil {
-		return "", false
+		return "", jwt.ErrFailedAuthentication
 	}
 	if checkHash(pwd, usr.Password) {
-		return usr.Id.String(), true
+		return usr.Id.String(), nil
 	}
-	return "", false
+	return "", jwt.ErrFailedAuthentication
 }
 
 func ChangePassword(r *model.ChangePasswordRequest) (bool, []int) {

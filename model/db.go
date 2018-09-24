@@ -78,8 +78,8 @@ type Tracker struct {
 	Id                  gocql.UUID `cql:"id" json:"id"`
 	DeviceId            string     `cql:"device_id" json:"device_id"`
 	Imei                string     `cql:"imei"`
-	Avatar              string     `cql:"avatar" json:"avatar"`
-	Name                string     `cql:"name" json:"name"`
+	//Avatar              string     `cql:"avatar" json:"avatar"`
+	//Name                string     `cql:"name" json:"name"`
 	DeviceType          int        `cql:"device_type" json:"device_type"`
 	SignalSource        int        `cql:"signal_source" json:"signal_source"`
 	LatitudeLast        float32    `cql:"latitude_last" json:"latitude_last"`

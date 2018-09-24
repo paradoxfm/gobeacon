@@ -49,13 +49,13 @@ func UserUpdateAvatar(c *gin.Context) {
 func UserUpdatePushId(c *gin.Context) {
 	req := model.UpdatePushRequest{UserId: getUserId(c)}
 	c.Bind(&req)
-	result, err := service.UserUpdatePushId(&req)
-	sendObjResponse(result, err, c)
+	_, err := service.UserUpdatePushId(&req)
+	sendResponse(err, c)
 }
 
 func getUserId(c *gin.Context) (string) {
 	claims := jwt.ExtractClaims(c)
-	return claims["id"].(string)
+	return claims["private_claim_id"].(string)
 }
 
 func sendResponse(err []int, c *gin.Context) {

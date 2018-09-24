@@ -15,10 +15,12 @@
 			"revisionTime": "2017-08-10T14:37:23Z"
 		},
 		{
-			"checksumSHA1": "iR5rg4zHqoEICoXd/WEA1dxN4tw=",
+			"checksumSHA1": "RL1R/icfGIbJ6EVvcZ1zUGVGJLs=",
 			"path": "github.com/appleboy/gin-jwt",
-			"revision": "25dbc558978a0b3caf0358d6b70b7a8eb87bdffb",
-			"revisionTime": "2018-08-18T04:10:44Z"
+			"revision": "18c777042be3ecc5cb3bf79cd24cbd6b28683cdc",
+			"revisionTime": "2018-08-25T15:11:14Z",
+			"version": "v2.5.0",
+			"versionExact": "v2.5.0"
 		},
 		{
 			"checksumSHA1": "JCIvbAjx46UhUu51KOSpVYJqnG4=",

@@ -11,3 +11,8 @@ type UserTracker struct {
 	Name   string `json:"name"`
 	Avatar string `json:"avatar"`
 }
+
+type UserSession struct {
+	Id    string
+	Email string
+}
