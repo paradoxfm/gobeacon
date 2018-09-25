@@ -18,12 +18,12 @@ import (
 	PRIMARY KEY (id)
 );*/
 type UserDb struct {
-	Id       gocql.UUID                  `cql:"id" json:"id"`
-	Email    string                      `cql:"email" json:"email"`
-	Password string                      `cql:"password" json:"password"`
-	Avatar   string                      `cql:"avatar" json:"avatar"`
-	PushId   []string                    `cql:"push_id" json:"push_id"`
-	Trackers map[gocql.UUID]UserTrackers `cql:"trackers" json:"trackers"`
+	Id       gocql.UUID                  `db:"id" json:"id"`
+	Email    string                      `db:"email" json:"email"`
+	Password string                      `db:"password" json:"password"`
+	Avatar   string                      `db:"avatar" json:"avatar"`
+	PushId   []string                    `db:"push_id" json:"push_id"`
+	Trackers map[gocql.UUID]UserTrackers `db:"trackers" json:"trackers"`
 
 	//Trackers map[gocql.UUID]UserTrackers `cql:"trackers" json:"trackers"`
 	//ZoneList []gocql.UUID                `cql:"geozones" json:"geozones"`
@@ -45,13 +45,13 @@ type UserTrackers struct {
 	PRIMARY KEY (id)
 );*/
 type GeoZoneDb struct {
-	Id        gocql.UUID          `cql:"id" json:"id" description:"Id геозоны"`
-	UserId    gocql.UUID          `cql:"user_id" json:"user_id" description:"Id пользователя"`
-	Name      string              `cql:"name" json:"name" description:"Имя геозоны"`
-	CreatedAt time.Time           `cql:"created_at" json:"createTime" description:"Дата создания"`
-	UpdatedAt time.Time           `cql:"updated_at" json:"updateTime" description:"Дата обновления"`
-	Points    []ZonePoint         `cql:"points" json:"points" description:"Точки полигона"`
-	Trackers  map[gocql.UUID]bool `cql:"trackers" json:"points" description:"Список привязанных трекеров"`
+	Id        gocql.UUID          `db:"id" json:"id" description:"Id геозоны"`
+	UserId    gocql.UUID          `db:"user_id" json:"user_id" description:"Id пользователя"`
+	Name      string              `db:"name" json:"name" description:"Имя геозоны"`
+	CreatedAt time.Time           `db:"created_at" json:"createTime" description:"Дата создания"`
+	UpdatedAt time.Time           `db:"updated_at" json:"updateTime" description:"Дата обновления"`
+	Points    []ZonePoint         `db:"points" json:"points" description:"Точки полигона"`
+	Trackers  map[gocql.UUID]bool `db:"trackers" json:"points" description:"Список привязанных трекеров"`
 }
 
 type ZonePoint struct {
@@ -75,20 +75,18 @@ type ZonePoint struct {
 	PRIMARY KEY (id)
 );*/
 type Tracker struct {
-	Id                  gocql.UUID `cql:"id" json:"id"`
-	DeviceId            string     `cql:"device_id" json:"device_id"`
-	Imei                string     `cql:"imei"`
-	//Avatar              string     `cql:"avatar" json:"avatar"`
-	//Name                string     `cql:"name" json:"name"`
-	DeviceType          int        `cql:"device_type" json:"device_type"`
-	SignalSource        int        `cql:"signal_source" json:"signal_source"`
-	LatitudeLast        float32    `cql:"latitude_last" json:"latitude_last"`
-	LongitudeLast       float32    `cql:"longitude_last" json:"longitude_last"`
-	BatteryPowerLast    float32    `cql:"battery_power_last" json:"battery_power_last"`
-	Users               []string   `cql:"users"`
-	CreatedAt           time.Time  `cql:"created_at" json:"created_at"`
-	UpdatedAt           time.Time  `cql:"updated_at" json:"updated_at"`
-	SignalTimestampLast time.Time  `cql:"signal_timestamp_last" json:"signal_timestamp_last"`
+	Id                  gocql.UUID `db:"id" json:"id"`
+	DeviceId            string     `db:"device_id" json:"device_id"`
+	Imei                string     `db:"imei"`
+	DeviceType          int        `db:"device_type" json:"device_type"`
+	SignalSource        int        `db:"signal_source" json:"signal_source"`
+	LatitudeLast        float32    `db:"latitude_last" json:"latitude_last"`
+	LongitudeLast       float32    `db:"longitude_last" json:"longitude_last"`
+	BatteryPowerLast    float32    `db:"battery_power_last" json:"battery_power_last"`
+	Users               []string   `db:"users"`
+	CreatedAt           time.Time  `db:"created_at" json:"created_at"`
+	UpdatedAt           time.Time  `db:"updated_at" json:"updated_at"`
+	SignalTimestampLast time.Time  `db:"signal_timestamp_last" json:"signal_timestamp_last"`
 }
 
 /*> CREATE TABLE avatars (
@@ -97,16 +95,26 @@ type Tracker struct {
 	PRIMARY KEY (id)
 );*/
 type BlobDb struct {
-	id      gocql.UUID `cql:"id" json:"id"`
-	content []byte     `cql:"content" json:"content"`
+	id      gocql.UUID `db:"id" json:"id"`
+	content []byte     `db:"content" json:"content"`
 }
 
-/*> CREATE TABLE watch.ping (
+/*> create table watch.track_ping (
+	tracker_id uuid,
 	event_time timestamp,
-	tracker_id UUID,
-	d bigint,
-	PRIMARY KEY (time_ins, tracker_id)
+	battery_power float,
+	latitude float,
+	longitude float,
+	zone_id uuid,
+	signal_source int,
+	primary key (tracker_id, event_time)
 );*/
 type PingDb struct {
-	EventTime time.Time `cql:"id" json:"id"`
+	TrackerId    gocql.UUID `db:"tracker_id"`
+	EventTime    time.Time  `db:"event_time" json:"datetime"`
+	BatteryPower float32    `db:"battery_power"`
+	Latitude     float32    `db:"latitude" json:"latitude"`
+	Longitude    float32    `db:"longitude" json:"longitude"`
+	ZoneId       gocql.UUID `db:"zone_id"`
+	SignalSource int        `db:"signal_source"`
 }

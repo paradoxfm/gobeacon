@@ -53,6 +53,12 @@ func UserUpdatePushId(c *gin.Context) {
 	sendResponse(err, c)
 }
 
+func TestPush(c *gin.Context) {
+	userId := getUserId(c)
+	service.SendPushNotification(userId)
+	sendResponse(nil, c)
+}
+
 func getUserId(c *gin.Context) (string) {
 	claims := jwt.ExtractClaims(c)
 	return claims["private_claim_id"].(string)

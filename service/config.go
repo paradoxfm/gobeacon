@@ -2,18 +2,19 @@ package service
 
 import (
 	"encoding/json"
-	"os"
 	"log"
+	"os"
 )
 
 var config *Configuration
 
 type Configuration struct {
-	Server_port        string  `json:"server_port"`
-	Cassandra_user     string  `json:"cassandra_user"`
-	Cassandra_password string  `json:"cassandra_password"`
-	Cassandra_ip       string  `json:"cassandra_ip"`
-	Cassandra_keyspace string  `json:"cassandra_keyspace"`
+	ServerPort        string `json:"server_port"`
+	ServerKey         string `json:"server_key"`
+	CassandraUser     string `json:"cassandra_user"`
+	CassandraPassword string `json:"cassandra_password"`
+	CassandraIp       string `json:"cassandra_ip"`
+	CassandraKey      string `json:"cassandra_keyspace"`
 }
 
 func Config() *Configuration {

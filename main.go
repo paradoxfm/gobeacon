@@ -67,6 +67,9 @@ func createPhoneAdminApi() (*gin.Engine) {
 	v1 := r.Group("/api/v1")  // api первой версии
 	usr := v1.Group("/users") // api для пользователей
 	mFunc := auth.MiddlewareFunc()
+	tst := v1.Group("/test")
+	tst.Use(mFunc)
+	tst.GET("/push", controller.TestPush)
 	{
 		usr.POST("/signUp", controller.UserCreate)
 		usr.POST("/login", auth.LoginHandler)

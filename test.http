@@ -17,11 +17,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYxODMwN
 ### обновление push id
 PUT http://localhost:8070/api/v1/users/me/push
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYxODMwNzYsIm9yaWdfaWF0IjoxNTM3NzgzMDc2LCJwcml2YXRlX2NsYWltX2lkIjoiNTRkOTYyM2MtMTFhZi0xMWU4LWEyN2QtNTQ1MjAwN2Q4NzdlIn0.b2GMV1o-WTl8kEdvlqug_UT5MOp5tyZW7iS3N_0FiHY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYyNTY0MzYsIm9yaWdfaWF0IjoxNTM3ODU2NDM2LCJwcml2YXRlX2NsYWltX2lkIjoiNTRkOTYyM2MtMTFhZi0xMWU4LWEyN2QtNTQ1MjAwN2Q4NzdlIn0.WTK3UWQaja_6nKcuDu5QpxsGaVeIddjRegKwGMqviZ0
 
 {
-  "push_id": "sdkjhsdfgkljhsdlfkgjh"
+  "push_id": "dx46qZ3i48w:APA91bHDBHtCjLV1t5rcAy1ddo16oH2ycUFlE0wvkejSdpVtseC8KrjgivyZKT17bO3xK3BEqbZbuoca70t2A34PrWgzOlmt41dgBFzLX6Ofovk10jmcp2fDHMSLZSABrU7c6_X0YZe6CaKp2Ylb5cuTOtY0z5Oq-A"
 }
+###
+
+### проверка отправки push
+GET http://localhost:8070/api/v1/test/push
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYyNTY0MzYsIm9yaWdfaWF0IjoxNTM3ODU2NDM2LCJwcml2YXRlX2NsYWltX2lkIjoiNTRkOTYyM2MtMTFhZi0xMWU4LWEyN2QtNTQ1MjAwN2Q4NzdlIn0.WTK3UWQaja_6nKcuDu5QpxsGaVeIddjRegKwGMqviZ0
+
 ###
 
 ### получение гео зон пользхователя

@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type UserAuth struct {
 	UserName  string `json: "id"`
 	FirstName string
@@ -15,4 +17,15 @@ type UserTracker struct {
 type UserSession struct {
 	Id    string
 	Email string
+}
+
+type Heartbeat struct {
+	IsGps     bool      `json:"is_gps_source"`
+	IsGsm     bool      `json:"is_gsm_source"`
+	IsWifi    bool      `json:"is_wifi_source"`
+	Latitude  float32   `json:"latitude"`
+	Longitude float32   `json:"longitude"`
+	Power     int       `json:"power"`
+	DateTime  time.Time `json:"datetime"`
+	DeviceId  string    `json:"device_id"`
 }
