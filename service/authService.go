@@ -60,7 +60,7 @@ func ResetPassword(r *model.ResetPasswordRequest) (bool, []int) {
 			send, _ := sendNewPassword(r.Email, newPwd)
 			if send {
 				hash, _ := hashPassword(newPwd)
-				dbErr := updateUserPassword(usr.Id, hash)
+				dbErr := updateUserPassword(usr.Id.String(), hash)
 
 				if dbErr != nil { //ошибка обновления в базе
 					err = append(err, code.UserUpdatePwdUnknownError)
@@ -93,12 +93,6 @@ func LoginUser(email string, pwd string) (interface{}, error) {
 		return usr.Id.String(), nil
 	}
 	return "", jwt.ErrFailedAuthentication
-}
-
-func ChangePassword(r *model.ChangePasswordRequest) (bool, []int) {
-	var errMsg []int
-
-	return len(errMsg) == 0, errMsg
 }
 
 /*func convertErrorsToMessages(errs interface{}, errMsg []string) ([]string) {

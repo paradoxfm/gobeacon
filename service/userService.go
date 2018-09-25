@@ -29,6 +29,23 @@ func UserUpdatePushId(r *model.UpdatePushRequest) (interface{}, []int) {
 	return nil, err
 }
 
+func ChangePassword(r *model.ChangePasswordRequest) ([]int) {
+	var err []int
+	userDb, e := getUserById(r.UserId)
+	if e != nil {
+		return append(err, code.DbError)
+	}
+	if !checkHash(r.OldPassword, userDb.Password) {
+		return append(err, code.InavlidCurrentPasswords)
+	}
+	hash, _ := hashPassword(r.NewPassword)
+	e = updateUserPassword(r.UserId, hash)
+	if e != nil {
+		return append(err, code.DbError)
+	}
+	return err
+}
+
 func SaveHeartbeat(p *model.Heartbeat) (*model.Tracker, []int) {
 	t, e := getTrackerIdByDevice(p.DeviceId)
 	var err []int

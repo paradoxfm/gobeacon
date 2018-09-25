@@ -26,7 +26,7 @@ func UserResetPassword(c *gin.Context) {
 func UserChangePassword(c *gin.Context) {
 	req := model.ChangePasswordRequest{UserId: getUserId(c)}
 	c.Bind(&req)
-	_, err := service.ChangePassword(&req)
+	err := service.ChangePassword(&req)
 	sendResponse(err, c)
 }
 
@@ -61,7 +61,10 @@ func TestPush(c *gin.Context) {
 
 func getUserId(c *gin.Context) (string) {
 	claims := jwt.ExtractClaims(c)
-	return claims["private_claim_id"].(string)
+	if val, ok := claims["private_claim_id"]; ok {
+		return val.(string)
+	}
+	return ""
 }
 
 func sendResponse(err []int, c *gin.Context) {

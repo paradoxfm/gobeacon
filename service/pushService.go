@@ -37,7 +37,7 @@ func SendPushNotification(userId string) {
 	client := fcm.NewClient(Config().ServerKey)
 
 	data := map[string]interface{}{
-		"message": "From iGurkin",
+		"message": "Тестовое оповещение при выходе трекера из зоны, возможны ураганы и шквалистый ветер",
 		"details": map[string]string{
 			"name":  "Name",
 			"user":  "Admin",

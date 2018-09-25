@@ -13,7 +13,9 @@ type ResetPasswordRequest struct {
 }
 
 type ChangePasswordRequest struct {
-	UserId string
+	UserId      string
+	NewPassword string `json:"new_password"`
+	OldPassword string `json:"old_password"`
 }
 
 type GetProfileRequest struct {
@@ -35,7 +37,7 @@ type ZoneAllRequest struct {
 }
 
 type TracksByIdsRequest struct {
-	Ids    []string `json:"ids"`
+	Ids []string `json:"ids"`
 }
 
 type HeartbeatRequest struct {

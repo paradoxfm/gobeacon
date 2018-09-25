@@ -65,11 +65,11 @@ func updateUserPushId(r *model.UpdatePushRequest) (error) {
 	return err
 }
 
-func updateUserPassword(userId gocql.UUID, password string) (error) {
+func updateUserPassword(userId string, hash string) (error) {
 	stmt, names := qb.Update(tUsers).Set("password").Where(qb.Eq("id")).ToCql()
-	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": userId, "password": password})
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": userId, "password": hash})
 
-	err := q.Exec()
+	err := q.ExecRelease()
 	return err
 }
 
