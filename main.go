@@ -11,19 +11,11 @@ import (
 	"sync"
 )
 
-// @title Swagger Example API
+// @title Swagger API
 // @version 1.0
-// @description This is a sample server celler server.
-// @termsOfService http://swagger.io/terms/
+// @description This is api for beacon services
 // @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-// @host localhost:8080
-// @BasePath /api/v1
-// @securityDefinitions.basic BasicAuth
-// @securityDefinitions.apikey ApiKeyAuth
-// @in header
-// @name Authorization
+// @contact.email paradoxfm@mail.ru
 func main() {
 	servers := map[string]http.Handler{":7777": createPhoneApi(), ":8070": createPhoneAdminApi(), ":8071": createSwaggerApi()}
 	var wg sync.WaitGroup
