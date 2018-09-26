@@ -28,5 +28,15 @@ const DbErrorUpdateUserPush = 2000013
 const DbErrorGetTracker = 2000014
 // Пароль не совпадает с подтверждением
 const InavlidCurrentPasswords = 2000015
+// Пароль не совпадает с подтверждением
+const ZoneCrossing = 2000016
+// Невозможно открыть файл
+const CantOpenFile = 2000017
+// Невозможно Прочитать файл
+const CantReadFile = 2000018
+// Неверный формат изображения, ожидается jpeg
+const InvalidImage = 2000019
+// Размер изображения должен быть 250 на 250
+const InvalidImageSize = 2000020
 //Ошибка БД
 const DbError = 2000100

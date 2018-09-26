@@ -31,35 +31,24 @@ func main() {
 	wg.Wait()
 }
 
-func createSwaggerApi() (*gin.Engine) {
-	r := gin.New()
-	r.Use(gin.Recovery())
-	// документация по сервисам /swagger/index.html
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	//r.Run(":8071")
-	//http.ListenAndServe(":8071", r)
-	return r //initServer(":8071", r)
-}
-
-func createPhoneApi() (*gin.Engine) {
-	r := gin.New()
-	r.Use(gin.Recovery())
-	auth := controller.CreateHeartGinJWTMiddleware()
-	r.Use(auth.MiddlewareFunc())
-	r.GET("/api/v1/heartbeat", controller.HeartbeatPhone)
-	return r // initServer(":7777", r)
-}
-
 func createPhoneAdminApi() (*gin.Engine) {
 	auth := controller.CreateAdminJWTMiddleware()
 	r := gin.Default()
 	r.Use(gin.Recovery())
+	// 1 << 20  1 MiB -> ‭1_048_576‬, 8 << 20  8 MiB -> ‭8_388_608‬
+	r.MaxMultipartMemory = 1 << 19 //0.5 MiB
 	v1 := r.Group("/api/v1")  // api первой версии
 	usr := v1.Group("/users") // api для пользователей
 	mFunc := auth.MiddlewareFunc()
 	tst := v1.Group("/test")
 	tst.Use(mFunc)
+	sys := v1.Group("")
+	sys.Use(mFunc)
+	{
+		sys.GET("/avatar/:id", controller.GetAvatar)
+	}
 	tst.GET("/push", controller.TestPush)
+	tst.GET("/updtrack", controller.TestTrack)
 	{
 		usr.POST("/signUp", controller.UserCreate)
 		usr.POST("/login", auth.LoginHandler)
@@ -71,7 +60,7 @@ func createPhoneAdminApi() (*gin.Engine) {
 			me.PUT("/password", controller.UserChangePassword)
 			me.PUT("/push", controller.UserUpdatePushId)
 			me.PUT("/avatar", controller.UserUpdateAvatar)
-			me.PUT("/refresh", auth.RefreshHandler)
+			//me.PUT("/refresh", auth.RefreshHandler)
 		}
 	}
 
@@ -84,7 +73,7 @@ func createPhoneAdminApi() (*gin.Engine) {
 		trk.GET("/find/:id", controller.TrackGetById)
 		trk.DELETE("/delete/:id", controller.TrackDeleteById)
 		trk.PUT("/update/:id", controller.TrackUpdate)
-		trk.POST("/avatar/:id", controller.TrackerAvatar)
+		trk.PUT("/avatar/:id", controller.TrackerAvatar)
 		trk.GET("/geo/current/:id", controller.TrackerLastGeoPosition)
 		trk.GET("/geo/history/:id", controller.TrackerHistory) //date_start date_end
 	}
@@ -100,7 +89,24 @@ func createPhoneAdminApi() (*gin.Engine) {
 		zone.PUT("/:id/trackers", controller.ZoneSnapTrackList)
 	}
 
-	return r // initServer(":8070", r)
+	return r
+}
+
+func createPhoneApi() (*gin.Engine) {
+	r := gin.New()
+	r.Use(gin.Recovery())
+	auth := controller.CreateHeartGinJWTMiddleware()
+	r.Use(auth.MiddlewareFunc())
+	r.GET("/api/v1/heartbeat", controller.HeartbeatPhone)
+	return r
+}
+
+func createSwaggerApi() (*gin.Engine) {
+	r := gin.New()
+	r.Use(gin.Recovery())
+	// документация по сервисам /swagger/index.html
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	return r
 }
 
 /*func createWatchApi() (*http.Server) {
@@ -108,16 +114,3 @@ func createPhoneAdminApi() (*gin.Engine) {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return initServer(":6666", r)
 }*/
-
-/*func dummyHandler(c *gin.Context) {
-	c.AbortWithStatus(http.StatusGone)
-}
-*/
-/*func initServer(port string, routes http.Handler) (*http.Server) {
-	srv := &http.Server{
-		Addr:    port,
-		Handler: routes,
-	}
-	return srv
-}
-*/

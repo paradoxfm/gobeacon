@@ -1,11 +1,11 @@
 package controller
 
 import (
+	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
 	"gobeacon/model"
 	"gobeacon/service"
 	"net/http"
-	"github.com/appleboy/gin-jwt"
 )
 
 func UserCreate(c *gin.Context) {
@@ -39,11 +39,17 @@ func UserGetProfile(c *gin.Context) {
 
 func UserUpdateAvatar(c *gin.Context) {
 	file, e := c.FormFile("avatar")
-	req := model.UpdateAvatarRequest{UserId: getUserId(c), File: file}
-	//cont, _ := file.Open()
-	if e != nil {
-		c.Bind(&req)
+	if e == nil {
+		sendResponse([]int{}, c)
 	}
+	req := model.UpdateAvatarRequest{UserId: getUserId(c), File: file}
+	service.UpdateUserAvatar(&req)
+}
+
+func GetAvatar(c *gin.Context) {
+	id := c.Param("id")
+	result, err := service.GetAvatar(id)
+	sendObjResponse(result, err, c)
 }
 
 func UserUpdatePushId(c *gin.Context) {
@@ -56,6 +62,11 @@ func UserUpdatePushId(c *gin.Context) {
 func TestPush(c *gin.Context) {
 	userId := getUserId(c)
 	service.SendPushNotification(userId)
+	sendResponse(nil, c)
+}
+
+func TestTrack(c *gin.Context) {
+	service.MoveTrackerSettings()
 	sendResponse(nil, c)
 }
 

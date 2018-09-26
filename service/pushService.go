@@ -29,6 +29,15 @@ func sendPush(userId string, pushIds []string, data interface{}, client *fcm.Cli
 	log.Println(status.Results)
 }
 
+func MoveTrackerSettings() {
+	users := getAllUsers()
+	for _, usr := range users {
+		for trkId, trk := range usr.Trackers {
+			insertTrackSettings(usr.Id, trkId, trk.Name)
+		}
+	}
+}
+
 func SendPushNotification(userId string) {
 	ids, e := getUserPushIds(userId)
 	if e != nil {
@@ -38,11 +47,7 @@ func SendPushNotification(userId string) {
 
 	data := map[string]interface{}{
 		"message": "Тестовое оповещение при выходе трекера из зоны, возможны ураганы и шквалистый ветер",
-		"details": map[string]string{
-			"name":  "Name",
-			"user":  "Admin",
-			"thing": "none",
-		},
+		"tracker_id": "",
 	}
 
 	client.PushMultiple(ids, data)

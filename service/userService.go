@@ -1,8 +1,12 @@
 package service
 
 import (
+	"bytes"
+	"encoding/base64"
 	"gobeacon/code"
 	"gobeacon/model"
+	"image/jpeg"
+	"io"
 )
 
 func UserGetProfile(r *model.GetProfileRequest) (model.ProfileResponse, []int) {
@@ -44,6 +48,49 @@ func ChangePassword(r *model.ChangePasswordRequest) ([]int) {
 		return append(err, code.DbError)
 	}
 	return err
+}
+
+func GetAvatar(id string) (model.AvatarResponse, []int) {
+	var err []int
+	data, e := loadAvatar(id)
+	if e != nil {
+		return model.AvatarResponse{}, append(err, code.DbError)
+	}
+	strB64 := base64.StdEncoding.EncodeToString(data)
+	return model.AvatarResponse{Data: strB64}, nil
+}
+
+func UpdateUserAvatar(req *model.UpdateAvatarRequest) (string, []int) {
+	var err []int
+	cont, ef := req.File.Open()
+	if ef != nil {
+		return "", append(err, code.CantOpenFile)
+	}
+	buf := bytes.NewBuffer(nil)
+	if _, e := io.Copy(buf, cont); e != nil {
+		return "", append(err, code.CantReadFile)
+	}
+	data := buf.Bytes()
+	if rez, er := validateJpeg(data); !rez {
+		return "", append(err, er)
+	}
+	avatarId, e := updateUserAvatar(req.UserId, data)
+	if e != nil {
+		return "", append(err, code.DbError)
+	}
+	return avatarId, nil
+}
+
+func validateJpeg(data []byte) (bool, int) {
+	img, e := jpeg.Decode(bytes.NewReader(data))
+	if e != nil {
+		return false, code.InvalidImage
+	}
+	b := img.Bounds()
+	if b.Dx() != 250 && b.Dy() != 250 {
+		return false, code.InvalidImageSize
+	}
+	return true, -1
 }
 
 func SaveHeartbeat(p *model.Heartbeat) (*model.Tracker, []int) {

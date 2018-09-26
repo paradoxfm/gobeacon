@@ -1,6 +1,9 @@
 package service
 
-import "gobeacon/code"
+import (
+	"gobeacon/code"
+	"gobeacon/model"
+)
 
 func GetTrackerById(id string) (interface{}, []int) {
 	var err []int
@@ -27,4 +30,13 @@ func GetTrackersByIds(ids []string) (interface{}, []int) {
 		err = append(err, code.DbErrorGetTracker)
 	}
 	return trackerList, err
+}
+
+func UpdateTrackerName(req *model.TracksNameRequest) ([]int) {
+	var err []int
+	e := updateTrackerName(req)
+	if e != nil {
+		err = append(err, code.DbError)
+	}
+	return err
 }

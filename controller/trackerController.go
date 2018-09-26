@@ -34,7 +34,12 @@ func TrackDeleteById(c *gin.Context) {
 }
 
 func TrackUpdate(c *gin.Context) {
-
+	trackId := c.Param("id")
+	userId := getUserId(c)
+	req := model.TracksNameRequest{TrackId: trackId, UserId: userId}
+	c.Bind(&req)
+	err := service.UpdateTrackerName(&req)
+	sendResponse(err, c)
 }
 
 func TrackerAvatar(c *gin.Context) {

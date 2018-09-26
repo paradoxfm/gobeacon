@@ -16,6 +16,10 @@ type ProfileResponse struct {
 	Trackers []UserTracker `json:"trackers"`
 }
 
+type AvatarResponse struct {
+	Data string `json:"data"`
+}
+
 type GeoZoneResponse struct {
 	Id       string          `json:"id"`
 	Name     string          `json:"name"`

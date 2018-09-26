@@ -12,6 +12,8 @@ import (
 var session *gocql.Session
 
 var tUsers = "watch.users"
+var tTrackPref = "watch.user_track_prefs"
+var tAvatars = "watch.files"
 var tTrackers = "watch.trackers"
 var tZones = "watch.geozones"
 var tPings = "track_ping"
@@ -73,6 +75,59 @@ func updateUserPassword(userId string, hash string) (error) {
 	return err
 }
 
+func loadAvatar(id string) ([]byte, error) {
+	stmt, names := qb.Select(tAvatars).Where(qb.Eq("id")).Limit(1).ToCql()
+	var u model.BlobDb
+
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": id,})
+	err := q.GetRelease(&u)
+	return u.Content, err
+}
+
+func updateUserAvatar(userId string, blob []byte) (string, error) {
+	userDb, _ := getUserById(userId)
+
+	avatarLink := userDb.Avatar
+	avaId, e := insertNewAvatar(blob)
+	if e != nil {
+		return "", e
+	}
+
+	// обновляем ссылку на аватар
+	stmt, names := qb.Update(tUsers).Set("avatar").Where(qb.Eq("id")).ToCql()
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": userId, "avatar": avaId})
+	if err := q.ExecRelease(); err != nil {
+		return "", err
+	}
+
+	if e = deleteAvatar(avatarLink); e != nil {
+		return "", e
+	}
+
+	return avaId, nil
+}
+
+// удаляем старый аватар
+func deleteAvatar(uid string) (error) {
+	stmt, names := qb.Delete(tAvatars).Where(qb.Eq("id")).ToCql()
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": uid})
+	err := q.ExecRelease()
+	return err
+}
+
+// вставляем новый аватар
+func insertNewAvatar(blob []byte) (string, error) {
+	uuid, _ := gocql.RandomUUID()
+	ava := model.BlobDb{Id: uuid, Content: blob}
+	// вставляем новый аватар
+	stmt, names := qb.Insert(tAvatars).Columns("id", "avatar").ToCql()
+	q := gocqlx.Query(session.Query(stmt), names).BindStruct(&ava)
+	if err := q.ExecRelease(); err != nil {
+		return "", err
+	}
+	return uuid.String(), nil
+}
+
 func getUserPushIds(userId string) ([]string, error) {
 	stmt, names := qb.Select(tUsers).Columns("id", "push_id").Where(qb.Eq("id")).Limit(1).ToCql()
 	var u model.UserDb
@@ -127,6 +182,38 @@ func getTrackerIdByDevice(deviceId string) (model.Tracker, error) {
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"device_id": deviceId})
 	err := q.GetRelease(&track)
 	return track, err
+}
+
+func getAllUsers() ([]model.UserDb) {
+	stmt, names := qb.Select(tUsers).Columns("id", "trackers").ToCql()
+	var users []model.UserDb
+	q := gocqlx.Query(session.Query(stmt), names)
+
+	e := q.SelectRelease(&users)
+	if e != nil {
+		return nil
+	}
+	return users
+}
+
+func insertTrackSettings(uuid gocql.UUID, trkId gocql.UUID, trkName string) (error) {
+	stmt, names := qb.Insert(tTrackPref).ToCql()
+	pref := model.TrackPref{UserId: uuid, TrackId: trkId, Name: trkName}
+	err := gocqlx.Query(session.Query(stmt), names).BindStruct(&pref).ExecRelease()
+	return err
+}
+
+func updateTrackerName(req *model.TracksNameRequest) (error) {
+	/*u, e := getUserById(req.UserId)
+	if e != nil {
+		return e
+	}
+	u.Trackers
+	stmt, names := qb.Update(tUsers).Set("latitude_last", "longitude_last", "battery_power_last", "updated_at").Where(qb.Eq("id")).ToCql()
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"latitude_last": tr.LatitudeLast, "longitude_last": tr.LongitudeLast, "battery_power_last": tr.BatteryPowerLast, "updated_at": time.Now(), "id": tr.Id.String()})
+	err := q.ExecRelease()
+	return err*/
+	return nil
 }
 
 func updateLastTracker(tr *model.Tracker) (error) {

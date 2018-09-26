@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/kellydunn/golang-geo"
+	"gobeacon/code"
 	"gobeacon/model"
 )
 
@@ -52,21 +53,16 @@ func checkZones(prev *model.Tracker, curr *model.Tracker) {
 
 		zone := geo.NewPolygon(points)
 
-		//fmt.Printf("%#v \n", geoTokens)
 		if zone.Contains(pOld) != zone.Contains(pNew) {
 			ids, e := getUserPushIds(geoZone.UserId.String())
 			if e != nil || len(ids) == 0 {
 				break
 			}
 			userPush := map[string][]string{geoZone.UserId.String(): ids}
-			//name, avatar := GetTrackerInfo(geoUser, trackerId)
 			data := map[string]interface{}{
-				"message": "From iGurkin",
-				"details": map[string]string{
-					"name":  "Name",
-					"user":  "Admin",
-					"thing": "none",
-				},
+				"message_id": code.ZoneCrossing,
+				"message":    "Пересечение зоны",
+				"tracker_id": curr.Id.String(),
 			}
 			SendPushForUsers(userPush, data)
 		}

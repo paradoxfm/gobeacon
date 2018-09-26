@@ -24,6 +24,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYyNTY0M
 }
 ###
 
+### обновление настроек треков
+GET http://localhost:8070/api/v1/test/updtrack
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYyNTY0MzYsIm9yaWdfaWF0IjoxNTM3ODU2NDM2LCJwcml2YXRlX2NsYWltX2lkIjoiNTRkOTYyM2MtMTFhZi0xMWU4LWEyN2QtNTQ1MjAwN2Q4NzdlIn0.WTK3UWQaja_6nKcuDu5QpxsGaVeIddjRegKwGMqviZ0
+
+###
+
 ### проверка отправки push
 GET http://localhost:8070/api/v1/test/push
 Content-Type: application/json

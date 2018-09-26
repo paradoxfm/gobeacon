@@ -89,14 +89,29 @@ type Tracker struct {
 	SignalTimestampLast time.Time  `db:"signal_timestamp_last" json:"signal_timestamp_last"`
 }
 
-/*> CREATE TABLE avatars (
-	id UUID,
-	content blob,
-	PRIMARY KEY (id)
+/*CREATE TABLE watch.user_track_prefs (
+    user_id uuid,
+    track_id uuid,
+    track_ava uuid,
+    track_name text,
+    PRIMARY KEY (user_id, track_id)
+)*/
+type TrackPref struct {
+	UserId   gocql.UUID `db:"user_id"`
+	TrackId  gocql.UUID `db:"track_id"`
+	AvatarId gocql.UUID `db:"track_ava"`
+	Name     string     `db:"track_name"`
+}
+
+/*> CREATE TABLE watch.files (
+	id uuid PRIMARY KEY,
+	link_id uuid,
+	avatar blob
 );*/
 type BlobDb struct {
-	id      gocql.UUID `db:"id" json:"id"`
-	content []byte     `db:"content" json:"content"`
+	Id      gocql.UUID `db:"id" json:"id"`
+	Content []byte     `db:"avatar" json:"content"`
+	//LinkId  gocql.UUID `db:"link_id" json:"id"`
 }
 
 /*> create table watch.track_ping (

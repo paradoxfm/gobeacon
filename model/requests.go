@@ -40,6 +40,12 @@ type TracksByIdsRequest struct {
 	Ids []string `json:"ids"`
 }
 
+type TracksNameRequest struct {
+	TrackId string
+	UserId  string
+	Name    string `json:"name"`
+}
+
 type HeartbeatRequest struct {
 	Datetime     int64   `json:"datetime"`
 	IsGPSSource  bool    `json:"is_gps_source"`
