@@ -43,7 +43,7 @@ func insertNewUser(email string, password string) (error) {
 }
 
 func getUserByEmail(email string) (model.UserDb, error) {
-	stmt, names := qb.Select(tUsers).Columns("id", "email", "password", "trackers").Where(qb.Eq("email")).Limit(1).ToCql()
+	stmt, names := qb.Select(tUsers).Columns("id", "email", "password").Where(qb.Eq("email")).Limit(1).ToCql()
 	var u model.UserDb
 
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"email": email,})
@@ -52,12 +52,21 @@ func getUserByEmail(email string) (model.UserDb, error) {
 }
 
 func getUserById(id string) (model.UserDb, error) {
-	stmt, names := qb.Select(tUsers).Columns("id", "email", "password", "avatar", "trackers").Where(qb.Eq("id")).Limit(1).ToCql()
+	stmt, names := qb.Select(tUsers).Columns("id", "email", "password", "avatar").Where(qb.Eq("id")).Limit(1).ToCql()
 	var u model.UserDb
 
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": id,})
 	err := q.GetRelease(&u)
 	return u, err
+}
+
+func getTrackPrefs(userId string) ([]model.TrackPref, error) {
+	stmt, names := qb.Select(tTrackPref).Where(qb.Eq("user_id")).ToCql()
+	var pref []model.TrackPref
+
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId})
+	err := q.SelectRelease(&pref)
+	return pref, err
 }
 
 func updateUserPushId(r *model.UpdatePushRequest) (error) {
@@ -165,18 +174,63 @@ func getTrackerByIds(ids []string) ([]model.Tracker, error) {
 }
 
 func getTrackersByUserId(userId string) ([]model.Tracker, error) {
-	builder := qb.Select(tTrackers)
-	stmt, names := builder.Where(qb.Contains("users")).AllowFiltering().ToCql()
-
+	prefs, er := getTrackPrefs(userId)
+	if er != nil {
+		return nil, er
+	}
 	var trackers []model.Tracker
-	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"users": userId})
+	if len(prefs) == 0 {
+		return trackers, nil
+	}
+	var ids []string
+	for _, v := range prefs {
+		ids = append(ids, v.TrackId.String())
+	}
+	stmt, names := qb.Select(tTrackers).Where(qb.In("id")) /*.AllowFiltering()*/ .ToCql()
+
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": ids})
 	err := q.SelectRelease(&trackers)
 	return trackers, err
 }
 
+func existTrackByDevice(deviceId string) (interface{}, error) {
+	stmt, names := qb.Select(tTrackers).Columns("id").Where(qb.Eq("device_id")).AllowFiltering().ToCql()
+
+	var t []model.Tracker
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"device_id": deviceId})
+	err := q.SelectRelease(&t)
+	if len(t) > 0 {
+		return t[0].Id.String(), err
+	}
+	return nil, err
+}
+
+func existTrackPref(userId string, trackId string) (bool, error) {
+	stmt, names := qb.Select(tTrackPref).Columns("user_id", "track_id").Where(qb.Eq("user_id"), qb.Eq("track_id")).AllowFiltering().ToCql()
+
+	var t []model.TrackPref
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId, "track_id": trackId})
+	err := q.SelectRelease(&t)
+	return len(t) > 0, err
+}
+
+func insertNewTrackPref(trackId string, req *model.TrackCreateRequest) (error) {
+	stmt, names := qb.Insert(tTrackPref).Columns("user_id", "track_id", "track_name").ToCql()
+
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": req.UserId, "track_id": trackId, "track_name": req.Name})
+	return q.ExecRelease()
+}
+
+func insertNewTrack(t *model.TrackCreateRequest) (interface{}, error) {
+	stmt, names := qb.Insert(tTrackers).Columns("id", "device_id", "created_at").ToCql()
+	uuid, _ := gocql.RandomUUID()
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": uuid, "device_id": t.DeviceId, "created_at": time.Now()})
+	err := q.ExecRelease()
+	return uuid.String(), err
+}
+
 func getTrackerIdByDevice(deviceId string) (model.Tracker, error) {
-	builder := qb.Select(tTrackers).Columns("id", "device_id")
-	stmt, names := builder.Where(qb.Eq("device_id")).AllowFiltering().ToCql()
+	stmt, names := qb.Select(tTrackers).Columns("id", "device_id").Where(qb.Eq("device_id")).AllowFiltering().ToCql()
 
 	var track model.Tracker
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"device_id": deviceId})
@@ -184,23 +238,77 @@ func getTrackerIdByDevice(deviceId string) (model.Tracker, error) {
 	return track, err
 }
 
-func getAllUsers() ([]model.UserDb) {
-	stmt, names := qb.Select(tUsers).Columns("id", "trackers").ToCql()
-	var users []model.UserDb
-	q := gocqlx.Query(session.Query(stmt), names)
+func getTrackUserIds(trackId string) ([]string, error) {
+	stmt, names := qb.Select(tTrackPref).Columns("user_id").Where(qb.Eq("track_id")).ToCql()
 
-	e := q.SelectRelease(&users)
-	if e != nil {
-		return nil
-	}
-	return users
+	var ids []string
+
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"track_id": trackId})
+	err := q.SelectRelease(&ids)
+	return ids, err
 }
 
-func insertTrackSettings(uuid gocql.UUID, trkId gocql.UUID, trkName string) (error) {
-	stmt, names := qb.Insert(tTrackPref).ToCql()
-	pref := model.TrackPref{UserId: uuid, TrackId: trkId, Name: trkName}
-	err := gocqlx.Query(session.Query(stmt), names).BindStruct(&pref).ExecRelease()
-	return err
+func getTrackPrefForUser(userId string, trackId string) (model.TrackPref, error) {
+	stmt, names := qb.Select(tTrackPref).Where(qb.Eq("user_id"), qb.Eq("track_id")).Limit(1).ToCql()
+
+	var p model.TrackPref
+
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId, "track_id": trackId})
+	err := q.GetRelease(&p)
+	return p, err
+}
+
+func updateTrackAvatar(userId string, trackId string, blob []byte) (string, error) {
+	trackPref, _ := getTrackPrefForUser(userId, trackId)
+
+	avatarLink := trackPref.AvatarId
+	avaId, e := insertNewAvatar(blob)
+	if e != nil {
+		return "", e
+	}
+
+	// обновляем ссылку на аватар
+	stmt, names := qb.Update(tTrackPref).Set("track_ava").Where(qb.Eq("user_id"), qb.Eq("track_id")).ToCql()
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId, "track_id": trackId, "track_ava": avaId})
+	if err := q.ExecRelease(); err != nil {
+		return "", err
+	}
+
+	if e = deleteAvatar(avatarLink); e != nil {
+		return "", e
+	}
+
+	return avaId, nil
+}
+
+func deleteTrackForUser(userId string, trackId string) (error) {
+	stmt, names := qb.Delete(tTrackPref).Where(qb.Eq("user_id"), qb.Eq("track_id")).ToCql()
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId, "track_id": trackId})
+	if e := q.ExecRelease(); e != nil {
+		return e
+	}
+	strings, e := getTrackUserIds(trackId)
+	if e != nil {
+		return e
+	}
+	if len(strings) > 0 { // если остались еще связи, оставляем трекер
+		return nil
+	}
+	stmt, names = qb.Delete(tTrackers).Where(qb.Eq("id")).ToCql()
+	q = gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": trackId})
+	if e := q.ExecRelease(); e != nil {
+		return e
+	}
+	stmt, names = qb.Delete(tPings).Where(qb.Eq("tracker_id")).ToCql()
+	q = gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"tracker_id": trackId})
+	if e := q.ExecRelease(); e != nil {
+		return e
+	}
+	// отвязать от зоны
+	stmt, names = qb.Update(tZones).Remove("trackers").Set("updated_at").Where(qb.Eq("user_id")).ToCql()
+	q = gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId, "trackers": trackId, "updated_at": time.Now()})
+	q.ExecRelease()
+	return nil
 }
 
 func updateTrackerName(req *model.TracksNameRequest) (error) {

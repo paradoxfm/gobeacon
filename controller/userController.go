@@ -1,11 +1,9 @@
 package controller
 
 import (
-	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
 	"gobeacon/model"
 	"gobeacon/service"
-	"net/http"
 )
 
 func UserCreate(c *gin.Context) {
@@ -39,11 +37,12 @@ func UserGetProfile(c *gin.Context) {
 
 func UserUpdateAvatar(c *gin.Context) {
 	file, e := c.FormFile("avatar")
-	if e == nil {
+	if e != nil {
 		sendResponse([]int{}, c)
 	}
 	req := model.UpdateAvatarRequest{UserId: getUserId(c), File: file}
-	service.UpdateUserAvatar(&req)
+	avatar, err := service.UpdateUserAvatar(&req)
+	sendObjResponse(gin.H{"url": avatar}, err, c)
 }
 
 func GetAvatar(c *gin.Context) {
@@ -66,34 +65,5 @@ func TestPush(c *gin.Context) {
 }
 
 func TestTrack(c *gin.Context) {
-	service.MoveTrackerSettings()
 	sendResponse(nil, c)
-}
-
-func getUserId(c *gin.Context) (string) {
-	claims := jwt.ExtractClaims(c)
-	if val, ok := claims["private_claim_id"]; ok {
-		return val.(string)
-	}
-	return ""
-}
-
-func sendResponse(err []int, c *gin.Context) {
-	if len(err) == 0 {
-		c.AbortWithStatus(http.StatusOK)
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"err": err,
-		})
-	}
-}
-
-func sendObjResponse(obj interface{}, err []int, c *gin.Context) {
-	if len(err) == 0 {
-		c.JSON(http.StatusOK, obj)
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"err": err,
-		})
-	}
 }

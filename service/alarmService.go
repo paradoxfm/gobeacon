@@ -8,7 +8,8 @@ import (
 
 func alarmsCheck(prev *model.Tracker, curr *model.Tracker, lowPowerAlarm bool, sosAlarm bool) {
 	var userPush map[string][]string
-	for _, userId := range prev.Users {
+	users, _ := getTrackUserIds(prev.Id.String())
+	for _, userId := range users {
 		ids, e := getUserPushIds(userId)
 		if e != nil && len(ids) > 0 {
 			userPush[userId] = ids

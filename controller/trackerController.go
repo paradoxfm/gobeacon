@@ -7,7 +7,10 @@ import (
 )
 
 func TrackCreate(c *gin.Context) {
-
+	req := model.TrackCreateRequest{UserId:getUserId(c)}
+	c.Bind(&req)
+	id, err := service.CreateTracker(&req)
+	sendObjResponse(model.TrackCreateResponse{Id: id}, err, c)
 }
 
 func TrackGetById(c *gin.Context) {
@@ -30,7 +33,10 @@ func TrackByIds(c *gin.Context) {
 }
 
 func TrackDeleteById(c *gin.Context) {
-
+	trackId := c.Param("id")
+	userId := getUserId(c)
+	err := service.DeleteTrack(userId, trackId)
+	sendResponse(err, c)
 }
 
 func TrackUpdate(c *gin.Context) {
@@ -43,7 +49,14 @@ func TrackUpdate(c *gin.Context) {
 }
 
 func TrackerAvatar(c *gin.Context) {
-
+	trackId := c.Param("id")
+	file, e := c.FormFile("avatar")
+	if e != nil {
+		sendResponse([]int{}, c)
+	}
+	req := model.UpdateTrackAvatarRequest{UserId: getUserId(c), TrackId: trackId, File: file}
+	avatar, err := service.UpdateTrackAvatar(&req)
+	sendObjResponse(gin.H{"url": avatar}, err, c)
 }
 
 func TrackerLastGeoPosition(c *gin.Context) {

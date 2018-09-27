@@ -27,6 +27,12 @@ type UpdateAvatarRequest struct {
 	File   *multipart.FileHeader
 }
 
+type UpdateTrackAvatarRequest struct {
+	UserId  string
+	TrackId string
+	File    *multipart.FileHeader
+}
+
 type UpdatePushRequest struct {
 	UserId string
 	PushId string `json:"push_id"`
@@ -38,6 +44,12 @@ type ZoneAllRequest struct {
 
 type TracksByIdsRequest struct {
 	Ids []string `json:"ids"`
+}
+
+type TrackCreateRequest struct {
+	UserId   string
+	Name     string `json:"name"`
+	DeviceId string `json:"equipment_id"`
 }
 
 type TracksNameRequest struct {

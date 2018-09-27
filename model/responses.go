@@ -27,6 +27,10 @@ type GeoZoneResponse struct {
 	Trackers []TrackSnapZone `json:"trackers"`
 }
 
+type TrackCreateResponse struct {
+	Id string `json:"id"`
+}
+
 type TrackSnapZone struct {
 	Id     string `json:"id,required" description:"Id трекера"`
 	Inside bool   `json:"inside,required" description:"Отслеживать вход или выход из зоны (true - вход, false - выход)"`

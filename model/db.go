@@ -18,12 +18,12 @@ import (
 	PRIMARY KEY (id)
 );*/
 type UserDb struct {
-	Id       gocql.UUID                  `db:"id" json:"id"`
-	Email    string                      `db:"email" json:"email"`
-	Password string                      `db:"password" json:"password"`
-	Avatar   string                      `db:"avatar" json:"avatar"`
-	PushId   []string                    `db:"push_id" json:"push_id"`
-	Trackers map[gocql.UUID]UserTrackers `db:"trackers" json:"trackers"`
+	Id       gocql.UUID `db:"id" json:"id"`
+	Email    string     `db:"email" json:"email"`
+	Password string     `db:"password" json:"password"`
+	Avatar   string     `db:"avatar" json:"avatar"`
+	PushId   []string   `db:"push_id" json:"push_id"`
+	//Trackers map[gocql.UUID]UserTrackers `db:"trackers" json:"trackers"`
 
 	//Trackers map[gocql.UUID]UserTrackers `cql:"trackers" json:"trackers"`
 	//ZoneList []gocql.UUID                `cql:"geozones" json:"geozones"`
@@ -57,6 +57,10 @@ type GeoZoneDb struct {
 type ZonePoint struct {
 	Latitude  float32 `json:"latitude,required" description:"Широта"`
 	Longitude float32 `json:"longitude,required" description:"Долгота"`
+}
+
+type Counter struct {
+	Count int64
 }
 
 /*> CREATE TABLE trackers (
@@ -99,7 +103,7 @@ type Tracker struct {
 type TrackPref struct {
 	UserId   gocql.UUID `db:"user_id"`
 	TrackId  gocql.UUID `db:"track_id"`
-	AvatarId gocql.UUID `db:"track_ava"`
+	AvatarId string     `db:"track_ava"`
 	Name     string     `db:"track_name"`
 }
 

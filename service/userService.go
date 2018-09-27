@@ -7,20 +7,23 @@ import (
 	"gobeacon/model"
 	"image/jpeg"
 	"io"
+	"mime/multipart"
 )
 
 func UserGetProfile(r *model.GetProfileRequest) (model.ProfileResponse, []int) {
 	var err []int
 	usr, e := getUserById(r.UserId)
 	if e != nil {
-		err = append(err, code.UserWithEmailNotFound) //пользователь не найден
-		return model.ProfileResponse{}, err
+		return model.ProfileResponse{}, append(err, code.UserWithEmailNotFound) //пользователь не найден
 	}
 	rez := model.ProfileResponse{Id: usr.Id.String(), Email: usr.Email, Avatar: usr.Avatar}
-	for id, tr := range usr.Trackers {
-		rez.Trackers = append(rez.Trackers, model.UserTracker{Id: id.String(), Avatar: tr.Avatar, Name: tr.Name})
+	prefs, e := getTrackPrefs(r.UserId)
+	if e != nil {
+		return model.ProfileResponse{}, append(err, code.DbError)
 	}
-
+	for _, tr := range prefs {
+		rez.Trackers = append(rez.Trackers, model.UserTracker{Id: tr.TrackId.String(), Avatar: tr.AvatarId, Name: tr.Name})
+	}
 	return rez, err
 }
 
@@ -62,23 +65,32 @@ func GetAvatar(id string) (model.AvatarResponse, []int) {
 
 func UpdateUserAvatar(req *model.UpdateAvatarRequest) (string, []int) {
 	var err []int
-	cont, ef := req.File.Open()
+	data, ef := getFileData(req.File)
 	if ef != nil {
-		return "", append(err, code.CantOpenFile)
-	}
-	buf := bytes.NewBuffer(nil)
-	if _, e := io.Copy(buf, cont); e != nil {
-		return "", append(err, code.CantReadFile)
-	}
-	data := buf.Bytes()
-	if rez, er := validateJpeg(data); !rez {
-		return "", append(err, er)
+		return "", append(err, ef...)
 	}
 	avatarId, e := updateUserAvatar(req.UserId, data)
 	if e != nil {
 		return "", append(err, code.DbError)
 	}
 	return avatarId, nil
+}
+
+func getFileData(file *multipart.FileHeader) ([]byte, []int) {
+	var err []int
+	cont, ef := file.Open()
+	if ef != nil {
+		return nil, append(err, code.CantOpenFile)
+	}
+	buf := bytes.NewBuffer(nil)
+	if _, e := io.Copy(buf, cont); e != nil {
+		return nil, append(err, code.CantReadFile)
+	}
+	data := buf.Bytes()
+	if rez, er := validateJpeg(data); !rez {
+		return nil, append(err, er)
+	}
+	return data, nil
 }
 
 func validateJpeg(data []byte) (bool, int) {

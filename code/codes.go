@@ -38,5 +38,7 @@ const CantReadFile = 2000018
 const InvalidImage = 2000019
 // Размер изображения должен быть 250 на 250
 const InvalidImageSize = 2000020
+// Попытка добавить уже существующий трекер
+const TrackForUserExist = 2000021
 //Ошибка БД
 const DbError = 2000100

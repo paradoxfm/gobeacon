@@ -29,15 +29,6 @@ func sendPush(userId string, pushIds []string, data interface{}, client *fcm.Cli
 	log.Println(status.Results)
 }
 
-func MoveTrackerSettings() {
-	users := getAllUsers()
-	for _, usr := range users {
-		for trkId, trk := range usr.Trackers {
-			insertTrackSettings(usr.Id, trkId, trk.Name)
-		}
-	}
-}
-
 func SendPushNotification(userId string) {
 	ids, e := getUserPushIds(userId)
 	if e != nil {
