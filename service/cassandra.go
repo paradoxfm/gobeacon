@@ -28,6 +28,8 @@ func init() {
 	}
 	cluster.Keyspace = Config().CassandraKey
 	cluster.ProtoVersion = 4
+	cluster.CQLVersion = "3.0.0"
+	cluster.Consistency = gocql.One
 	cluster.ReconnectInterval = 10 * time.Second
 	session, err = cluster.CreateSession()
 	if err != nil {
