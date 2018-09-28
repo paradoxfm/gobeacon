@@ -27,6 +27,8 @@ func init() {
 		Password: Config().CassandraPassword,
 	}
 	cluster.Keyspace = Config().CassandraKey
+	cluster.ProtoVersion = 4
+	cluster.ReconnectInterval = 10 * time.Second
 	session, err = cluster.CreateSession()
 	if err != nil {
 		log.Fatal(err)
@@ -324,15 +326,15 @@ func updateTrackerName(req *model.TracksNameRequest) (error) {
 	return nil
 }
 
-func updateLastTracker(tr *model.Tracker) (error) {
-	stmt, names := qb.Update(tTrackers).Set("latitude_last", "longitude_last", "battery_power_last", "updated_at").Where(qb.Eq("id")).ToCql()
-	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"latitude_last": tr.LatitudeLast, "longitude_last": tr.LongitudeLast, "battery_power_last": tr.BatteryPowerLast, "updated_at": time.Now(), "id": tr.Id.String()})
+func updateLastTracker(tr *model.Tracker, dt time.Time) (error) {
+	stmt, names := qb.Update(tTrackers).Set("latitude_last", "longitude_last", "battery_power_last", "updated_at", "signal_timestamp_last").Where(qb.Eq("id")).ToCql()
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"latitude_last": tr.LatitudeLast, "longitude_last": tr.LongitudeLast, "battery_power_last": tr.BatteryPowerLast, "updated_at": time.Now(), "id": tr.Id.String(), "signal_timestamp_last": dt})
 	err := q.ExecRelease()
 	return err
 }
 
 func insertPing(ping *model.PingDb) error {
-	stmt, names := qb.Insert(tPings).ToCql()
+	stmt, names := qb.Insert(tPings).Columns("tracker_id", "event_time", "battery_power", "latitude", "longitude", "signal_source").ToCql()
 	err := gocqlx.Query(session.Query(stmt), names).BindStruct(&ping).ExecRelease()
 	return err
 }
@@ -355,6 +357,30 @@ func getAllZoneByUserId(userId string) ([]model.GeoZoneDb, error) {
 	return zones, err
 }
 
+func createZoneForUser(r *model.ZoneCreateRequest) (model.GeoZoneDb, error) {
+	id, _ := gocql.RandomUUID()
+	usr, _ := gocql.ParseUUID(r.UserId)
+	db := model.GeoZoneDb{Id: id, UserId: usr, Name: r.Name, CreatedAt: time.Now(), UpdatedAt: time.Now(), Points: r.Points, Trackers: make(map[gocql.UUID]bool)}
+
+	stmt, names := qb.Insert(tZones).Columns("id", "user_id", "name", "created_at", "updated_at", "points", "trackers").ToCql()
+	e := gocqlx.Query(session.Query(stmt), names).BindStruct(&db).ExecRelease()
+	return db, e
+}
+
+func updateZoneProp(r *model.ZoneCreateRequest) (error) {
+	stmt, names := qb.Update(tZones).Set("name", "points").Where(qb.Eq("id")).ToCql()
+	e := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": r.Id, "name": r.Name, "points": r.Points}).ExecRelease()
+	return e
+}
+
+func findZoneById(id string) (model.GeoZoneDb, error) {
+	stmt, names := qb.Select(tZones).Where(qb.Eq("id")).ToCql()
+	var zone model.GeoZoneDb
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": id})
+	err := q.GetRelease(&zone)
+	return zone, err
+}
+
 func getZonesByTrackId(trackId string) ([]model.GeoZoneDb, error) {
 	stmt, names := qb.Select(tZones).Where(qb.ContainsKey("trackers")).ToCql()
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"trackers": trackId})
@@ -362,6 +388,19 @@ func getZonesByTrackId(trackId string) ([]model.GeoZoneDb, error) {
 	var zones []model.GeoZoneDb
 	err := q.SelectRelease(&zones)
 	return zones, err
+}
+
+func deleteZoneById(zoneId string) (error) {
+	stmt, names := qb.Delete(tZones).Where(qb.Eq("id")).ToCql()
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": zoneId})
+	return q.ExecRelease()
+}
+
+func updateZoneTrackers(zoneId string, track map[string]bool) (error) {
+	stmt, names := qb.Update(tZones).Set("trackers").Where(qb.Eq("id")).ToCql()
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"trackers": track, "id": zoneId})
+
+	return q.ExecRelease()
 }
 
 /*func Exception(err error) {

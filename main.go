@@ -37,8 +37,8 @@ func createPhoneAdminApi() (*gin.Engine) {
 	r.Use(gin.Recovery())
 	// 1 << 20  1 MiB -> ‭1_048_576‬, 8 << 20  8 MiB -> ‭8_388_608‬
 	r.MaxMultipartMemory = 1 << 19 //0.5 MiB
-	v1 := r.Group("/api/v1")  // api первой версии
-	usr := v1.Group("/users") // api для пользователей
+	v1 := r.Group("/api/v1")       // api первой версии
+	usr := v1.Group("/users")      // api для пользователей
 	mFunc := auth.MiddlewareFunc()
 	tst := v1.Group("/test")
 	tst.Use(mFunc)
@@ -78,26 +78,27 @@ func createPhoneAdminApi() (*gin.Engine) {
 		trk.GET("/geo/history/:id", controller.TrackerHistory) //date_start date_end
 	}
 
-	zone := v1.Group("/geozones") // api для гео зон
+	zone := v1.Group("/zone") // api для гео зон
 	zone.Use(mFunc)
 	{
-		zone.GET("", controller.ZoneAllForUser)
-		zone.POST("", controller.ZoneAdd)
-		zone.DELETE("/:id", controller.ZoneDeleteById)
-		zone.GET("/:id", controller.ZoneGetById)
-		zone.PUT("/:id", controller.ZoneUpdate)
-		zone.PUT("/:id/trackers", controller.ZoneSnapTrackList)
+		zone.GET("/all", controller.ZoneAllForUser)
+		zone.POST("/save", controller.ZoneCreate)
+		zone.DELETE("/delete/:id", controller.ZoneDeleteById)
+		zone.GET("/find/:id", controller.ZoneGetById)
+		zone.PUT("/update/:id", controller.ZoneUpdate)
+		zone.PUT("/snap/:id", controller.ZoneSnapTrackList)
 	}
 
 	return r
 }
 
 func createPhoneApi() (*gin.Engine) {
-	r := gin.New()
+	r := gin.Default()
 	r.Use(gin.Recovery())
-	auth := controller.CreateHeartGinJWTMiddleware()
-	r.Use(auth.MiddlewareFunc())
-	r.GET("/api/v1/heartbeat", controller.HeartbeatPhone)
+	v1 := r.Group("/api/v1", gin.BasicAuthForRealm(gin.Accounts{
+		"heart349023": "s156EzI07820CtsfJhu",
+	}, "phone connector"))
+	v1.POST("/heartbeat", controller.HeartbeatPhone)
 	return r
 }
 

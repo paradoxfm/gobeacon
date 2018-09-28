@@ -128,6 +128,10 @@ func SaveHeartbeat(p *model.Heartbeat) (*model.Tracker, []int) {
 	t.LatitudeLast = pingDb.Latitude
 	t.LongitudeLast = pingDb.Longitude
 	t.BatteryPowerLast = pingDb.BatteryPower
+	if e := updateLastTracker(&t, p.DateTime); e != nil {
+		return nil, append(err, code.DbError)
+	}
+
 	return &t, nil
 }
 
@@ -142,7 +146,7 @@ func getSignalId(p *model.Heartbeat) int {
 	return 0
 }
 
-func CheckAndUpdateTracker(trk *model.Tracker) {
+/*func CheckAndUpdateTracker(trk *model.Tracker) {
 	tracker, e := getTrackerById(trk.Id.String())
 	if e != nil {
 		return
@@ -150,3 +154,4 @@ func CheckAndUpdateTracker(trk *model.Tracker) {
 	updateLastTracker(trk)
 	alarmsCheck(&tracker, trk, false, false)
 }
+*/

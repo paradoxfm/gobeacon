@@ -46,8 +46,8 @@ func getAuthenticator(c *gin.Context) (interface{}, error) {
 
 func CreateHeartGinJWTMiddleware() (*jwt.GinJWTMiddleware) {
 	authMiddleware := &jwt.GinJWTMiddleware{// the jwt middleware
-		Realm:         "megazlo.net",
-		Key:           []byte("fkl;jnbLJkN;old"),
+		Realm:         "phone connector",
+		Key:           []byte{},
 		Timeout:       time.Hour, // время действия токена после авторизации
 		MaxRefresh:    time.Hour, // время действия токена после обновления
 		Authenticator: func(c *gin.Context) (interface{}, error) {

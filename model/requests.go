@@ -42,6 +42,18 @@ type ZoneAllRequest struct {
 	UserId string
 }
 
+type ZoneSnapRequest struct {
+	UserId string
+	Ids    []string `json:"trackers"`
+}
+
+type ZoneCreateRequest struct {
+	UserId string
+	Id     string      `json:"id"`
+	Name   string      `json:"name"`
+	Points []ZonePoint `json:"points"`
+}
+
 type TracksByIdsRequest struct {
 	Ids []string `json:"ids"`
 }

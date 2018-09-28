@@ -11,7 +11,7 @@ type ErrorResponse struct {
 
 type ProfileResponse struct {
 	Id       string        `json:"id"`
-	Email    string        `json:"name"`
+	Email    string        `json:"email"`
 	Avatar   string        `json:"avatar"`
 	Trackers []UserTracker `json:"trackers"`
 }
@@ -21,10 +21,10 @@ type AvatarResponse struct {
 }
 
 type GeoZoneResponse struct {
-	Id       string          `json:"id"`
-	Name     string          `json:"name"`
-	Points   []ZonePoint     `json:"points"`
-	Trackers []TrackSnapZone `json:"trackers"`
+	Id       string      `json:"id"`
+	Name     string      `json:"name"`
+	Points   []ZonePoint `json:"points"`
+	Trackers []string    `json:"trackers"`
 }
 
 type TrackCreateResponse struct {
