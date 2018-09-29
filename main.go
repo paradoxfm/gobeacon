@@ -38,17 +38,17 @@ func createPhoneAdminApi() (*gin.Engine) {
 	// 1 << 20  1 MiB -> ‭1_048_576‬, 8 << 20  8 MiB -> ‭8_388_608‬
 	r.MaxMultipartMemory = 1 << 19 //0.5 MiB
 	v1 := r.Group("/api/v1")       // api первой версии
-	usr := v1.Group("/users")      // api для пользователей
 	mFunc := auth.MiddlewareFunc()
 	tst := v1.Group("/test")
 	tst.Use(mFunc)
+	//tst.GET("/push", controller.TestPush)
+	//tst.GET("/updtrack", controller.TestTrack)
 	sys := v1.Group("")
 	sys.Use(mFunc)
 	{
 		sys.GET("/avatar/:id", controller.GetAvatar)
 	}
-	tst.GET("/push", controller.TestPush)
-	tst.GET("/updtrack", controller.TestTrack)
+	usr := v1.Group("/users")      // api для пользователей
 	{
 		usr.POST("/signUp", controller.UserCreate)
 		usr.POST("/login", auth.LoginHandler)
