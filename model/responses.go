@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type HeartbeatResponse struct {
 	Code int `json:"code"`
 }
@@ -29,6 +31,12 @@ type GeoZoneResponse struct {
 
 type TrackCreateResponse struct {
 	Id string `json:"id"`
+}
+
+type TrackHistoryResponse struct {
+	Date      time.Time `json:"datetime"`
+	Latitude  float32   `json:"latitude"`
+	Longitude float32   `json:"longitude"`
 }
 
 type TrackSnapZone struct {

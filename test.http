@@ -3,8 +3,8 @@ POST http://localhost:8070/api/v1/users/login
 Content-Type: application/json
 
 {
-  "email": "paradoxfm@mail.ru",
-  "password": "90lv9wt9"
+	"email": "paradoxfm@mail.ru",
+	"password": "90lv9wt9"
 }
 
 ### запрос профиля
@@ -14,14 +14,27 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYxODMwN
 
 ###
 
+### запрос истории
+GET http://localhost:8070/api/v1/trackers/geo/history/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYxODMwNzYsIm9yaWdfaWF0IjoxNTM3NzgzMDc2LCJwcml2YXRlX2NsYWltX2lkIjoiNTRkOTYyM2MtMTFhZi0xMWU4LWEyN2QtNTQ1MjAwN2Q4NzdlIn0.b2GMV1o-WTl8kEdvlqug_UT5MOp5tyZW7iS3N_0FiHY
+{
+	"tracker_id": 9e95aa86-bb0e-11e8-8aec-5452007d877e,
+	"date_start":1538165562,
+	"date_end":1538251962
+}
+
+###
+
 ### обновление push id
 PUT http://localhost:8070/api/v1/users/me/push
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYyNTY0MzYsIm9yaWdfaWF0IjoxNTM3ODU2NDM2LCJwcml2YXRlX2NsYWltX2lkIjoiNTRkOTYyM2MtMTFhZi0xMWU4LWEyN2QtNTQ1MjAwN2Q4NzdlIn0.WTK3UWQaja_6nKcuDu5QpxsGaVeIddjRegKwGMqviZ0
 
 {
-  "push_id": "dx46qZ3i48w:APA91bHDBHtCjLV1t5rcAy1ddo16oH2ycUFlE0wvkejSdpVtseC8KrjgivyZKT17bO3xK3BEqbZbuoca70t2A34PrWgzOlmt41dgBFzLX6Ofovk10jmcp2fDHMSLZSABrU7c6_X0YZe6CaKp2Ylb5cuTOtY0z5Oq-A"
+	"push_id": "dx46qZ3i48w:APA91bHDBHtCjLV1t5rcAy1ddo16oH2ycUFlE0wvkejSdpVtseC8KrjgivyZKT17bO3xK3BEqbZbuoca70t2A34PrWgzOlmt41dgBFzLX6Ofovk10jmcp2fDHMSLZSABrU7c6_X0YZe6CaKp2Ylb5cuTOtY0z5Oq-A"
 }
+
 ###
 
 ###
@@ -56,7 +69,7 @@ POST http://localhost:8070/api/v1/users/password/reset
 Content-Type: application/json
 
 {
-  "email": "paradoxfm@mail.ru"
+	"email": "paradoxfm@mail.ru"
 }
 
 ###
@@ -66,7 +79,9 @@ POST http://localhost:7777/api/v1/heartbeat
 Content-Type: application/json
 Authorization: Basic aGVhcnQzNDkwMjM6czE1NkV6STA3ODIwQ3RzZkpodQ==
 
-{"is_gps_source": true}
+{
+	"is_gps_source": true
+}
 
 ###
 

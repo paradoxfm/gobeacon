@@ -19,23 +19,23 @@ func CreateTracker(req *model.TrackCreateRequest) (string, []int) {
 	// ищем может уже добавлял кто-то (ситуация с 2мя родителями)
 	id, e := existTrackByDevice(req.DeviceId)
 	if e != nil {
-		return "",  append(err, code.DbError)
+		return "", append(err, code.DbError)
 	}
-	if id == nil {// если ничего нет, то добавляем трекер
+	if id == nil { // если ничего нет, то добавляем трекер
 		if id, e = insertNewTrack(req); e != nil {
-			return "",  append(err, code.DbError)
+			return "", append(err, code.DbError)
 		}
 	}
 	// ищем текущую связь стрекером, на случай если решили повторно добавить (
 	exist, e := existTrackPref(req.UserId, id.(string))
 	if e != nil {
-		return "",  append(err, code.DbError)
+		return "", append(err, code.DbError)
 	}
-	if exist {// если связь уже есть отпинываем
-		return "",  append(err, code.TrackForUserExist)
+	if exist { // если связь уже есть отпинываем
+		return "", append(err, code.TrackForUserExist)
 	}
 	if e = insertNewTrackPref(id.(string), req); e != nil {
-		return "",  append(err, code.DbError)
+		return "", append(err, code.DbError)
 	}
 	return id.(string), err
 }
@@ -87,4 +87,19 @@ func UpdateTrackAvatar(req *model.UpdateTrackAvatarRequest) (string, []int) {
 		return "", append(err, code.DbError)
 	}
 	return avatarId, nil
+}
+
+func GetTrackHistory(r *model.TracksHistRequest) ([]model.TrackHistoryResponse, []int) {
+	var err []int
+
+	ping, e := loadTrackHistory(r)
+	if e != nil {
+		return nil, append(err, code.DbError)
+	}
+	hist := make([]model.TrackHistoryResponse, 0)
+	for _, p := range ping {
+		h := model.TrackHistoryResponse{Date: p.EventTime, Latitude: p.Latitude, Longitude: p.Longitude}
+		hist = append(hist, h)
+	}
+	return hist, nil
 }

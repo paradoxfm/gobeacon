@@ -1,6 +1,9 @@
 package model
 
-import "mime/multipart"
+import (
+	"mime/multipart"
+	"time"
+)
 
 type RegistrationRequest struct {
 	Email    string `json:"email,required" description:"Email пользователя"`
@@ -68,6 +71,12 @@ type TracksNameRequest struct {
 	TrackId string
 	UserId  string
 	Name    string `json:"name"`
+}
+
+type TracksHistRequest struct {
+	TrackId  string    `json:"tracker_id"`
+	DateFrom time.Time `json:"date_start"`
+	DateTo   time.Time `json:"date_end"`
 }
 
 type HeartbeatRequest struct {

@@ -48,7 +48,7 @@ func createPhoneAdminApi() (*gin.Engine) {
 	{
 		sys.GET("/avatar/:id", controller.GetAvatar)
 	}
-	usr := v1.Group("/users")      // api для пользователей
+	usr := v1.Group("/users") // api для пользователей
 	{
 		usr.POST("/signUp", controller.UserCreate)
 		usr.POST("/login", auth.LoginHandler)
@@ -75,7 +75,7 @@ func createPhoneAdminApi() (*gin.Engine) {
 		trk.PUT("/update/:id", controller.TrackUpdate)
 		trk.PUT("/avatar/:id", controller.TrackerAvatar)
 		trk.GET("/geo/current/:id", controller.TrackerLastGeoPosition)
-		trk.GET("/geo/history/:id", controller.TrackerHistory) //date_start date_end
+		trk.GET("/geo/history", controller.TrackerHistory) //date_start date_end
 	}
 
 	zone := v1.Group("/zone") // api для гео зон

@@ -7,7 +7,7 @@ import (
 )
 
 func TrackCreate(c *gin.Context) {
-	req := model.TrackCreateRequest{UserId:getUserId(c)}
+	req := model.TrackCreateRequest{UserId: getUserId(c)}
 	c.Bind(&req)
 	id, err := service.CreateTracker(&req)
 	sendObjResponse(model.TrackCreateResponse{Id: id}, err, c)
@@ -60,9 +60,11 @@ func TrackerAvatar(c *gin.Context) {
 }
 
 func TrackerLastGeoPosition(c *gin.Context) {
-
 }
 
 func TrackerHistory(c *gin.Context) {
-
+	req := model.TracksHistRequest{}
+	c.Bind(&req)
+	resp, err := service.GetTrackHistory(&req)
+	sendObjResponse(resp, err, c)
 }
