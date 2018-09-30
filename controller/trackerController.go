@@ -60,6 +60,7 @@ func TrackerAvatar(c *gin.Context) {
 }
 
 func TrackerLastGeoPosition(c *gin.Context) {
+
 }
 
 func TrackerHistory(c *gin.Context) {

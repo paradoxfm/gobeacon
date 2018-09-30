@@ -74,8 +74,8 @@ func createPhoneAdminApi() (*gin.Engine) {
 		trk.DELETE("/delete/:id", controller.TrackDeleteById)
 		trk.PUT("/update/:id", controller.TrackUpdate)
 		trk.PUT("/avatar/:id", controller.TrackerAvatar)
-		trk.GET("/geo/current/:id", controller.TrackerLastGeoPosition)
-		trk.GET("/geo/history", controller.TrackerHistory) //date_start date_end
+		//trk.GET("/geo/current/:id", controller.TrackerLastGeoPosition)
+		trk.POST("/geo/history", controller.TrackerHistory)
 	}
 
 	zone := v1.Group("/zone") // api для гео зон
