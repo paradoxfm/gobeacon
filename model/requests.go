@@ -1,7 +1,9 @@
 package model
 
 import (
+	"fmt"
 	"mime/multipart"
+	"strings"
 	"time"
 )
 
@@ -88,4 +90,112 @@ type HeartbeatRequest struct {
 	Longitude    float32 `json:"longitude"`
 	Power        float32 `json:"power"`
 	DeviceId     string  `json:"device_id"`
+}
+
+type PositionData struct {
+	Date               string
+	Time               string
+	WhetherTheLocation string
+	Latitude           float32
+	MarkOfLatitude     string
+	Longitude          float32
+	MarkOfLongitude    string
+	Power              float32
+	TerminalState      int16
+}
+
+type IBaseRequest interface {
+	GetType() MessageType
+	GetBase() BaseRequest
+	GetPositionData() PositionData
+}
+
+type BaseRequest struct {
+	Manufacter  string
+	EquipmentId int64
+	Type        MessageType
+}
+
+type LKRequest struct {
+	BaseRequest
+}
+
+type UDRequest struct {
+	BaseRequest
+	PositionData
+}
+
+type UD2Request struct {
+	BaseRequest
+	PositionData
+}
+
+type ALRequest struct {
+	BaseRequest
+	PositionData
+}
+
+func (m BaseRequest) GetType() MessageType {
+	return m.Type
+}
+
+func (m BaseRequest) GetBase() BaseRequest {
+	return m
+}
+
+func (m LKRequest) GetPositionData() PositionData {
+	return PositionData{}
+}
+
+func (m PositionData) GetPositionData() PositionData {
+	return m
+}
+
+type MessageType int
+
+const (
+	LK MessageType = 1 + iota
+	UD
+	UD2
+	AL
+	TKQ
+	TKQ2
+	None
+)
+
+func ToMessageType(p string) MessageType {
+
+	switch strings.ToUpper(strings.TrimSpace(p)) {
+	case "LK":
+		return LK
+	case "UD":
+		return UD
+	case "UD2":
+		return UD2
+	case "AL":
+		return AL
+	case "TKQ":
+		return TKQ
+	case "TKQ2":
+		return TKQ2
+	}
+	return None
+}
+
+func (p MessageType) ToString() string {
+	switch p {
+	case LK:
+		return "LK"
+	case UD:
+		return "UD"
+	case UD2:
+		return "UD2"
+	case AL:
+		return "AL"
+	case TKQ:
+		return "TKQ"
+	case TKQ2:
+		return "TKQ2"
+	}
+	return fmt.Sprintf("MessageType(%d)", p)
 }

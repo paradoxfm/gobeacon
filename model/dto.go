@@ -20,12 +20,14 @@ type UserSession struct {
 }
 
 type Heartbeat struct {
-	IsGps     bool      `json:"is_gps_source"`
-	IsGsm     bool      `json:"is_gsm_source"`
-	IsWifi    bool      `json:"is_wifi_source"`
-	Latitude  float32   `json:"latitude"`
-	Longitude float32   `json:"longitude"`
-	Power     int       `json:"power"`
-	DateTime  time.Time `json:"datetime"` //RFC3339
-	DeviceId  string    `json:"device_id"`
+	IsGps           bool      `json:"is_gps_source"`
+	IsGsm           bool      `json:"is_gsm_source"`
+	IsWifi          bool      `json:"is_wifi_source"`
+	Latitude        float32   `json:"latitude"`
+	Longitude       float32   `json:"longitude"`
+	Power           int       `json:"power"`
+	DateTime        time.Time `json:"datetime"` //RFC3339
+	DeviceId        string    `json:"device_id"`
+	IsLowPowerAlarm bool      `json:"is_low_power_alarm"`
+	IsSOSAlarm      bool      `json:"is_sos_alarm"`
 }

@@ -13,7 +13,7 @@ func HeartbeatPhone(c *gin.Context) {
 		fmt.Println(e)
 		return
 	}
-	_, err := service.SaveHeartbeat(&req)
+	err := service.SaveHeartbeat(&req)
 	if err == nil { // если нет ошибок, обновляем последние данные и выполняем проверки по трекеру
 		//go service.CheckAndUpdateTracker(trk)
 	}

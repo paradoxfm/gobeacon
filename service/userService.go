@@ -105,34 +105,29 @@ func validateJpeg(data []byte) (bool, int) {
 	return true, -1
 }
 
-func SaveHeartbeat(p *model.Heartbeat) (*model.Tracker, []int) {
+func SaveHeartbeat(p *model.Heartbeat) ([]int) {
 	t, e := getTrackerIdByDevice(p.DeviceId)
 	var err []int
 	if e != nil {
-		return &t, append(err, code.DbError)
+		return append(err, code.DbError)
 	}
-	pingDb := model.PingDb{
-		TrackerId:    t.Id,
-		EventTime:    p.DateTime,
-		BatteryPower: float32(p.Power),
-		Latitude:     p.Latitude,
-		Longitude:    p.Longitude,
-		//ZoneId:       nil,
-		SignalSource: getSignalId(p),
-	}
+	pingDb := model.PingDb{TrackerId: t.Id, EventTime: p.DateTime, BatteryPower: float32(p.Power), Latitude: p.Latitude, Longitude: p.Longitude, SignalSource: getSignalId(p),}
 
 	e = insertPing(&pingDb)
 	if e != nil {
-		return nil, append(err, code.DbError)
+		return append(err, code.DbError)
 	}
+	tOld := new(model.Tracker)
+	*tOld = *&t // копируем свойства старого
+
 	t.LatitudeLast = pingDb.Latitude
 	t.LongitudeLast = pingDb.Longitude
 	t.BatteryPowerLast = pingDb.BatteryPower
 	if e := updateLastTracker(&t, p.DateTime); e != nil {
-		return nil, append(err, code.DbError)
+		return append(err, code.DbError)
 	}
-
-	return &t, nil
+	go alarmsCheck(tOld, &t, p.IsLowPowerAlarm, p.IsSOSAlarm)
+	return nil
 }
 
 func getSignalId(p *model.Heartbeat) int {

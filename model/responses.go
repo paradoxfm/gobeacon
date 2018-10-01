@@ -43,3 +43,21 @@ type TrackSnapZone struct {
 	Id     string `json:"id,required" description:"Id трекера"`
 	Inside bool   `json:"inside,required" description:"Отслеживать вход или выход из зоны (true - вход, false - выход)"`
 }
+
+type IBaseResponse interface {
+	ToSerialize() string
+}
+
+type BaseResponse struct {
+	Manufacter  string
+	EquipmentId int64
+	Type        MessageType
+}
+
+type LKResponse struct {
+	BaseResponse
+}
+
+type ALResponse struct {
+	BaseResponse
+}

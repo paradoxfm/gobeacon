@@ -6,9 +6,11 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"gobeacon/controller"
 	_ "gobeacon/docs"
+	"gobeacon/watch"
 	"log"
 	"net/http"
 	"sync"
+	"time"
 )
 
 // @title Swagger API
@@ -17,6 +19,8 @@ import (
 // @contact.name API Support
 // @contact.email paradoxfm@mail.ru
 func main() {
+	startTcpServer()
+	// если пойдет большая нагрузка, то надо распилить на отдельные приложения
 	servers := map[string]http.Handler{":7777": createPhoneApi(), ":8070": createPhoneAdminApi(), ":8071": createSwaggerApi()}
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -29,6 +33,15 @@ func main() {
 		}(port, server)
 	}
 	wg.Wait()
+}
+
+func startTcpServer() {
+	srv := watch.Server{
+		Addr:         ":6666",
+		IdleTimeout:  5 * time.Second,
+		MaxReadBytes: 1000,
+	}
+	go srv.ListenAndServe()
 }
 
 func createPhoneAdminApi() (*gin.Engine) {
