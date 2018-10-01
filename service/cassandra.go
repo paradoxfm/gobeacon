@@ -404,7 +404,7 @@ func updateZoneTrackers(zoneId string, track map[string]bool) (error) {
 }
 
 func loadTrackHistory(r *model.TracksHistRequest) ([]model.PingDb, error) {
-	stmt, names := qb.Select(tPings).Where(qb.Eq("tracker_id"), qb.GtNamed("event_time", "from"), qb.LtNamed("event_time", "to")).ToCql()
+	stmt, names := qb.Select(tPings).Where(qb.Eq("tracker_id"), qb.GtNamed("event_time", "from"), qb.LtOrEqNamed("event_time", "to")).ToCql()
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"tracker_id": r.TrackId, "from": r.DateFrom, "to": r.DateTo})
 
 	var ping []model.PingDb

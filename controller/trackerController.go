@@ -59,10 +59,6 @@ func TrackerAvatar(c *gin.Context) {
 	sendObjResponse(gin.H{"url": avatar}, err, c)
 }
 
-func TrackerLastGeoPosition(c *gin.Context) {
-
-}
-
 func TrackerHistory(c *gin.Context) {
 	req := model.TracksHistRequest{}
 	c.Bind(&req)

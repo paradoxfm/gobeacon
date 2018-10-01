@@ -1,8 +1,10 @@
 package service
 
 import (
+	"github.com/kellydunn/golang-geo"
 	"gobeacon/code"
 	"gobeacon/model"
+	"sort"
 )
 
 func GetTrackerById(id string) (interface{}, []int) {
@@ -96,10 +98,21 @@ func GetTrackHistory(r *model.TracksHistRequest) ([]model.TrackHistoryResponse, 
 	if e != nil {
 		return nil, append(err, code.DbError)
 	}
+	sort.Slice(ping, func(i, j int) bool {
+		return ping[i].EventTime.Before(ping[j].EventTime)
+	})
 	hist := make([]model.TrackHistoryResponse, 0)
-	for _, p := range ping {
-		h := model.TrackHistoryResponse{Date: p.EventTime, Latitude: p.Latitude, Longitude: p.Longitude}
-		hist = append(hist, h)
+	var prev model.PingDb
+	for i, p := range ping {
+		p1 := geo.NewPoint(float64(prev.Latitude), float64(prev.Longitude))
+		p2 := geo.NewPoint(float64(p.Latitude), float64(p.Longitude))
+		// фильтруем по расстоянию между точками
+		dist := p1.GreatCircleDistance(p2) * 1000
+		if dist >= 50 || i == len(ping)-1 { // 50 метров или последний
+			h := model.TrackHistoryResponse{Date: p.EventTime, Latitude: p.Latitude, Longitude: p.Longitude}
+			hist = append(hist, h)
+		}
+		prev = p
 	}
 	return hist, nil
 }
