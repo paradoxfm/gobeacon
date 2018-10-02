@@ -54,7 +54,7 @@ func createPhoneAdminApi() (*gin.Engine) {
 	mFunc := auth.MiddlewareFunc()
 	tst := v1.Group("/test")
 	tst.Use(mFunc)
-	//tst.GET("/push", controller.TestPush)
+	tst.GET("/push", controller.TestPush)
 	//tst.GET("/updtrack", controller.TestTrack)
 	sys := v1.Group("")
 	sys.Use(mFunc)

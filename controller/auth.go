@@ -12,7 +12,6 @@ type login struct {
 	Password string `form:"password" json:"password" binding:"required"`
 }
 
-
 var identityKey = "private_claim_id"
 
 func CreateAdminJWTMiddleware() (*jwt.GinJWTMiddleware) {
@@ -42,22 +41,4 @@ func getAuthenticator(c *gin.Context) (interface{}, error) {
 		return "", jwt.ErrMissingLoginValues
 	}
 	return service.LoginUser(cred.Email, cred.Password)
-}
-
-func CreateHeartGinJWTMiddleware() (*jwt.GinJWTMiddleware) {
-	authMiddleware := &jwt.GinJWTMiddleware{// the jwt middleware
-		Realm:         "phone connector",
-		Key:           []byte{},
-		Timeout:       time.Hour, // время действия токена после авторизации
-		MaxRefresh:    time.Hour, // время действия токена после обновления
-		Authenticator: func(c *gin.Context) (interface{}, error) {
-			claims := jwt.ExtractClaims(c)
-			if claims["id"] == "heart349023" && claims["password"] == "s156EzI07820CtsfJhu" {
-				return claims["id"], nil
-			}
-			return "", jwt.ErrMissingLoginValues
-		},
-	}
-
-	return authMiddleware
 }

@@ -2,8 +2,12 @@ package service
 
 import (
 	"github.com/kellydunn/golang-geo"
-	"gobeacon/code"
 	"gobeacon/model"
+)
+
+const (
+	lowPowerMsgId = 2001
+	zoneMsgId     = 2002
 )
 
 func alarmsCheck(prev *model.Tracker, curr *model.Tracker, lowPowerAlarm bool, sosAlarm bool) {
@@ -22,12 +26,9 @@ func alarmsCheck(prev *model.Tracker, curr *model.Tracker, lowPowerAlarm bool, s
 	// LOW POWER ALARM
 	if (curr.DeviceType == 1 && lowPowerAlarm) || (prev.BatteryPowerLast >= 20 && curr.BatteryPowerLast < 20) {
 		data := map[string]interface{}{
-			"message": "From iGurkin",
-			"details": map[string]string{
-				"name":  "Name",
-				"user":  "Admin",
-				"thing": "none",
-			},
+			"message":    lowPowerMsgId,
+			"tracker_id": curr.Id.String(),
+			"tracker_name": curr.Id.String(),
 		}
 		SendPushForUsers(userPush, data)
 	}
@@ -61,10 +62,17 @@ func checkZones(prev *model.Tracker, curr *model.Tracker) {
 			}
 			userPush := map[string][]string{geoZone.UserId.String(): ids}
 			data := map[string]interface{}{
+				"message":    zoneMsgId,
+				"tracker_id": curr.Id.String(),
+				"tracker_name": curr.Id.String(),
+				"zone_name": geoZone.Name,
+			}
+			/*data := map[string]interface{}{
+
 				"message_id": code.ZoneCrossing,
 				"message":    "Пересечение зоны",
 				"tracker_id": curr.Id.String(),
-			}
+			}*/
 			SendPushForUsers(userPush, data)
 		}
 	}

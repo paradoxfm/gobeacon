@@ -63,7 +63,3 @@ func TestPush(c *gin.Context) {
 	service.SendPushNotification(userId)
 	sendResponse(nil, c)
 }
-
-func TestTrack(c *gin.Context) {
-	sendResponse(nil, c)
-}
