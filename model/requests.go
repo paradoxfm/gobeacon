@@ -69,10 +69,11 @@ type TrackCreateRequest struct {
 	DeviceId string `json:"equipment_id"`
 }
 
-type TracksNameRequest struct {
+type TrackPrefRequest struct {
 	TrackId string
 	UserId  string
 	Name    string `json:"name"`
+	Offset  int    `json:"offset"`
 }
 
 type TracksHistRequest struct {

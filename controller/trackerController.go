@@ -40,11 +40,9 @@ func TrackDeleteById(c *gin.Context) {
 }
 
 func TrackUpdate(c *gin.Context) {
-	trackId := c.Param("id")
-	userId := getUserId(c)
-	req := model.TracksNameRequest{TrackId: trackId, UserId: userId}
+	req := model.TrackPrefRequest{TrackId: c.Param("id"), UserId: getUserId(c)}
 	c.Bind(&req)
-	err := service.UpdateTrackerName(&req)
+	err := service.UpdateTrackPref(&req)
 	sendResponse(err, c)
 }
 

@@ -22,7 +22,7 @@ func UserGetProfile(r *model.GetProfileRequest) (model.ProfileResponse, []int) {
 		return model.ProfileResponse{}, append(err, code.DbError)
 	}
 	for _, tr := range prefs {
-		rez.Trackers = append(rez.Trackers, model.UserTracker{Id: tr.TrackId.String(), Avatar: tr.AvatarId, Name: tr.Name})
+		rez.Trackers = append(rez.Trackers, model.UserTracker{Id: tr.TrackId.String(), Avatar: tr.AvatarId, Name: tr.Name, Offset: tr.Offset})
 	}
 	return rez, err
 }

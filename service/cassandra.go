@@ -322,17 +322,11 @@ func deleteTrackForUser(userId string, trackId string) (error) {
 	return nil
 }
 
-func updateTrackerName(req *model.TracksNameRequest) (error) {
-	/*u, e := getUserById(req.UserId)
-	if e != nil {
-		return e
-	}
-	u.Trackers
-	stmt, names := qb.Update(tUsers).Set("latitude_last", "longitude_last", "battery_power_last", "updated_at").Where(qb.Eq("id")).ToCql()
-	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"latitude_last": tr.LatitudeLast, "longitude_last": tr.LongitudeLast, "battery_power_last": tr.BatteryPowerLast, "updated_at": time.Now(), "id": tr.Id.String()})
+func updateTrackPref(req *model.TrackPrefRequest) (error) {
+	stmt, names := qb.Update(tTrackPref).Set("track_name", "track_offs").Where(qb.Eq("user_id"), qb.Eq("track_id")).ToCql()
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"track_name": req.Name, "track_offs": req.Offset, "user_id": req.UserId, "track_id": req.TrackId})
 	err := q.ExecRelease()
-	return err*/
-	return nil
+	return err
 }
 
 func updateLastTracker(tr *model.Tracker, dt time.Time) (error) {

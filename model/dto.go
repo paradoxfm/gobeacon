@@ -12,6 +12,7 @@ type UserTracker struct {
 	Id     string `json:"id"`
 	Name   string `json:"name"`
 	Avatar string `json:"avatar"`
+	Offset int    `json:"offset"`
 }
 
 type UserSession struct {

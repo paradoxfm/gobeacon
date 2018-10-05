@@ -69,9 +69,9 @@ func DeleteTrack(userId string, trackId string) ([]int) {
 	return err
 }
 
-func UpdateTrackerName(req *model.TracksNameRequest) ([]int) {
+func UpdateTrackPref(req *model.TrackPrefRequest) ([]int) {
 	var err []int
-	e := updateTrackerName(req)
+	e := updateTrackPref(req)
 	if e != nil {
 		err = append(err, code.DbError)
 	}
