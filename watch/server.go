@@ -42,7 +42,7 @@ func (srv *Server) ListenAndServe() error {
 			log.Printf("error accepting connection %v", err)
 			continue
 		}
-		log.Printf("accepted connection from %v", newConn.RemoteAddr())
+		log.Printf("%s accepted connection from %v", time.Now(), newConn.RemoteAddr())
 		conn := &conn{
 			Conn:          newConn,
 			IdleTimeout:   srv.IdleTimeout,
@@ -66,7 +66,7 @@ func (srv *Server) trackConn(c *conn) {
 
 func (srv *Server) handle(conn *conn) error {
 	defer func() {
-		log.Printf("closing connection from %v", conn.RemoteAddr())
+		log.Printf("%s closing connection from %v", time.Now(), conn.RemoteAddr())
 		conn.Close()
 		srv.deleteConn(conn)
 	}()
@@ -89,9 +89,11 @@ func (srv *Server) handle(conn *conn) error {
 				}
 				return nil
 			}
+			log.Printf("accept string %s", scanr.Text())
 			respMsg := service.WatchHandleMessage(scanr.Bytes())
 			if respMsg != nil {
 				w := bufio.NewWriter(conn)
+				log.Printf("write string %s", respMsg)
 				w.WriteString(respMsg.(string))
 				//w.WriteString(respMsg + "\n")
 				w.Flush()

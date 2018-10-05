@@ -38,8 +38,8 @@ func main() {
 func startTcpServer() {
 	srv := watch.Server{
 		Addr:         ":6666",
-		IdleTimeout:  5 * time.Second,
-		MaxReadBytes: 1000,
+		IdleTimeout:  1500 * time.Second,
+		MaxReadBytes: 10000,
 	}
 	go srv.ListenAndServe()
 }

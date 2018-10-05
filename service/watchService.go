@@ -20,9 +20,9 @@ func WatchHandleMessage(buff []byte) (interface{}) {
 		hb := convertToHeartbeat(message)
 		SaveHeartbeat(&hb)
 	case model.LK:
-		return model.LKResponse{BaseResponse: createBase(message.GetBase())}
+		return model.LKResponse{BaseResponse: createBase(message.GetBase())}.ToSerialize()
 	case model.AL:
-		return model.ALResponse{BaseResponse: createBase(message.GetBase())}
+		return model.ALResponse{BaseResponse: createBase(message.GetBase())}.ToSerialize()
 	}
 	return nil
 }

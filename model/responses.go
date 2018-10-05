@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type HeartbeatResponse struct {
 	Code int `json:"code"`
@@ -52,6 +55,40 @@ type BaseResponse struct {
 	Manufacter  string
 	EquipmentId int64
 	Type        MessageType
+}
+
+func (response BaseResponse) ToSerialize() string {
+	return "[" + response.Manufacter + "*" + fmt.Sprintf("%v", response.EquipmentId) + "*" + string(lengthMessage(response.Type.ToString())) + "*" + response.Type.ToString() + "]"
+}
+
+// Считаем длину строки
+// Examples:
+//[3G*1208178692*0009*UPLOAD,30]
+// input: UPLOAD
+// output: 0009 (HEX)
+// --------------
+//[3G*1208178692*000E*MESSAGE,GOHOME]
+//input: MESSAGE
+// output: 000E (HEX)
+func lengthMessage(mes string) []byte {
+
+	size := len([]byte(mes))
+	hex := fmt.Sprintf("%X", size)
+	lenHex := len(string(size))
+
+	if lenHex == 0 {
+		return []byte("0000")
+	} else if lenHex == 1 {
+		return []byte("000" + hex)
+	} else if lenHex == 2 {
+		return []byte("00" + hex)
+	} else if lenHex == 3 {
+		return []byte("0" + hex)
+	} else if lenHex == 4 {
+		return []byte(hex)
+	} else {
+		return []byte("0000")
+	}
 }
 
 type LKResponse struct {
