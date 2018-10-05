@@ -105,6 +105,7 @@ type TrackPref struct {
 	TrackId  gocql.UUID `db:"track_id"`
 	AvatarId string     `db:"track_ava"`
 	Name     string     `db:"track_name"`
+	Offset   int        `db:"track_offs"`
 }
 
 /*> CREATE TABLE watch.files (

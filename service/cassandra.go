@@ -62,11 +62,20 @@ func getUserById(id string) (model.UserDb, error) {
 	return u, err
 }
 
-func getTrackPrefs(userId string) ([]model.TrackPref, error) {
+func getTrackPrefsByUser(userId string) ([]model.TrackPref, error) {
 	stmt, names := qb.Select(tTrackPref).Where(qb.Eq("user_id")).ToCql()
 	var pref []model.TrackPref
 
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId})
+	err := q.SelectRelease(&pref)
+	return pref, err
+}
+
+func getTrackPrefsByTrack(trackId string) ([]model.TrackPref, error) {
+	stmt, names := qb.Select(tTrackPref).Columns("user_id", "track_id", "track_name").Where(qb.Eq("track_id")).ToCql()
+	var pref []model.TrackPref
+
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"track_id": trackId})
 	err := q.SelectRelease(&pref)
 	return pref, err
 }
@@ -176,7 +185,7 @@ func getTrackerByIds(ids []string) ([]model.Tracker, error) {
 }
 
 func getTrackersByUserId(userId string) ([]model.Tracker, error) {
-	prefs, er := getTrackPrefs(userId)
+	prefs, er := getTrackPrefsByUser(userId)
 	if er != nil {
 		return nil, er
 	}

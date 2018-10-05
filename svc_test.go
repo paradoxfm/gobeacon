@@ -13,9 +13,8 @@ func TestBasicAuth(t *testing.T) {
 	println(val)
 }
 
-
 func TestCopyTrack(t *testing.T) {
-	t1 := model.Tracker{DeviceId:"asdfasdf"}
+	t1 := model.Tracker{DeviceId: "asdfasdf"}
 	t2 := new(model.Tracker)
 	*t2 = *&t1
 	t1.DeviceId = "dfgh"

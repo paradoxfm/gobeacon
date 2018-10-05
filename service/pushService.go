@@ -5,12 +5,10 @@ import (
 	"log"
 )
 
-func SendPushForUsers(userPush map[string][]string, data interface{}) {
+func SendPushForUser(userId string, pushIds []string, data interface{}) {
 	client := fcm.NewClient(Config().ServerKey)
-	for userId, pushIds := range userPush {
-		if len(pushIds) != 0 {
-			sendPush(userId, pushIds, data, client)
-		}
+	if len(pushIds) != 0 {
+		sendPush(userId, pushIds, data, client)
 	}
 }
 

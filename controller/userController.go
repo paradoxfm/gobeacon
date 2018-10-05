@@ -51,6 +51,20 @@ func GetAvatar(c *gin.Context) {
 	sendObjResponse(result, err, c)
 }
 
+/*func GetAvatar(c *gin.Context) {
+	id := c.Param("id")
+	imgData, err := service.GetAvatar(id)
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+	}
+
+	header := c.Writer.Header()
+	header["Content-type"] = []string{"image/jpg"}
+	header["Content-Disposition"] = []string{"attachment; filename= " + id}
+
+	io.Copy(c.Writer, bytes.NewReader(imgData))
+}*/
+
 func UserUpdatePushId(c *gin.Context) {
 	req := model.UpdatePushRequest{UserId: getUserId(c)}
 	c.Bind(&req)
