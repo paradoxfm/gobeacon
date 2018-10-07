@@ -90,7 +90,8 @@ func (srv *Server) handle(conn *conn) error {
 				return nil
 			}
 			log.Printf("accept string %s", scanr.Text())
-			respMsg := service.WatchHandleMessage(scanr.Bytes())
+			//respMsg := service.WatchHandleMessage(scanr.Bytes())
+			respMsg := service.WatchHandleMessage2(scanr.Text())
 			if respMsg != nil {
 				w := bufio.NewWriter(conn)
 				log.Printf("write string %s", respMsg)

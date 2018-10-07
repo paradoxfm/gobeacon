@@ -10,6 +10,18 @@ import (
 	"time"
 )
 
+func WatchHandleMessage2(msg string) (interface{}) {
+	commands := strings.FieldsFunc(msg, splitByChars)
+	for i, str := range commands {
+
+	}
+	return nil
+}
+
+func splitByChars(r rune) bool {
+	return r == '[' || r == ']'
+}
+
 func WatchHandleMessage(buff []byte) (interface{}) {
 	message := parseMessage(buff)
 	if message == nil {
