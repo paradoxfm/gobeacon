@@ -12,10 +12,15 @@ import (
 
 func WatchHandleMessage2(msg string) (interface{}) {
 	commands := strings.FieldsFunc(msg, splitByChars)
-	for i, str := range commands {
-
+	var resp interface{}
+	for _, str := range commands {
+		str = strings.TrimSpace(str)
+		rez := WatchHandleMessage([]byte(str))
+		if resp == nil && rez != nil && len(rez.(string)) > 0 {
+			resp = rez
+		}
 	}
-	return nil
+	return resp
 }
 
 func splitByChars(r rune) bool {
@@ -141,8 +146,8 @@ func convertToHeartbeat(req model.IBaseRequest) (model.Heartbeat) {
 	dt := p.Date
 	tm := p.Time
 	//rfcStr := fmt.Sprintf("a %s", "string")
-	tdStr := fmt.Sprintf("20%q%q-%q%q-%q%q", dt[4], dt[5], dt[2], dt[3], dt[0], dt[1])
-	timeStr := fmt.Sprintf("%q%q:%q%q:%q%qZ", tm[0], tm[1], tm[2], tm[3], tm[4], tm[5])
+	tdStr := fmt.Sprintf("20%c%c-%c%c-%c%c", dt[4], dt[5], dt[2], dt[3], dt[0], dt[1])
+	timeStr := fmt.Sprintf("%c%c:%c%c:%c%cZ", tm[0], tm[1], tm[2], tm[3], tm[4], tm[5])
 	rfcStr := tdStr + "T" + timeStr
 	datetime, e := time.Parse(time.RFC3339, rfcStr)
 
