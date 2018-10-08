@@ -135,6 +135,6 @@ type PingDb struct {
 	BatteryPower float32    `db:"battery_power"`
 	Latitude     float32    `db:"latitude" json:"latitude"`
 	Longitude    float32    `db:"longitude" json:"longitude"`
-	ZoneId       gocql.UUID `db:"zone_id"`
 	SignalSource int        `db:"signal_source"`
+	//ZoneId       gocql.UUID `db:"zone_id"`
 }
