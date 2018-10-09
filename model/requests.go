@@ -43,6 +43,11 @@ type UpdatePushRequest struct {
 	PushId string `json:"push_id"`
 }
 
+type LoginRequest struct {
+	Email string `form:"email" json:"email" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
+}
+
 type ZoneAllRequest struct {
 	UserId string
 }
@@ -64,22 +69,22 @@ type TracksByIdsRequest struct {
 }
 
 type TrackCreateRequest struct {
-	UserId   string
+	UserId   string `json:"-"`
 	Name     string `json:"name"`
-	DeviceId string `json:"equipment_id"`
+	DeviceId string `json:"equipment_id" example:"device id"`
 }
 
 type TrackPrefRequest struct {
-	TrackId string
-	UserId  string
+	TrackId string `json:"-"`
+	UserId  string `json:"-"`
 	Name    string `json:"name"`
 	Offset  int    `json:"offset"`
 }
 
 type TracksHistRequest struct {
 	TrackId  string    `json:"tracker_id"`
-	DateFrom time.Time `json:"date_start"`
-	DateTo   time.Time `json:"date_end"`
+	DateFrom time.Time `json:"date_start" example:"RFC3339"`
+	DateTo   time.Time `json:"date_end" example:"RFC3339"`
 }
 
 type HeartbeatRequest struct {

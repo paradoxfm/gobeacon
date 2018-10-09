@@ -81,7 +81,7 @@ type Counter struct {
 type Tracker struct {
 	Id                  gocql.UUID `db:"id" json:"id"`
 	DeviceId            string     `db:"device_id" json:"device_id"`
-	Imei                string     `db:"imei"`
+	Imei                string     `db:"imei" json:"-"`
 	DeviceType          int        `db:"device_type" json:"device_type"`
 	SignalSource        int        `db:"signal_source" json:"signal_source"`
 	LatitudeLast        float32    `db:"latitude_last" json:"latitude_last"`

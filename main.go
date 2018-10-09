@@ -19,6 +19,7 @@ import (
 // @contact.name API Support
 // @contact.email paradoxfm@mail.ru
 func main() {
+	//gin.SetMode(gin.ReleaseMode)
 	startTcpServer()
 	// если пойдет большая нагрузка, то надо распилить на отдельные приложения
 	servers := map[string]http.Handler{":7777": createPhoneApi(), ":8070": createPhoneAdminApi(), ":8071": createSwaggerApi()}
@@ -118,8 +119,13 @@ func createPhoneApi() (*gin.Engine) {
 func createSwaggerApi() (*gin.Engine) {
 	r := gin.New()
 	r.Use(gin.Recovery())
+	authorized := r.Group("", gin.BasicAuth(gin.Accounts{
+		"admin": "password",
+	}))
+	authorized.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	// документация по сервисам /swagger/index.html
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	//r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return r
 }
 

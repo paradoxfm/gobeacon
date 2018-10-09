@@ -21,8 +21,12 @@ type ProfileResponse struct {
 	Trackers []UserTracker `json:"trackers"`
 }
 
+type AvatarIdResponse struct {
+	Id string `json:"url"`
+}
+
 type AvatarResponse struct {
-	Data string `json:"data"`
+	Data string `json:"data" example:"base64"`
 }
 
 type GeoZoneResponse struct {
@@ -34,6 +38,10 @@ type GeoZoneResponse struct {
 
 type TrackCreateResponse struct {
 	Id string `json:"id"`
+}
+
+type LoginResponse struct {
+	Token string `json:"token"`
 }
 
 type TrackHistoryResponse struct {

@@ -1,4 +1,24 @@
 definitions:
+  model.AvatarIdResponse:
+    properties:
+      url:
+        type: string
+    type: object
+  model.AvatarResponse:
+    properties:
+      data:
+        example: base64
+        type: string
+    type: object
+  model.ChangePasswordRequest:
+    properties:
+      new_password:
+        type: string
+      old_password:
+        type: string
+      userId:
+        type: string
+    type: object
   model.GeoZoneResponse:
     properties:
       id:
@@ -38,6 +58,138 @@ definitions:
       power:
         type: integer
     type: object
+  model.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  model.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  model.ProfileResponse:
+    properties:
+      avatar:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      trackers:
+        items:
+          $ref: '#/definitions/model.UserTracker'
+        type: array
+    type: object
+  model.RegistrationRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      сonfirm:
+        type: string
+    type: object
+  model.ResetPasswordRequest:
+    properties:
+      email:
+        type: string
+    type: object
+  model.TrackCreateRequest:
+    properties:
+      equipment_id:
+        example: device id
+        type: string
+      name:
+        type: string
+    type: object
+  model.TrackCreateResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  model.TrackHistoryResponse:
+    properties:
+      datetime:
+        type: string
+      latitude:
+        type: number
+      longitude:
+        type: number
+    type: object
+  model.TrackPrefRequest:
+    properties:
+      name:
+        type: string
+      offset:
+        type: integer
+    type: object
+  model.Tracker:
+    properties:
+      battery_power_last:
+        type: number
+      created_at:
+        type: string
+      device_id:
+        type: string
+      device_type:
+        type: integer
+      id:
+        type: string
+      latitude_last:
+        type: number
+      longitude_last:
+        type: number
+      signal_source:
+        type: integer
+      signal_timestamp_last:
+        type: string
+      updated_at:
+        type: string
+      users:
+        items:
+          type: string
+        type: array
+    type: object
+  model.TracksByIdsRequest:
+    properties:
+      ids:
+        items:
+          type: string
+        type: array
+    type: object
+  model.TracksHistRequest:
+    properties:
+      date_end:
+        example: RFC3339
+        type: string
+      date_start:
+        example: RFC3339
+        type: string
+      tracker_id:
+        type: string
+    type: object
+  model.UpdatePushRequest:
+    properties:
+      push_id:
+        type: string
+    type: object
+  model.UserTracker:
+    properties:
+      avatar:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      offset:
+        type: integer
+    type: object
   model.ZoneCreateRequest:
     properties:
       id:
@@ -74,6 +226,31 @@ info:
   title: Swagger API
   version: "1.0"
 paths:
+  /avatar/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: id аватарки
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AvatarResponse'
+            type: object
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Загрузка аватарки по id
+      tags:
+      - Система
   /heartbeat:
     post:
       consumes:
@@ -98,6 +275,400 @@ paths:
       summary: Прием координат от смартфона
       tags:
       - Мониторинг
+  /trackers:
+    post:
+      consumes:
+      - application/json
+      description: Создание нового трекера для авторизованного пользователя
+      parameters:
+      - description: Запрос на создание треккера
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.TrackCreateRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.TrackCreateResponse'
+            type: object
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Создание нового трекера
+      tags:
+      - Трекеры
+  /trackers/all:
+    get:
+      description: Лист трекеров для пользователя
+      parameters:
+      - description: id трекера
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Tracker'
+            type: array
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Загрузить трекеры
+      tags:
+      - Трекеры
+  /trackers/avatar/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Обновление аватара трекера для пользователя (jpeg 250x250)
+      parameters:
+      - description: id трекера
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: avatar
+        in: body
+        name: avatar
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AvatarIdResponse'
+            type: object
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Обновление аватара трекера
+      tags:
+      - Трекеры
+  /trackers/custom:
+    post:
+      consumes:
+      - application/json
+      description: Лист выбранных трекеров для пользователя
+      parameters:
+      - description: Запрос на отдельные трекеры
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.TracksByIdsRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Tracker'
+            type: array
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Загрузить трекеры по id
+      tags:
+      - Трекеры
+  /trackers/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление трекера для авторизованного пользователя, если трекер
+        привязан к нескольким пользователям, то только отвязка
+      parameters:
+      - description: id трекера
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Удаление трекера
+      tags:
+      - Трекеры
+  /trackers/find/{id}:
+    get:
+      description: Загрузка трекера по id
+      parameters:
+      - description: id трекера
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Tracker'
+            type: object
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Загрузить трекер
+      tags:
+      - Трекеры
+  /trackers/geo/history:
+    post:
+      consumes:
+      - application/json
+      description: Получение истории для трекера за период
+      parameters:
+      - description: Запрос истории треккера
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.TracksHistRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.TrackHistoryResponse'
+            type: array
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: История трекера
+      tags:
+      - Трекеры
+  /trackers/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Обновление свойств трекера для пользователя
+      parameters:
+      - description: id трекера
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Запрос на редактирование трекера
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.TrackPrefRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Обновление трекера
+      tags:
+      - Трекеры
+  /users:
+    get:
+      description: Получение профиля пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProfileResponse'
+            type: object
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Запрос профиля
+      tags:
+      - Пользователи
+  /users/avatar:
+    put:
+      consumes:
+      - application/json
+      description: Обновление аватара пользователя (jpeg 250x250)
+      parameters:
+      - description: avatar
+        in: body
+        name: avatar
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AvatarIdResponse'
+            type: object
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Обновление аватара пользователя
+      tags:
+      - Пользователи
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Авторизация пользователя
+      parameters:
+      - description: Логин пароль
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.LoginResponse'
+            type: object
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Авторизация пользователя
+      tags:
+      - Пользователи
+  /users/password:
+    put:
+      consumes:
+      - application/json
+      description: Изменение пароля пользователя
+      parameters:
+      - description: Запрос на изменение пароля
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ChangePasswordRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Изменение пароля
+      tags:
+      - Пользователи
+  /users/password/reset:
+    post:
+      consumes:
+      - application/json
+      description: Сброс пароля пользователя по email
+      parameters:
+      - description: Запрос на сброс пароля
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ResetPasswordRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Сброс пароля
+      tags:
+      - Пользователи
+  /users/push:
+    put:
+      consumes:
+      - application/json
+      description: Обновление push id пользователя
+      parameters:
+      - description: Запрос с push id
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdatePushRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Обновление push id пользователя
+      tags:
+      - Пользователи
+  /users/signUp:
+    post:
+      consumes:
+      - application/json
+      description: Регистрация пользователя email + password
+      parameters:
+      - description: Запрос на регистрацию
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegistrationRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Регистрация пользователя
+      tags:
+      - Пользователи
   /zone/all:
     get:
       consumes:

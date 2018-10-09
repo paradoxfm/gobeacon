@@ -6,6 +6,17 @@ import (
 	"gobeacon/service"
 )
 
+// UserCreate godoc
+// @Summary Регистрация пользователя
+// @Description Регистрация пользователя email + password
+// @Accept json
+// @Produce json
+// @Param request body model.RegistrationRequest true "Запрос на регистрацию"
+// @Router /users/signUp [post]
+// @Success 200 "ok"
+// @Failure 400 "err"
+// @Failure 500 "err"
+// @Tags Пользователи
 func UserCreate(c *gin.Context) {
 	var req model.RegistrationRequest
 	c.Bind(&req)
@@ -14,6 +25,17 @@ func UserCreate(c *gin.Context) {
 	sendResponse(err, c)
 }
 
+// UserResetPassword godoc
+// @Summary Сброс пароля
+// @Description Сброс пароля пользователя по email
+// @Accept json
+// @Produce json
+// @Param request body model.ResetPasswordRequest true "Запрос на сброс пароля"
+// @Router /users/password/reset [post]
+// @Success 200 "ok"
+// @Failure 400 "err"
+// @Failure 500 "err"
+// @Tags Пользователи
 func UserResetPassword(c *gin.Context) {
 	req := model.ResetPasswordRequest{}
 	c.Bind(&req)
@@ -21,6 +43,17 @@ func UserResetPassword(c *gin.Context) {
 	sendResponse(err, c)
 }
 
+// UserChangePassword godoc
+// @Summary Изменение пароля
+// @Description Изменение пароля пользователя
+// @Accept json
+// @Produce json
+// @Param request body model.ChangePasswordRequest true "Запрос на изменение пароля"
+// @Router /users/password [put]
+// @Success 200 "ok"
+// @Failure 400 "err"
+// @Failure 500 "err"
+// @Tags Пользователи
 func UserChangePassword(c *gin.Context) {
 	req := model.ChangePasswordRequest{UserId: getUserId(c)}
 	c.Bind(&req)
@@ -28,6 +61,15 @@ func UserChangePassword(c *gin.Context) {
 	sendResponse(err, c)
 }
 
+// UserGetProfile godoc
+// @Summary Запрос профиля
+// @Description Получение профиля пользователя
+// @Produce json
+// @Router /users [get]
+// @Success 200 {object} model.ProfileResponse
+// @Failure 400 "err"
+// @Failure 500 "err"
+// @Tags Пользователи
 func UserGetProfile(c *gin.Context) {
 	req := model.GetProfileRequest{UserId: getUserId(c)}
 	c.Bind(&req)
@@ -35,6 +77,17 @@ func UserGetProfile(c *gin.Context) {
 	sendObjResponse(result, err, c)
 }
 
+// UserUpdateAvatar godoc
+// @Summary Обновление аватара пользователя
+// @Description Обновление аватара пользователя (jpeg 250x250)
+// @Accept json
+// @Produce json
+// @Param avatar body file true "avatar"
+// @Router /users/avatar [put]
+// @Success 200 {object} model.AvatarIdResponse
+// @Failure 400 "err"
+// @Failure 500 "err"
+// @Tags Пользователи
 func UserUpdateAvatar(c *gin.Context) {
 	file, e := c.FormFile("avatar")
 	if e != nil {
@@ -42,38 +95,23 @@ func UserUpdateAvatar(c *gin.Context) {
 	}
 	req := model.UpdateAvatarRequest{UserId: getUserId(c), File: file}
 	avatar, err := service.UpdateUserAvatar(&req)
-	sendObjResponse(gin.H{"url": avatar}, err, c)
+	sendObjResponse(model.AvatarIdResponse{Id: avatar}, err, c)
 }
 
-func GetAvatar(c *gin.Context) {
-	id := c.Param("id")
-	result, err := service.GetAvatar(id)
-	sendObjResponse(result, err, c)
-}
-
-/*func GetAvatar(c *gin.Context) {
-	id := c.Param("id")
-	imgData, err := service.GetAvatar(id)
-	if err != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
-	}
-
-	header := c.Writer.Header()
-	header["Content-type"] = []string{"image/jpg"}
-	header["Content-Disposition"] = []string{"attachment; filename= " + id}
-
-	io.Copy(c.Writer, bytes.NewReader(imgData))
-}*/
-
+// UserUpdatePushId godoc
+// @Summary Обновление push id пользователя
+// @Description Обновление push id пользователя
+// @Accept json
+// @Produce json
+// @Param request body model.UpdatePushRequest true "Запрос с push id"
+// @Router /users/push [put]
+// @Success 200 "ok"
+// @Failure 400 "err"
+// @Failure 500 "err"
+// @Tags Пользователи
 func UserUpdatePushId(c *gin.Context) {
 	req := model.UpdatePushRequest{UserId: getUserId(c)}
 	c.Bind(&req)
 	_, err := service.UserUpdatePushId(&req)
 	sendResponse(err, c)
-}
-
-func TestPush(c *gin.Context) {
-	userId := getUserId(c)
-	service.SendPushNotification(userId)
-	sendResponse(nil, c)
 }

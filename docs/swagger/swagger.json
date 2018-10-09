@@ -11,6 +11,44 @@
         "version": "1.0"
     },
     "paths": {
+        "/avatar/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Система"
+                ],
+                "summary": "Загрузка аватарки по id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id аватарки",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.AvatarResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
         "/heartbeat": {
             "post": {
                 "description": "Принимает координаты от смартфона, происходит: сохранение и проверка на вхождение в неозоны, обновление последних данных трекера",
@@ -30,6 +68,600 @@
                         "schema": {
                             "type": "object",
                             "$ref": "#/definitions/model.Heartbeat"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/trackers": {
+            "post": {
+                "description": "Создание нового трекера для авторизованного пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Трекеры"
+                ],
+                "summary": "Создание нового трекера",
+                "parameters": [
+                    {
+                        "description": "Запрос на создание треккера",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.TrackCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.TrackCreateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/trackers/all": {
+            "get": {
+                "description": "Лист трекеров для пользователя",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Трекеры"
+                ],
+                "summary": "Загрузить трекеры",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id трекера",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Tracker"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/trackers/avatar/{id}": {
+            "put": {
+                "description": "Обновление аватара трекера для пользователя (jpeg 250x250)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Трекеры"
+                ],
+                "summary": "Обновление аватара трекера",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id трекера",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "avatar",
+                        "name": "avatar",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.AvatarIdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/trackers/custom": {
+            "post": {
+                "description": "Лист выбранных трекеров для пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Трекеры"
+                ],
+                "summary": "Загрузить трекеры по id",
+                "parameters": [
+                    {
+                        "description": "Запрос на отдельные трекеры",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.TracksByIdsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Tracker"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/trackers/delete/{id}": {
+            "delete": {
+                "description": "Удаление трекера для авторизованного пользователя, если трекер привязан к нескольким пользователям, то только отвязка",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Трекеры"
+                ],
+                "summary": "Удаление трекера",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id трекера",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/trackers/find/{id}": {
+            "get": {
+                "description": "Загрузка трекера по id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Трекеры"
+                ],
+                "summary": "Загрузить трекер",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id трекера",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.Tracker"
+                        }
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/trackers/geo/history": {
+            "post": {
+                "description": "Получение истории для трекера за период",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Трекеры"
+                ],
+                "summary": "История трекера",
+                "parameters": [
+                    {
+                        "description": "Запрос истории треккера",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.TracksHistRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.TrackHistoryResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/trackers/update/{id}": {
+            "put": {
+                "description": "Обновление свойств трекера для пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Трекеры"
+                ],
+                "summary": "Обновление трекера",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id трекера",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Запрос на редактирование трекера",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.TrackPrefRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "description": "Получение профиля пользователя",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Запрос профиля",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.ProfileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/users/avatar": {
+            "put": {
+                "description": "Обновление аватара пользователя (jpeg 250x250)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Обновление аватара пользователя",
+                "parameters": [
+                    {
+                        "description": "avatar",
+                        "name": "avatar",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.AvatarIdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/users/login": {
+            "post": {
+                "description": "Авторизация пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Авторизация пользователя",
+                "parameters": [
+                    {
+                        "description": "Логин пароль",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.LoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/users/password": {
+            "put": {
+                "description": "Изменение пароля пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Изменение пароля",
+                "parameters": [
+                    {
+                        "description": "Запрос на изменение пароля",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.ChangePasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/users/password/reset": {
+            "post": {
+                "description": "Сброс пароля пользователя по email",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Сброс пароля",
+                "parameters": [
+                    {
+                        "description": "Запрос на сброс пароля",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.ResetPasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/users/push": {
+            "put": {
+                "description": "Обновление push id пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Обновление push id пользователя",
+                "parameters": [
+                    {
+                        "description": "Запрос с push id",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.UpdatePushRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/users/signUp": {
+            "post": {
+                "description": "Регистрация пользователя email + password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Регистрация пользователя",
+                "parameters": [
+                    {
+                        "description": "Запрос на регистрацию",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.RegistrationRequest"
                         }
                     }
                 ],
@@ -286,6 +918,37 @@
         }
     },
     "definitions": {
+        "model.AvatarIdResponse": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.AvatarResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "string",
+                    "example": "base64"
+                }
+            }
+        },
+        "model.ChangePasswordRequest": {
+            "type": "object",
+            "properties": {
+                "new_password": {
+                    "type": "string"
+                },
+                "old_password": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
         "model.GeoZoneResponse": {
             "type": "object",
             "properties": {
@@ -341,6 +1004,209 @@
                     "type": "number"
                 },
                 "power": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ProfileResponse": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "trackers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.UserTracker"
+                    }
+                }
+            }
+        },
+        "model.RegistrationRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "сonfirm": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ResetPasswordRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.TrackCreateRequest": {
+            "type": "object",
+            "properties": {
+                "equipment_id": {
+                    "type": "string",
+                    "example": "device id"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.TrackCreateResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.TrackHistoryResponse": {
+            "type": "object",
+            "properties": {
+                "datetime": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                }
+            }
+        },
+        "model.TrackPrefRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "offset": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Tracker": {
+            "type": "object",
+            "properties": {
+                "battery_power_last": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "device_id": {
+                    "type": "string"
+                },
+                "device_type": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "latitude_last": {
+                    "type": "number"
+                },
+                "longitude_last": {
+                    "type": "number"
+                },
+                "signal_source": {
+                    "type": "integer"
+                },
+                "signal_timestamp_last": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "model.TracksByIdsRequest": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "model.TracksHistRequest": {
+            "type": "object",
+            "properties": {
+                "date_end": {
+                    "type": "string",
+                    "example": "RFC3339"
+                },
+                "date_start": {
+                    "type": "string",
+                    "example": "RFC3339"
+                },
+                "tracker_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.UpdatePushRequest": {
+            "type": "object",
+            "properties": {
+                "push_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.UserTracker": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "offset": {
                     "type": "integer"
                 }
             }
