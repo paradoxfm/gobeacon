@@ -27,7 +27,7 @@ type Heartbeat struct {
 	Latitude        float32   `json:"latitude"`
 	Longitude       float32   `json:"longitude"`
 	Power           int       `json:"power"`
-	DateTime        time.Time `json:"datetime"` //RFC3339
+	DateTime        time.Time `json:"datetime" example:"RFC3339"` //RFC3339
 	DeviceId        string    `json:"device_id"`
 	IsLowPowerAlarm bool      `json:"is_low_power_alarm"`
 	IsSOSAlarm      bool      `json:"is_sos_alarm"`

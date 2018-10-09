@@ -1,12 +1,69 @@
 definitions:
-  model.UserAuth:
+  model.GeoZoneResponse:
     properties:
-      firstName:
+      id:
         type: string
-      lastName:
+      name:
         type: string
-      userName:
+      points:
+        items:
+          $ref: '#/definitions/model.ZonePoint'
+        type: array
+      trackers:
+        items:
+          type: string
+        type: array
+    type: object
+  model.Heartbeat:
+    properties:
+      datetime:
+        example: RFC3339
         type: string
+      device_id:
+        type: string
+      is_gps_source:
+        type: boolean
+      is_gsm_source:
+        type: boolean
+      is_low_power_alarm:
+        type: boolean
+      is_sos_alarm:
+        type: boolean
+      is_wifi_source:
+        type: boolean
+      latitude:
+        type: number
+      longitude:
+        type: number
+      power:
+        type: integer
+    type: object
+  model.ZoneCreateRequest:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      points:
+        items:
+          $ref: '#/definitions/model.ZonePoint'
+        type: array
+      userId:
+        type: string
+    type: object
+  model.ZonePoint:
+    properties:
+      latitude:
+        type: number
+      longitude:
+        type: number
+    type: object
+  model.ZoneSnapRequest:
+    properties:
+      trackers:
+        items:
+          type: string
+        type: array
     type: object
 info:
   contact:
@@ -17,37 +74,35 @@ info:
   title: Swagger API
   version: "1.0"
 paths:
-  /users:
-    get:
-      consumes:
-      - application/json
-      description: get accounts
-      parameters:
-      - description: name search by q
-        in: query
-        name: q
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/model.UserAuth'
-            type: array
-      summary: List accounts
-      tags:
-      - Пользователи users
+  /heartbeat:
     post:
       consumes:
       - application/json
-      description: get accounts
+      description: 'Принимает координаты от смартфона, происходит: сохранение и проверка
+        на вхождение в неозоны, обновление последних данных трекера'
       parameters:
-      - description: name search by q
-        in: query
-        name: q
-        type: string
+      - description: Запрос с координатами и флагами устройства
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.Heartbeat'
+          type: object
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Прием координат от смартфона
+      tags:
+      - Мониторинг
+  /zone/all:
+    get:
+      consumes:
+      - application/json
+      description: Получение списка зон для авторизованного пользователя
       produces:
       - application/json
       responses:
@@ -55,9 +110,150 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.UserAuth'
+              $ref: '#/definitions/model.GeoZoneResponse'
             type: array
-      summary: List accounts
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Список зон
       tags:
-      - Пользователи users
+      - Зоны
+  /zone/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление зоны для авторизованного пользователя
+      parameters:
+      - description: id зоны
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Удаление зоны
+      tags:
+      - Зоны
+  /zone/find/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Загрузка зоны для авторизованного пользователя
+      parameters:
+      - description: id зоны
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GeoZoneResponse'
+            type: object
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Загрузка зоны
+      tags:
+      - Зоны
+  /zone/save:
+    post:
+      consumes:
+      - application/json
+      description: Создание зоны для авторизованного пользователя
+      parameters:
+      - description: Запрос настройками зоны
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ZoneCreateRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GeoZoneResponse'
+            type: object
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Создание зоны
+      tags:
+      - Зоны
+  /zone/snap/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Привязка зоны к списку трекеров
+      parameters:
+      - description: id зоны
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Запрос привязки трекеров к зоне
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ZoneSnapRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Привязка зоны
+      tags:
+      - Зоны
+  /zone/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Обновление настроек зоны для авторизованного пользователя
+      parameters:
+      - description: id зоны
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Запрос настройками зоны
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ZoneCreateRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Обновление зоны
+      tags:
+      - Зоны
 swagger: "2.0"

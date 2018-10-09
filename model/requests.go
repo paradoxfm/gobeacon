@@ -39,7 +39,7 @@ type UpdateTrackAvatarRequest struct {
 }
 
 type UpdatePushRequest struct {
-	UserId string
+	UserId string `json:"-"`
 	PushId string `json:"push_id"`
 }
 
@@ -48,7 +48,7 @@ type ZoneAllRequest struct {
 }
 
 type ZoneSnapRequest struct {
-	UserId string
+	UserId string   `json:"-"`
 	Ids    []string `json:"trackers"`
 }
 
