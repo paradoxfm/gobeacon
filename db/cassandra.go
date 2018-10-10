@@ -27,7 +27,8 @@ func init() {
 	cluster.Keyspace = Config().CassandraKey
 	cluster.ProtoVersion = 4
 	cluster.ReconnectInterval = 10 * time.Second
-	go createSession(cluster)
+	//go createSession(cluster)
+	createSession(cluster)
 }
 
 func createSession(cluster *gocql.ClusterConfig) {

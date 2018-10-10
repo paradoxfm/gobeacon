@@ -26,6 +26,24 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYxODMwN
 
 ###
 
+### работа la: 56.813248 lo: 60.59087
+### вне 56.814017, 60.592747
+### проверка алертов
+POST http://localhost:7777/api/v1/heartbeat
+Content-Type: application/json
+Authorization: Basic aGVhcnQzNDkwMjM6czE1NkV6STA3ODIwQ3RzZkpodQ==
+
+{
+  "is_gps_source": true,
+  "latitude": 56.814017,
+  "longitude": 60.592747,
+  "power": 99,
+  "datetime": "2018-10-10T15:53:24+05:00",
+  "device_id": "c60050f8255acc10"
+}
+
+###
+
 ### обновление push id
 PUT http://localhost:8070/api/v1/users/me/push
 Content-Type: application/json

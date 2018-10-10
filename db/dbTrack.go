@@ -103,10 +103,9 @@ func InsertNewTrack(t *model.TrackCreateRequest) (interface{}, error) {
 }
 
 func GetTrackerIdByDevice(deviceId string) (model.Tracker, error) {
-	stmt, names := qb.Select(tTrackers).Columns("id", "device_id").Where(qb.Eq("device_id")).AllowFiltering().ToCql()
-
-	var track model.Tracker
+	stmt, names := qb.Select(tTrackers).Columns("id", "device_id", "latitude_last", "longitude_last", "battery_power_last").Where(qb.Eq("device_id")).AllowFiltering().ToCql()
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"device_id": deviceId})
+	var track model.Tracker
 	err := q.GetRelease(&track)
 	return track, err
 }

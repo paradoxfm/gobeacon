@@ -53,7 +53,7 @@ func LoadUserPushIds(userId string) ([]string, error) {
 	stmt, names := qb.Select(tUsers).Columns("id", "push_id").Where(qb.Eq("id")).Limit(1).ToCql()
 	var u model.UserDb
 
-	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": userId,})
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": userId})
 	err := q.GetRelease(&u)
 	return u.PushId, err
 }

@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"github.com/kellydunn/golang-geo"
 	"gobeacon/model"
+	"gobeacon/service"
 	"testing"
+	"time"
 )
 
 func TestBasicAuth(t *testing.T) {
@@ -13,13 +15,24 @@ func TestBasicAuth(t *testing.T) {
 	println(val)
 }
 
+func TestZoneAlarm(t *testing.T) {
+	// работа la: 56.813248 lo: 60.59087
+	req := model.Heartbeat{IsGps: true, Latitude: 56.813248, Longitude: 60.59087, Power: 99, DateTime: time.Now(), DeviceId: "c60050f8255acc10"}
+	service.SaveHeartbeat(&req)
+	// вне зоны 56.814017, 60.592747
+	req2 := model.Heartbeat{IsGps: true, Latitude: 56.814017, Longitude: 60.592747, Power: 99, DateTime: time.Now(), DeviceId: "c60050f8255acc10"}
+	service.SaveHeartbeat(&req2)
+}
+
 func TestCopyTrack(t *testing.T) {
-	t1 := model.Tracker{DeviceId: "asdfasdf"}
+	t1 := model.Tracker{DeviceId: "asdfasdf", LatitudeLast: 56.814017, LongitudeLast: 60.592747}
 	t2 := new(model.Tracker)
 	*t2 = *&t1
 	t1.DeviceId = "dfgh"
 	println(t1.DeviceId)
 	println(t2.DeviceId)
+	println(t1.LatitudeLast)
+	println(t2.LatitudeLast)
 }
 
 func TestPointDist(t *testing.T) {

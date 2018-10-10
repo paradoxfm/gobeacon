@@ -93,6 +93,16 @@ type Tracker struct {
 	SignalTimestampLast time.Time  `db:"signal_timestamp_last" json:"signal_timestamp_last"`
 }
 
+func (trk Tracker) Copy() Tracker {
+	rez := Tracker{Id: trk.Id, DeviceId: trk.DeviceId, DeviceType: trk.DeviceType, SignalSource: trk.SignalSource}
+	rez.LatitudeLast = trk.LatitudeLast
+	rez.LongitudeLast = trk.LongitudeLast
+	rez.BatteryPowerLast = trk.BatteryPowerLast
+	rez.Users = trk.Users
+	rez.SignalTimestampLast = trk.SignalTimestampLast
+	return rez
+}
+
 /*CREATE TABLE watch.user_track_prefs (
     user_id uuid,
     track_id uuid,

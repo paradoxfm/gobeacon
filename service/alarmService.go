@@ -21,18 +21,19 @@ type AlarmConf struct {
 func createPushData(trackId string) (map[string]AlarmConf) {
 	rez := make(map[string]AlarmConf)
 	trackPref, _ := db.GetTrackPrefsByTrack(trackId)
+	zones, _ := db.LoadZonesByTrackId(trackId)
 	for _, tr := range trackPref {
 		usrId := tr.UserId.String()
+		zoneList := make([]model.GeoZoneDb, 0)
+		for _, zn := range zones {
+			if zn.UserId.String() == usrId{
+				zoneList = append(zoneList, zn)
+			}
+		}
 		ids, _ := db.LoadUserPushIds(usrId)
 		if len(ids) != 0 {
-			rez[usrId] = AlarmConf{UserId: usrId, PushIds: ids, Pref: tr}
+			rez[usrId] = AlarmConf{UserId: usrId, PushIds: ids, Pref: tr, Zones: zoneList}
 		}
-	}
-	zones, _ := db.LoadZonesByTrackId(trackId)
-	for _, z := range zones {
-		usrId := z.UserId.String()
-		alarmConf := rez[usrId]
-		alarmConf.Zones = append(alarmConf.Zones, z)
 	}
 	return rez
 }

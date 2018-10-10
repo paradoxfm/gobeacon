@@ -141,13 +141,3 @@ func getSignalId(p *model.Heartbeat) int {
 	}
 	return 0
 }
-
-/*func CheckAndUpdateTracker(trk *model.Tracker) {
-	tracker, e := getTrackerById(trk.Id.String())
-	if e != nil {
-		return
-	}
-	updateLastTracker(trk)
-	alarmsCheck(&tracker, trk, false, false)
-}
-*/
