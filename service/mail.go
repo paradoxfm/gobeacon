@@ -1,9 +1,9 @@
 package service
 
 import (
-	"net/smtp"
 	"bytes"
 	"html/template"
+	"net/smtp"
 )
 
 const (

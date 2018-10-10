@@ -1,4 +1,4 @@
-package service
+package db
 
 import (
 	"encoding/json"
@@ -9,7 +9,10 @@ import (
 var config *Configuration
 
 type Configuration struct {
-	ServerKey string `json:"server_key"`
+	CassandraUser     string `json:"cassandra_user"`
+	CassandraPassword string `json:"cassandra_password"`
+	CassandraIp       string `json:"cassandra_ip"`
+	CassandraKey      string `json:"cassandra_keyspace"`
 }
 
 func Config() *Configuration {

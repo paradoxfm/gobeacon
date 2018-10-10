@@ -5,20 +5,21 @@ import (
 	valid "github.com/asaskevich/govalidator"
 	"github.com/hlandau/passlib"
 	"gobeacon/code"
+	"gobeacon/db"
 	"gobeacon/model"
 	"math/rand"
 	"time"
 )
 
-const defaultPasswordLenght = 8
+const defaultPasswordLength = 8
 
 func RegistrationUser(r *model.RegistrationRequest) (bool, []int) {
 	err := validateRegistration(r)
 	if len(err) == 0 {
-		_, e := getUserByEmail(r.Email)
+		_, e := db.LoadUserByEmail(r.Email)
 		if e != nil {
 			hash, _ := hashPassword(r.Password)
-			dbErr := insertNewUser(r.Email, hash)
+			dbErr := db.InsertNewUser(r.Email, hash)
 			if dbErr != nil {
 				err = append(err, code.UserCreateUnknownError)
 			}
@@ -52,15 +53,15 @@ func validateRegistration(r *model.RegistrationRequest) []int {
 func ResetPassword(r *model.ResetPasswordRequest) (bool, []int) {
 	err := validateResetPassword(r)
 	if len(err) == 0 {
-		usr, e := getUserByEmail(r.Email)
+		usr, e := db.LoadUserByEmail(r.Email)
 		if e != nil {
 			err = append(err, code.UserWithEmailNotFound) //пользователь не найден
 		} else {
-			newPwd := randomString(defaultPasswordLenght)
+			newPwd := randomString(defaultPasswordLength)
 			send, _ := sendNewPassword(r.Email, newPwd)
 			if send {
 				hash, _ := hashPassword(newPwd)
-				dbErr := updateUserPassword(usr.Id.String(), hash)
+				dbErr := db.UpdateUserPassword(usr.Id.String(), hash)
 
 				if dbErr != nil { //ошибка обновления в базе
 					err = append(err, code.UserUpdatePwdUnknownError)
@@ -85,7 +86,7 @@ func validateResetPassword(r *model.ResetPasswordRequest) []int {
 }
 
 func LoginUser(email string, pwd string) (interface{}, error) {
-	usr, err := getUserByEmail(email)
+	usr, err := db.LoadUserByEmail(email)
 	if err != nil {
 		return "", jwt.ErrFailedAuthentication
 	}

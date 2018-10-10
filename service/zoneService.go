@@ -2,13 +2,14 @@ package service
 
 import (
 	"gobeacon/code"
+	"gobeacon/db"
 	"gobeacon/model"
 )
 
 func ZoneGetAllForUser(r *model.ZoneAllRequest) ([]model.GeoZoneResponse, []int) {
 	var err []int
 	rez := make([]model.GeoZoneResponse, 0)
-	zones, e := getAllZoneByUserId(r.UserId)
+	zones, e := db.LoadZonesByUserId(r.UserId)
 	if e != nil {
 		err = append(err, code.DbErrorUpdateUserPush)
 		return rez, err
@@ -30,7 +31,7 @@ func convertZoneToResponse(zone model.GeoZoneDb) (model.GeoZoneResponse) {
 
 func ZoneCreateForUser(r *model.ZoneCreateRequest) (interface{}, []int) {
 	var err []int
-	zn, e := createZoneForUser(r)
+	zn, e := db.CreateZoneForUser(r)
 	if e != nil {
 		err = append(err, code.DbErrorUpdateUserPush)
 		return nil, err
@@ -43,7 +44,7 @@ func ZoneCreateForUser(r *model.ZoneCreateRequest) (interface{}, []int) {
 
 func ZoneUpdate(r *model.ZoneCreateRequest) ([]int) {
 	var err []int
-	if e := updateZoneProp(r); e != nil {
+	if e := db.UpdateZone(r); e != nil {
 		return append(err, code.DbError)
 	}
 	return err
@@ -51,7 +52,7 @@ func ZoneUpdate(r *model.ZoneCreateRequest) ([]int) {
 
 func ZoneGetById(id string) (interface{}, []int) {
 	var err []int
-	zone, e := findZoneById(id)
+	zone, e := db.LoadZoneById(id)
 	if e != nil {
 		return nil, append(err, code.DbError)
 	}
@@ -61,7 +62,7 @@ func ZoneGetById(id string) (interface{}, []int) {
 
 func ZoneDelete(zoneId string) ([]int) {
 	var err []int
-	if e := deleteZoneById(zoneId); e != nil {
+	if e := db.DeleteZoneById(zoneId); e != nil {
 		return append(err, code.DbError)
 	}
 	return err
@@ -75,7 +76,7 @@ func ZoneSnapTrack(zoneId string, r *model.ZoneSnapRequest) ([]int) {
 		track[v] = true
 	}
 
-	if e := updateZoneTrackers(zoneId, track); e != nil {
+	if e := db.UpdateZoneTrackers(zoneId, track); e != nil {
 		return append(err, code.DbError)
 	}
 	return err

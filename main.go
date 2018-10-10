@@ -49,6 +49,7 @@ func createPhoneAdminApi() (*gin.Engine) {
 	auth := controller.CreateAdminJWTMiddleware()
 	r := gin.Default()
 	r.Use(gin.Recovery())
+	r.Use(gin.Logger())
 	// 1 << 20  1 MiB -> ‭1_048_576‬, 8 << 20  8 MiB -> ‭8_388_608‬
 	r.MaxMultipartMemory = 1 << 19 //0.5 MiB
 	v1 := r.Group("/api/v1")       // api первой версии
@@ -64,7 +65,7 @@ func createPhoneAdminApi() (*gin.Engine) {
 	}
 	usr := v1.Group("/users") // api для пользователей
 	{
-		usr.POST("/signUp", controller.UserCreate)
+		usr.POST("/signup", controller.UserCreate)
 		usr.POST("/login", auth.LoginHandler)
 		usr.POST("/password/reset", controller.UserResetPassword)
 		me := usr.Group("/me")
@@ -109,6 +110,7 @@ func createPhoneAdminApi() (*gin.Engine) {
 func createPhoneApi() (*gin.Engine) {
 	r := gin.Default()
 	r.Use(gin.Recovery())
+	r.Use(gin.Logger())
 	v1 := r.Group("/api/v1", gin.BasicAuthForRealm(gin.Accounts{
 		"heart349023": "s156EzI07820CtsfJhu",
 	}, "phone connector"))
@@ -122,15 +124,7 @@ func createSwaggerApi() (*gin.Engine) {
 	authorized := r.Group("", gin.BasicAuth(gin.Accounts{
 		"admin": "password",
 	}))
-	authorized.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
 	// документация по сервисам /swagger/index.html
-	//r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	authorized.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return r
 }
-
-/*func createWatchApi() (*http.Server) {
-	r := gin.New()
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	return initServer(":6666", r)
-}*/

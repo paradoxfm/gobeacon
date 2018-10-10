@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/kellydunn/golang-geo"
+	"gobeacon/db"
 	"gobeacon/model"
 )
 
@@ -19,15 +20,15 @@ type AlarmConf struct {
 
 func createPushData(trackId string) (map[string]AlarmConf) {
 	rez := make(map[string]AlarmConf)
-	trackPref, _ := getTrackPrefsByTrack(trackId)
+	trackPref, _ := db.GetTrackPrefsByTrack(trackId)
 	for _, tr := range trackPref {
 		usrId := tr.UserId.String()
-		ids, _ := getUserPushIds(usrId)
+		ids, _ := db.LoadUserPushIds(usrId)
 		if len(ids) != 0 {
 			rez[usrId] = AlarmConf{UserId: usrId, PushIds: ids, Pref: tr}
 		}
 	}
-	zones, _ := getZonesByTrackId(trackId)
+	zones, _ := db.LoadZonesByTrackId(trackId)
 	for _, z := range zones {
 		usrId := z.UserId.String()
 		alarmConf := rez[usrId]

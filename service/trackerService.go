@@ -3,13 +3,14 @@ package service
 import (
 	"github.com/kellydunn/golang-geo"
 	"gobeacon/code"
+	"gobeacon/db"
 	"gobeacon/model"
 	"sort"
 )
 
 func GetTrackerById(id string) (interface{}, []int) {
 	var err []int
-	tracker, e := getTrackerById(id)
+	tracker, e := db.GetTrackerById(id)
 	if e != nil {
 		err = append(err, code.DbError)
 	}
@@ -19,24 +20,24 @@ func GetTrackerById(id string) (interface{}, []int) {
 func CreateTracker(req *model.TrackCreateRequest) (string, []int) {
 	var err []int
 	// ищем может уже добавлял кто-то (ситуация с 2мя родителями)
-	id, e := existTrackByDevice(req.DeviceId)
+	id, e := db.ExistTrackByDevice(req.DeviceId)
 	if e != nil {
 		return "", append(err, code.DbError)
 	}
 	if id == nil { // если ничего нет, то добавляем трекер
-		if id, e = insertNewTrack(req); e != nil {
+		if id, e = db.InsertNewTrack(req); e != nil {
 			return "", append(err, code.DbError)
 		}
 	}
 	// ищем текущую связь стрекером, на случай если решили повторно добавить (
-	exist, e := existTrackPref(req.UserId, id.(string))
+	exist, e := db.ExistTrackPref(req.UserId, id.(string))
 	if e != nil {
 		return "", append(err, code.DbError)
 	}
 	if exist { // если связь уже есть отпинываем
 		return "", append(err, code.TrackForUserExist)
 	}
-	if e = insertNewTrackPref(id.(string), req); e != nil {
+	if e = db.InsertNewTrackPref(id.(string), req); e != nil {
 		return "", append(err, code.DbError)
 	}
 	return id.(string), err
@@ -44,7 +45,7 @@ func CreateTracker(req *model.TrackCreateRequest) (string, []int) {
 
 func GetAllTrackersForUser(userId string) (interface{}, []int) {
 	var err []int
-	trackerList, e := getTrackersByUserId(userId)
+	trackerList, e := db.GetTrackersByUserId(userId)
 	if e != nil {
 		err = append(err, code.DbErrorGetTracker)
 	}
@@ -53,7 +54,7 @@ func GetAllTrackersForUser(userId string) (interface{}, []int) {
 
 func GetTrackersByIds(ids []string) (interface{}, []int) {
 	var err []int
-	trackerList, e := getTrackerByIds(ids)
+	trackerList, e := db.GetTrackerByIds(ids)
 	if e != nil {
 		err = append(err, code.DbErrorGetTracker)
 	}
@@ -62,7 +63,7 @@ func GetTrackersByIds(ids []string) (interface{}, []int) {
 
 func DeleteTrack(userId string, trackId string) ([]int) {
 	var err []int
-	e := deleteTrackForUser(userId, trackId)
+	e := db.DeleteTrackForUser(userId, trackId)
 	if e != nil {
 		err = append(err, code.DbError)
 	}
@@ -71,7 +72,7 @@ func DeleteTrack(userId string, trackId string) ([]int) {
 
 func UpdateTrackPref(req *model.TrackPrefRequest) ([]int) {
 	var err []int
-	e := updateTrackPref(req)
+	e := db.UpdateTrackPref(req)
 	if e != nil {
 		err = append(err, code.DbError)
 	}
@@ -84,7 +85,7 @@ func UpdateTrackAvatar(req *model.UpdateTrackAvatarRequest) (string, []int) {
 	if ef != nil {
 		return "", append(err, ef...)
 	}
-	avatarId, e := updateTrackAvatar(req.UserId, req.TrackId, data)
+	avatarId, e := db.UpdateTrackAvatar(req.UserId, req.TrackId, data)
 	if e != nil {
 		return "", append(err, code.DbError)
 	}
@@ -94,7 +95,7 @@ func UpdateTrackAvatar(req *model.UpdateTrackAvatarRequest) (string, []int) {
 func GetTrackHistory(r *model.TracksHistRequest) ([]model.TrackHistoryResponse, []int) {
 	var err []int
 
-	ping, e := loadTrackHistory(r)
+	ping, e := db.LoadPingHistory(r)
 	if e != nil {
 		return nil, append(err, code.DbError)
 	}

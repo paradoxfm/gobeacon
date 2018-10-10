@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"gobeacon/code"
+	"gobeacon/db"
 	"gobeacon/model"
 	"image/jpeg"
 	"io"
@@ -12,12 +13,12 @@ import (
 
 func UserGetProfile(r *model.GetProfileRequest) (model.ProfileResponse, []int) {
 	var err []int
-	usr, e := getUserById(r.UserId)
+	usr, e := db.LoadUserById(r.UserId)
 	if e != nil {
 		return model.ProfileResponse{}, append(err, code.UserWithEmailNotFound) //пользователь не найден
 	}
 	rez := model.ProfileResponse{Id: usr.Id.String(), Email: usr.Email, Avatar: usr.Avatar}
-	prefs, e := getTrackPrefsByUser(r.UserId)
+	prefs, e := db.GetTrackPrefsByUser(r.UserId)
 	if e != nil {
 		return model.ProfileResponse{}, append(err, code.DbError)
 	}
@@ -29,7 +30,7 @@ func UserGetProfile(r *model.GetProfileRequest) (model.ProfileResponse, []int) {
 
 func UserUpdatePushId(r *model.UpdatePushRequest) (interface{}, []int) {
 	var err []int
-	e := updateUserPushId(r)
+	e := db.UpdateUserPushId(r)
 	if e != nil {
 		err = append(err, code.DbErrorUpdateUserPush)
 	}
@@ -38,7 +39,7 @@ func UserUpdatePushId(r *model.UpdatePushRequest) (interface{}, []int) {
 
 func ChangePassword(r *model.ChangePasswordRequest) ([]int) {
 	var err []int
-	userDb, e := getUserById(r.UserId)
+	userDb, e := db.LoadUserById(r.UserId)
 	if e != nil {
 		return append(err, code.DbError)
 	}
@@ -46,7 +47,7 @@ func ChangePassword(r *model.ChangePasswordRequest) ([]int) {
 		return append(err, code.InavlidCurrentPasswords)
 	}
 	hash, _ := hashPassword(r.NewPassword)
-	e = updateUserPassword(r.UserId, hash)
+	e = db.UpdateUserPassword(r.UserId, hash)
 	if e != nil {
 		return append(err, code.DbError)
 	}
@@ -55,7 +56,7 @@ func ChangePassword(r *model.ChangePasswordRequest) ([]int) {
 
 func GetAvatar(id string) (model.AvatarResponse, []int) {
 	var err []int
-	data, e := loadAvatar(id)
+	data, e := db.LoadAvatar(id)
 	if e != nil {
 		return model.AvatarResponse{}, append(err, code.DbError)
 	}
@@ -69,7 +70,7 @@ func UpdateUserAvatar(req *model.UpdateAvatarRequest) (string, []int) {
 	if ef != nil {
 		return "", append(err, ef...)
 	}
-	avatarId, e := updateUserAvatar(req.UserId, data)
+	avatarId, e := db.UpdateUserAvatar(req.UserId, data)
 	if e != nil {
 		return "", append(err, code.DbError)
 	}
@@ -106,14 +107,14 @@ func validateJpeg(data []byte) (bool, int) {
 }
 
 func SaveHeartbeat(p *model.Heartbeat) ([]int) {
-	t, e := getTrackerIdByDevice(p.DeviceId)
+	t, e := db.GetTrackerIdByDevice(p.DeviceId)
 	var err []int
 	if e != nil {
 		return append(err, code.DbError)
 	}
 	pingDb := model.PingDb{TrackerId: t.Id, EventTime: p.DateTime, BatteryPower: float32(p.Power), Latitude: p.Latitude, Longitude: p.Longitude, SignalSource: getSignalId(p),}
 
-	e = insertPing(&pingDb)
+	e = db.InsertPing(&pingDb)
 	if e != nil {
 		return append(err, code.DbError)
 	}
@@ -123,7 +124,7 @@ func SaveHeartbeat(p *model.Heartbeat) ([]int) {
 	t.LatitudeLast = pingDb.Latitude
 	t.LongitudeLast = pingDb.Longitude
 	t.BatteryPowerLast = pingDb.BatteryPower
-	if e := updateLastTracker(&t, p.DateTime); e != nil {
+	if e := db.UpdateLastTracker(&t, p.DateTime); e != nil {
 		return append(err, code.DbError)
 	}
 	go alarmsCheck(tOld, &t, p.IsLowPowerAlarm, p.IsSOSAlarm)

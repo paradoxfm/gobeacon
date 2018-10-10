@@ -119,7 +119,7 @@ func createPositionData(posData [][]byte) model.PositionData {
 	lon := float32(lon64)
 
 	date := string(posData[1])
-	time := string(posData[2])
+	tm := string(posData[2])
 
 	power64, e := strconv.ParseFloat(string(posData[13]), 32)
 	CheckError(e, "power64.Parse failed")
@@ -129,7 +129,7 @@ func createPositionData(posData [][]byte) model.PositionData {
 	CheckError(e, "state64.Parse failed")
 	state := int16(state64)
 
-	return model.PositionData{Date: date, Time: time, WhetherTheLocation: string(posData[3]), Latitude: lat,
+	return model.PositionData{Date: date, Time: tm, WhetherTheLocation: string(posData[3]), Latitude: lat,
 		MarkOfLatitude: string(posData[5]), Longitude: lon, MarkOfLongitude: string(posData[7]), Power: power, TerminalState: state}
 }
 

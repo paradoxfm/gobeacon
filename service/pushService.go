@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/douglasmakey/go-fcm"
+	"gobeacon/db"
 	"log"
 )
 
@@ -16,7 +17,7 @@ func sendPush(userId string, pushIds []string, data interface{}, client *fcm.Cli
 	client.PushMultiple(pushIds, data)
 	badRegistrations := client.CleanRegistrationIds()
 	if len(badRegistrations) > 0 {
-		removeInvalidPush(userId, badRegistrations)
+		db.RemoveUserPush(userId, badRegistrations)
 		//log.Println(badRegistrations)
 	}
 	status, err := client.Send()
@@ -28,14 +29,14 @@ func sendPush(userId string, pushIds []string, data interface{}, client *fcm.Cli
 }
 
 func SendPushNotification(userId string) {
-	ids, e := getUserPushIds(userId)
+	ids, e := db.LoadUserPushIds(userId)
 	if e != nil {
 		return
 	}
 	client := fcm.NewClient(Config().ServerKey)
 
 	data := map[string]interface{}{
-		"message": "Тестовое оповещение при выходе трекера из зоны, возможны ураганы и шквалистый ветер",
+		"message":    "Тестовое оповещение при выходе трекера из зоны, возможны ураганы и шквалистый ветер",
 		"tracker_id": "",
 	}
 
@@ -43,7 +44,7 @@ func SendPushNotification(userId string) {
 
 	badRegistrations := client.CleanRegistrationIds()
 	if len(badRegistrations) > 0 {
-		removeInvalidPush(userId, badRegistrations)
+		db.RemoveUserPush(userId, badRegistrations)
 		//log.Println(badRegistrations)
 	}
 
