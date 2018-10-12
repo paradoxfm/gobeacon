@@ -36,8 +36,9 @@ func SendPushNotification(userId string) {
 	client := fcm.NewClient(Config().ServerKey)
 
 	data := map[string]interface{}{
-		"message":    "Тестовое оповещение при выходе трекера из зоны, возможны ураганы и шквалистый ветер",
-		"tracker_id": "",
+		"message":      lowPowerMsgId,
+		"tracker_id":   "Трекер тест",
+		"tracker_name": "Трекер тест",
 	}
 
 	client.PushMultiple(ids, data)

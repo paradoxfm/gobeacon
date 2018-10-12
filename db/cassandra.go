@@ -19,12 +19,13 @@ var tZones = "watch.geozones"
 var tPings = "track_ping"
 
 func init() {
-	cluster := gocql.NewCluster(Config().CassandraIp)
+	conf := Config()
+	cluster := gocql.NewCluster(conf.CassandraIp)
 	cluster.Authenticator = gocql.PasswordAuthenticator{
-		Username: Config().CassandraUser,
-		Password: Config().CassandraPassword,
+		Username: conf.CassandraUser,
+		Password: conf.CassandraPassword,
 	}
-	cluster.Keyspace = Config().CassandraKey
+	cluster.Keyspace = conf.CassandraKey
 	cluster.ProtoVersion = 4
 	cluster.ReconnectInterval = 10 * time.Second
 	//go createSession(cluster)

@@ -19,6 +19,7 @@ import (
 // @contact.name API Support
 // @contact.email paradoxfm@mail.ru
 func main() {
+	//db.InitConnect()
 	//gin.SetMode(gin.ReleaseMode)
 	startTcpServer()
 	// если пойдет большая нагрузка, то надо распилить на отдельные приложения
@@ -39,7 +40,7 @@ func main() {
 func startTcpServer() {
 	srv := watch.Server{
 		Addr:         ":6666",
-		IdleTimeout:  1500 * time.Second,
+		IdleTimeout:  150 * time.Second,
 		MaxReadBytes: 10000,
 	}
 	go srv.ListenAndServe()

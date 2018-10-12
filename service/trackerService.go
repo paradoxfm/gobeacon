@@ -20,7 +20,16 @@ func GetTrackerById(id string) (interface{}, []int) {
 func CreateTracker(req *model.TrackCreateRequest) (string, []int) {
 	var err []int
 	// ищем может уже добавлял кто-то (ситуация с 2мя родителями)
-	id, e := db.ExistTrackByDevice(req.DeviceId)
+	devId := req.DeviceId
+	var e error
+	var id interface{}
+	if len(devId) == 15 { // если прислали imei часов
+		req.Imei = req.DeviceId
+		req.DeviceId = req.DeviceId[4:14]
+		id, e = db.ExistTrackByDevice(req.DeviceId[4:14])
+	} else {
+		id, e = db.ExistTrackByDevice(devId)
+	}
 	if e != nil {
 		return "", append(err, code.DbError)
 	}

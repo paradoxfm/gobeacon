@@ -99,6 +99,12 @@
 			"revisionTime": "2016-02-19T21:45:06Z"
 		},
 		{
+			"checksumSHA1": "yxMSkcwYKGfhSDNYHigicl7wCBE=",
+			"path": "github.com/franela/goblin",
+			"revision": "ead4ad1d27278780bab074b8dee47fba0e67afda",
+			"revisionTime": "2018-10-03T17:30:13Z"
+		},
+		{
 			"checksumSHA1": "6h5IjwH/vo9EuLXKXhtu1i00oxY=",
 			"path": "github.com/gin-contrib/sse",
 			"revision": "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae",

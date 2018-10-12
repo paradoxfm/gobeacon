@@ -44,7 +44,7 @@ type UpdatePushRequest struct {
 }
 
 type LoginRequest struct {
-	Email string `form:"email" json:"email" binding:"required"`
+	Email    string `form:"email" json:"email" binding:"required"`
 	Password string `form:"password" json:"password" binding:"required"`
 }
 
@@ -70,6 +70,7 @@ type TracksByIdsRequest struct {
 
 type TrackCreateRequest struct {
 	UserId   string `json:"-"`
+	Imei     string `json:"-"`
 	Name     string `json:"name"`
 	DeviceId string `json:"equipment_id" example:"device id"`
 }

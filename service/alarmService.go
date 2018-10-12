@@ -8,7 +8,8 @@ import (
 
 const (
 	lowPowerMsgId = 2001
-	zoneMsgId     = 2002
+	zoneMsgIn     = 2002
+	zoneMsgOut    = 2003
 )
 
 type AlarmConf struct {
@@ -26,7 +27,7 @@ func createPushData(trackId string) (map[string]AlarmConf) {
 		usrId := tr.UserId.String()
 		zoneList := make([]model.GeoZoneDb, 0)
 		for _, zn := range zones {
-			if zn.UserId.String() == usrId{
+			if zn.UserId.String() == usrId {
 				zoneList = append(zoneList, zn)
 			}
 		}
@@ -77,9 +78,14 @@ func checkZonesForUser(pOld *geo.Point, pNew *geo.Point, conf AlarmConf) {
 
 		zone := geo.NewPolygon(points)
 
-		if zone.Contains(pOld) != zone.Contains(pNew) {
+		inZoneNew := zone.Contains(pNew)
+		if zone.Contains(pOld) != inZoneNew {
+			msgId := zoneMsgOut
+			if inZoneNew {
+				msgId = zoneMsgIn
+			}
 			data := map[string]interface{}{
-				"message":      zoneMsgId,
+				"message":      msgId,
 				"tracker_id":   conf.Pref.TrackId.String(),
 				"tracker_name": conf.Pref.Name,
 				"zone_name":    geoZone.Name,
