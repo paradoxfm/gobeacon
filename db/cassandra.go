@@ -16,7 +16,7 @@ var tTrackPref = "watch.user_track_prefs"
 var tAvatars = "watch.files"
 var tTrackers = "watch.trackers"
 var tZones = "watch.geozones"
-var tPings = "track_ping"
+var tPings = "watch.track_ping"
 
 func init() {
 	conf := Config()

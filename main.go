@@ -55,6 +55,13 @@ func createPhoneAdminApi() (*gin.Engine) {
 	r.MaxMultipartMemory = 1 << 19 //0.5 MiB
 	v1 := r.Group("/api/v1")       // api первой версии
 	mFunc := auth.MiddlewareFunc()
+
+	// новое api для смартфонов на том же порту
+	bgr := v1.Group("", gin.BasicAuthForRealm(gin.Accounts{
+		"heart349023": "s156EzI07820CtsfJhu",
+	}, "phone connector"))
+	bgr.POST("/heartbeat", controller.HeartbeatPhone)
+
 	tst := v1.Group("/test")
 	tst.Use(mFunc)
 	tst.GET("/push", controller.TestPush)
@@ -108,6 +115,7 @@ func createPhoneAdminApi() (*gin.Engine) {
 	return r
 }
 
+//depreceated from 23.10.2018
 func createPhoneApi() (*gin.Engine) {
 	r := gin.Default()
 	r.Use(gin.Recovery())
