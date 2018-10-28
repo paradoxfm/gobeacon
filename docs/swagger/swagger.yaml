@@ -65,8 +65,8 @@ definitions:
       password:
         type: string
     required:
-    - password
     - email
+    - password
     type: object
   model.LoginResponse:
     properties:
@@ -490,51 +490,6 @@ paths:
       summary: Обновление трекера
       tags:
       - Трекеры
-  /users:
-    get:
-      description: Получение профиля пользователя
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.ProfileResponse'
-            type: object
-        "400":
-          description: err
-        "500":
-          description: err
-      summary: Запрос профиля
-      tags:
-      - Пользователи
-  /users/avatar:
-    put:
-      consumes:
-      - application/json
-      description: Обновление аватара пользователя (jpeg 250x250)
-      parameters:
-      - description: avatar
-        in: body
-        name: avatar
-        required: true
-        schema:
-          type: object
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.AvatarIdResponse'
-            type: object
-        "400":
-          description: err
-        "500":
-          description: err
-      summary: Обновление аватара пользователя
-      tags:
-      - Пользователи
   /users/login:
     post:
       consumes:
@@ -563,7 +518,52 @@ paths:
       summary: Авторизация пользователя
       tags:
       - Пользователи
-  /users/password:
+  /users/me:
+    get:
+      description: Получение профиля пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProfileResponse'
+            type: object
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Запрос профиля
+      tags:
+      - Пользователи
+  /users/me/avatar:
+    put:
+      consumes:
+      - application/json
+      description: Обновление аватара пользователя (jpeg 250x250)
+      parameters:
+      - description: avatar
+        in: body
+        name: avatar
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AvatarIdResponse'
+            type: object
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Обновление аватара пользователя
+      tags:
+      - Пользователи
+  /users/me/password:
     put:
       consumes:
       - application/json
@@ -586,6 +586,31 @@ paths:
         "500":
           description: err
       summary: Изменение пароля
+      tags:
+      - Пользователи
+  /users/me/push:
+    put:
+      consumes:
+      - application/json
+      description: Обновление push id пользователя
+      parameters:
+      - description: Запрос с push id
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdatePushRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Обновление push id пользователя
       tags:
       - Пользователи
   /users/password/reset:
@@ -611,31 +636,6 @@ paths:
         "500":
           description: err
       summary: Сброс пароля
-      tags:
-      - Пользователи
-  /users/push:
-    put:
-      consumes:
-      - application/json
-      description: Обновление push id пользователя
-      parameters:
-      - description: Запрос с push id
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/model.UpdatePushRequest'
-          type: object
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-        "400":
-          description: err
-        "500":
-          description: err
-      summary: Обновление push id пользователя
       tags:
       - Пользователи
   /users/signUp:

@@ -407,74 +407,6 @@
                 }
             }
         },
-        "/users": {
-            "get": {
-                "description": "Получение профиля пользователя",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Пользователи"
-                ],
-                "summary": "Запрос профиля",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "$ref": "#/definitions/model.ProfileResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "err"
-                    },
-                    "500": {
-                        "description": "err"
-                    }
-                }
-            }
-        },
-        "/users/avatar": {
-            "put": {
-                "description": "Обновление аватара пользователя (jpeg 250x250)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Пользователи"
-                ],
-                "summary": "Обновление аватара пользователя",
-                "parameters": [
-                    {
-                        "description": "avatar",
-                        "name": "avatar",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "$ref": "#/definitions/model.AvatarIdResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "err"
-                    },
-                    "500": {
-                        "description": "err"
-                    }
-                }
-            }
-        },
         "/users/login": {
             "post": {
                 "description": "Авторизация пользователя",
@@ -517,7 +449,75 @@
                 }
             }
         },
-        "/users/password": {
+        "/users/me": {
+            "get": {
+                "description": "Получение профиля пользователя",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Запрос профиля",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.ProfileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/users/me/avatar": {
+            "put": {
+                "description": "Обновление аватара пользователя (jpeg 250x250)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Обновление аватара пользователя",
+                "parameters": [
+                    {
+                        "description": "avatar",
+                        "name": "avatar",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.AvatarIdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/users/me/password": {
             "put": {
                 "description": "Изменение пароля пользователя",
                 "consumes": [
@@ -539,6 +539,44 @@
                         "schema": {
                             "type": "object",
                             "$ref": "#/definitions/model.ChangePasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/users/me/push": {
+            "put": {
+                "description": "Обновление push id пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Обновление push id пользователя",
+                "parameters": [
+                    {
+                        "description": "Запрос с push id",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.UpdatePushRequest"
                         }
                     }
                 ],
@@ -577,44 +615,6 @@
                         "schema": {
                             "type": "object",
                             "$ref": "#/definitions/model.ResetPasswordRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    },
-                    "400": {
-                        "description": "err"
-                    },
-                    "500": {
-                        "description": "err"
-                    }
-                }
-            }
-        },
-        "/users/push": {
-            "put": {
-                "description": "Обновление push id пользователя",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Пользователи"
-                ],
-                "summary": "Обновление push id пользователя",
-                "parameters": [
-                    {
-                        "description": "Запрос с push id",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "$ref": "#/definitions/model.UpdatePushRequest"
                         }
                     }
                 ],
@@ -1002,8 +1002,8 @@
         "model.LoginRequest": {
             "type": "object",
             "required": [
-                "password",
-                "email"
+                "email",
+                "password"
             ],
             "properties": {
                 "email": {
