@@ -49,7 +49,7 @@ func UserResetPassword(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param request body model.ChangePasswordRequest true "Запрос на изменение пароля"
-// @Router /users/password [put]
+// @Router /users/me/password [put]
 // @Success 200 "ok"
 // @Failure 400 "err"
 // @Failure 500 "err"
@@ -65,7 +65,7 @@ func UserChangePassword(c *gin.Context) {
 // @Summary Запрос профиля
 // @Description Получение профиля пользователя
 // @Produce json
-// @Router /users [get]
+// @Router /users/me [get]
 // @Success 200 {object} model.ProfileResponse
 // @Failure 400 "err"
 // @Failure 500 "err"
@@ -83,7 +83,7 @@ func UserGetProfile(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param avatar body file true "avatar"
-// @Router /users/avatar [put]
+// @Router /users/me/avatar [put]
 // @Success 200 {object} model.AvatarIdResponse
 // @Failure 400 "err"
 // @Failure 500 "err"
@@ -104,7 +104,7 @@ func UserUpdateAvatar(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param request body model.UpdatePushRequest true "Запрос с push id"
-// @Router /users/push [put]
+// @Router /users/me/push [put]
 // @Success 200 "ok"
 // @Failure 400 "err"
 // @Failure 500 "err"
