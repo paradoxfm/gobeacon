@@ -65,8 +65,8 @@ definitions:
       password:
         type: string
     required:
-    - email
     - password
+    - email
     type: object
   model.LoginResponse:
     properties:
@@ -306,12 +306,6 @@ paths:
   /trackers/all:
     get:
       description: Лист трекеров для пользователя
-      parameters:
-      - description: id трекера
-        in: path
-        name: id
-        required: true
-        type: string
       produces:
       - application/json
       responses:

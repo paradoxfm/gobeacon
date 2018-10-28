@@ -44,7 +44,6 @@ func TrackGetById(c *gin.Context) {
 // @Summary Загрузить трекеры
 // @Description Лист трекеров для пользователя
 // @Produce json
-// @Param id path string true "id трекера"
 // @Router /trackers/all [get]
 // @Success 200 {array} model.Tracker
 // @Failure 400 "err"
@@ -55,7 +54,6 @@ func TrackAll(c *gin.Context) {
 	result, err := service.GetAllTrackersForUser(userId)
 	sendObjResponse(result, err, c)
 }
-
 
 // TrackByIds godoc
 // @Summary Загрузить трекеры по id

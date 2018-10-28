@@ -136,15 +136,6 @@
                     "Трекеры"
                 ],
                 "summary": "Загрузить трекеры",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "id трекера",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1011,8 +1002,8 @@
         "model.LoginRequest": {
             "type": "object",
             "required": [
-                "email",
-                "password"
+                "password",
+                "email"
             ],
             "properties": {
                 "email": {
