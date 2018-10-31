@@ -231,7 +231,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: id аватарки
+      - description: id avatar
         in: path
         name: id
         required: true
@@ -248,17 +248,17 @@ paths:
           description: err
         "500":
           description: err
-      summary: Загрузка аватарки по id
+      summary: Loading avatar by id
       tags:
-      - Система
+      - System
   /heartbeat:
     post:
       consumes:
       - application/json
-      description: 'Принимает координаты от смартфона, происходит: сохранение и проверка
-        на вхождение в неозоны, обновление последних данных трекера'
+      description: 'Accepts coordinates from the smartphone, occurs: saving and checking
+        for entry into neozones, updating the latest tracker data'
       parameters:
-      - description: Запрос с координатами и флагами устройства
+      - description: Request with device coordinates and flags
         in: body
         name: request
         required: true
@@ -272,14 +272,14 @@ paths:
           description: err
         "500":
           description: err
-      summary: Прием координат от смартфона
+      summary: Acceptance of coordinates from a smartphone
       tags:
-      - Мониторинг
+      - Monitoring
   /trackers:
     post:
       consumes:
       - application/json
-      description: Создание нового трекера для авторизованного пользователя
+      description: Creating a new tracker for an authorized user
       parameters:
       - description: Запрос на создание треккера
         in: body
@@ -300,12 +300,12 @@ paths:
           description: err
         "500":
           description: err
-      summary: Создание нового трекера
+      summary: Create a new tracker
       tags:
-      - Трекеры
+      - Trackers
   /trackers/all:
     get:
-      description: Лист трекеров для пользователя
+      description: Load all trackers for an authorized user
       produces:
       - application/json
       responses:
@@ -319,16 +319,16 @@ paths:
           description: err
         "500":
           description: err
-      summary: Загрузить трекеры
+      summary: Load all trackers
       tags:
-      - Трекеры
+      - Trackers
   /trackers/avatar/{id}:
     put:
       consumes:
       - application/json
-      description: Обновление аватара трекера для пользователя (jpeg 250x250)
+      description: Update avatar tracker for authorized user (jpeg 250x250)
       parameters:
-      - description: id трекера
+      - description: id tracker
         in: path
         name: id
         required: true
@@ -351,14 +351,14 @@ paths:
           description: err
         "500":
           description: err
-      summary: Обновление аватара трекера
+      summary: Update avatar tracker
       tags:
-      - Трекеры
+      - Trackers
   /trackers/custom:
     post:
       consumes:
       - application/json
-      description: Лист выбранных трекеров для пользователя
+      description: Load custom trackers by ids for an authorized user
       parameters:
       - description: Запрос на отдельные трекеры
         in: body
@@ -380,17 +380,17 @@ paths:
           description: err
         "500":
           description: err
-      summary: Загрузить трекеры по id
+      summary: Load custom trackers by ids
       tags:
-      - Трекеры
+      - Trackers
   /trackers/delete/{id}:
     delete:
       consumes:
       - application/json
-      description: Удаление трекера для авторизованного пользователя, если трекер
-        привязан к нескольким пользователям, то только отвязка
+      description: Delete the tracker for an authorized user, if the tracker is associated
+        with several users, then only unlink
       parameters:
-      - description: id трекера
+      - description: id tracker
         in: path
         name: id
         required: true
@@ -404,14 +404,14 @@ paths:
           description: err
         "500":
           description: err
-      summary: Удаление трекера
+      summary: Delete tracker
       tags:
-      - Трекеры
+      - Trackers
   /trackers/find/{id}:
     get:
-      description: Загрузка трекера по id
+      description: Load tracker by id
       parameters:
-      - description: id трекера
+      - description: id tracker
         in: path
         name: id
         required: true
@@ -428,14 +428,14 @@ paths:
           description: err
         "500":
           description: err
-      summary: Загрузить трекер
+      summary: Load tracker
       tags:
-      - Трекеры
+      - Trackers
   /trackers/geo/history:
     post:
       consumes:
       - application/json
-      description: Получение истории для трекера за период
+      description: Getting history for tracker for the period
       parameters:
       - description: Запрос истории треккера
         in: body
@@ -457,14 +457,14 @@ paths:
           description: err
         "500":
           description: err
-      summary: История трекера
+      summary: Tracker history
       tags:
-      - Трекеры
+      - Trackers
   /trackers/update/{id}:
     put:
       consumes:
       - application/json
-      description: Обновление свойств трекера для пользователя
+      description: Update tracker properties for authorized user
       parameters:
       - description: id трекера
         in: path
@@ -487,16 +487,16 @@ paths:
           description: err
         "500":
           description: err
-      summary: Обновление трекера
+      summary: Update tracker
       tags:
-      - Трекеры
+      - Trackers
   /users/login:
     post:
       consumes:
       - application/json
-      description: Авторизация пользователя
+      description: User Authorization by Login/Password
       parameters:
-      - description: Логин пароль
+      - description: 'Login: Password'
         in: body
         name: request
         required: true
@@ -515,12 +515,12 @@ paths:
           description: err
         "500":
           description: err
-      summary: Авторизация пользователя
+      summary: User Authorization
       tags:
-      - Пользователи
+      - Users
   /users/me:
     get:
-      description: Получение профиля пользователя
+      description: Getting a user profile
       produces:
       - application/json
       responses:
@@ -533,14 +533,14 @@ paths:
           description: err
         "500":
           description: err
-      summary: Запрос профиля
+      summary: Profile request
       tags:
-      - Пользователи
+      - Users
   /users/me/avatar:
     put:
       consumes:
       - application/json
-      description: Обновление аватара пользователя (jpeg 250x250)
+      description: Update user avatar (jpeg 250x250)
       parameters:
       - description: avatar
         in: body
@@ -560,16 +560,16 @@ paths:
           description: err
         "500":
           description: err
-      summary: Обновление аватара пользователя
+      summary: Update user avatar
       tags:
-      - Пользователи
+      - Users
   /users/me/password:
     put:
       consumes:
       - application/json
-      description: Изменение пароля пользователя
+      description: Change user password
       parameters:
-      - description: Запрос на изменение пароля
+      - description: Password change request
         in: body
         name: request
         required: true
@@ -585,16 +585,16 @@ paths:
           description: err
         "500":
           description: err
-      summary: Изменение пароля
+      summary: Change password
       tags:
-      - Пользователи
+      - Users
   /users/me/push:
     put:
       consumes:
       - application/json
-      description: Обновление push id пользователя
+      description: Update user push id
       parameters:
-      - description: Запрос с push id
+      - description: Request with push id
         in: body
         name: request
         required: true
@@ -610,16 +610,16 @@ paths:
           description: err
         "500":
           description: err
-      summary: Обновление push id пользователя
+      summary: Update user push id
       tags:
-      - Пользователи
+      - Users
   /users/password/reset:
     post:
       consumes:
       - application/json
-      description: Сброс пароля пользователя по email
+      description: Reset user password by email
       parameters:
-      - description: Запрос на сброс пароля
+      - description: Password reset request
         in: body
         name: request
         required: true
@@ -635,16 +635,16 @@ paths:
           description: err
         "500":
           description: err
-      summary: Сброс пароля
+      summary: Password reset
       tags:
-      - Пользователи
+      - Users
   /users/signUp:
     post:
       consumes:
       - application/json
-      description: Регистрация пользователя email + password
+      description: User registration email + password
       parameters:
-      - description: Запрос на регистрацию
+      - description: Registration Request
         in: body
         name: request
         required: true
@@ -660,14 +660,14 @@ paths:
           description: err
         "500":
           description: err
-      summary: Регистрация пользователя
+      summary: User registration
       tags:
-      - Пользователи
+      - Users
   /zone/all:
     get:
       consumes:
       - application/json
-      description: Получение списка зон для авторизованного пользователя
+      description: Getting a list of zones for an authorized user
       produces:
       - application/json
       responses:
@@ -681,16 +681,16 @@ paths:
           description: err
         "500":
           description: err
-      summary: Список зон
+      summary: Zone list
       tags:
-      - Зоны
+      - Zones
   /zone/delete/{id}:
     delete:
       consumes:
       - application/json
-      description: Удаление зоны для авторизованного пользователя
+      description: Deleting a zone for an authorized user
       parameters:
-      - description: id зоны
+      - description: id zone
         in: path
         name: id
         required: true
@@ -704,16 +704,16 @@ paths:
           description: err
         "500":
           description: err
-      summary: Удаление зоны
+      summary: Deleting a zone
       tags:
-      - Зоны
+      - Zones
   /zone/find/{id}:
     get:
       consumes:
       - application/json
-      description: Загрузка зоны для авторизованного пользователя
+      description: Loading zone for authorized user
       parameters:
-      - description: id зоны
+      - description: id zone
         in: path
         name: id
         required: true
@@ -730,16 +730,16 @@ paths:
           description: err
         "500":
           description: err
-      summary: Загрузка зоны
+      summary: Loading zone
       tags:
-      - Зоны
+      - Zones
   /zone/save:
     post:
       consumes:
       - application/json
-      description: Создание зоны для авторизованного пользователя
+      description: Creating a zone for an authorized user
       parameters:
-      - description: Запрос настройками зоны
+      - description: Request with zone settings
         in: body
         name: request
         required: true
@@ -758,21 +758,21 @@ paths:
           description: err
         "500":
           description: err
-      summary: Создание зоны
+      summary: Creating a zone
       tags:
-      - Зоны
+      - Zones
   /zone/snap/{id}:
     put:
       consumes:
       - application/json
-      description: Привязка зоны к списку трекеров
+      description: Linking the zone to the tracker list
       parameters:
       - description: id зоны
         in: path
         name: id
         required: true
         type: string
-      - description: Запрос привязки трекеров к зоне
+      - description: Request linking trackers to a zone
         in: body
         name: request
         required: true
@@ -788,21 +788,21 @@ paths:
           description: err
         "500":
           description: err
-      summary: Привязка зоны
+      summary: Zone binding
       tags:
-      - Зоны
+      - Zones
   /zone/update/{id}:
     put:
       consumes:
       - application/json
-      description: Обновление настроек зоны для авторизованного пользователя
+      description: Updating zone settings for an authorized user
       parameters:
       - description: id зоны
         in: path
         name: id
         required: true
         type: string
-      - description: Запрос настройками зоны
+      - description: Request with zone settings
         in: body
         name: request
         required: true
@@ -818,7 +818,7 @@ paths:
           description: err
         "500":
           description: err
-      summary: Обновление зоны
+      summary: Zone update
       tags:
-      - Зоны
+      - Zones
 swagger: "2.0"

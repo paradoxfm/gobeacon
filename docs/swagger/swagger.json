@@ -20,13 +20,13 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Система"
+                    "System"
                 ],
-                "summary": "Загрузка аватарки по id",
+                "summary": "Loading avatar by id",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "id аватарки",
+                        "description": "id avatar",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -51,17 +51,17 @@
         },
         "/heartbeat": {
             "post": {
-                "description": "Принимает координаты от смартфона, происходит: сохранение и проверка на вхождение в неозоны, обновление последних данных трекера",
+                "description": "Accepts coordinates from the smartphone, occurs: saving and checking for entry into neozones, updating the latest tracker data",
                 "consumes": [
                     "application/json"
                 ],
                 "tags": [
-                    "Мониторинг"
+                    "Monitoring"
                 ],
-                "summary": "Прием координат от смартфона",
+                "summary": "Acceptance of coordinates from a smartphone",
                 "parameters": [
                     {
-                        "description": "Запрос с координатами и флагами устройства",
+                        "description": "Request with device coordinates and flags",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -86,7 +86,7 @@
         },
         "/trackers": {
             "post": {
-                "description": "Создание нового трекера для авторизованного пользователя",
+                "description": "Creating a new tracker for an authorized user",
                 "consumes": [
                     "application/json"
                 ],
@@ -94,9 +94,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Трекеры"
+                    "Trackers"
                 ],
-                "summary": "Создание нового трекера",
+                "summary": "Create a new tracker",
                 "parameters": [
                     {
                         "description": "Запрос на создание треккера",
@@ -128,14 +128,14 @@
         },
         "/trackers/all": {
             "get": {
-                "description": "Лист трекеров для пользователя",
+                "description": "Load all trackers for an authorized user",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Трекеры"
+                    "Trackers"
                 ],
-                "summary": "Загрузить трекеры",
+                "summary": "Load all trackers",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -157,7 +157,7 @@
         },
         "/trackers/avatar/{id}": {
             "put": {
-                "description": "Обновление аватара трекера для пользователя (jpeg 250x250)",
+                "description": "Update avatar tracker for authorized user (jpeg 250x250)",
                 "consumes": [
                     "application/json"
                 ],
@@ -165,13 +165,13 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Трекеры"
+                    "Trackers"
                 ],
-                "summary": "Обновление аватара трекера",
+                "summary": "Update avatar tracker",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "id трекера",
+                        "description": "id tracker",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -205,7 +205,7 @@
         },
         "/trackers/custom": {
             "post": {
-                "description": "Лист выбранных трекеров для пользователя",
+                "description": "Load custom trackers by ids for an authorized user",
                 "consumes": [
                     "application/json"
                 ],
@@ -213,9 +213,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Трекеры"
+                    "Trackers"
                 ],
-                "summary": "Загрузить трекеры по id",
+                "summary": "Load custom trackers by ids",
                 "parameters": [
                     {
                         "description": "Запрос на отдельные трекеры",
@@ -249,7 +249,7 @@
         },
         "/trackers/delete/{id}": {
             "delete": {
-                "description": "Удаление трекера для авторизованного пользователя, если трекер привязан к нескольким пользователям, то только отвязка",
+                "description": "Delete the tracker for an authorized user, if the tracker is associated with several users, then only unlink",
                 "consumes": [
                     "application/json"
                 ],
@@ -257,13 +257,13 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Трекеры"
+                    "Trackers"
                 ],
-                "summary": "Удаление трекера",
+                "summary": "Delete tracker",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "id трекера",
+                        "description": "id tracker",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -284,18 +284,18 @@
         },
         "/trackers/find/{id}": {
             "get": {
-                "description": "Загрузка трекера по id",
+                "description": "Load tracker by id",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Трекеры"
+                    "Trackers"
                 ],
-                "summary": "Загрузить трекер",
+                "summary": "Load tracker",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "id трекера",
+                        "description": "id tracker",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -320,7 +320,7 @@
         },
         "/trackers/geo/history": {
             "post": {
-                "description": "Получение истории для трекера за период",
+                "description": "Getting history for tracker for the period",
                 "consumes": [
                     "application/json"
                 ],
@@ -328,9 +328,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Трекеры"
+                    "Trackers"
                 ],
-                "summary": "История трекера",
+                "summary": "Tracker history",
                 "parameters": [
                     {
                         "description": "Запрос истории треккера",
@@ -364,7 +364,7 @@
         },
         "/trackers/update/{id}": {
             "put": {
-                "description": "Обновление свойств трекера для пользователя",
+                "description": "Update tracker properties for authorized user",
                 "consumes": [
                     "application/json"
                 ],
@@ -372,9 +372,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Трекеры"
+                    "Trackers"
                 ],
-                "summary": "Обновление трекера",
+                "summary": "Update tracker",
                 "parameters": [
                     {
                         "type": "string",
@@ -409,7 +409,7 @@
         },
         "/users/login": {
             "post": {
-                "description": "Авторизация пользователя",
+                "description": "User Authorization by Login/Password",
                 "consumes": [
                     "application/json"
                 ],
@@ -417,12 +417,12 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Пользователи"
+                    "Users"
                 ],
-                "summary": "Авторизация пользователя",
+                "summary": "User Authorization",
                 "parameters": [
                     {
-                        "description": "Логин пароль",
+                        "description": "Login: Password",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -451,14 +451,14 @@
         },
         "/users/me": {
             "get": {
-                "description": "Получение профиля пользователя",
+                "description": "Getting a user profile",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Пользователи"
+                    "Users"
                 ],
-                "summary": "Запрос профиля",
+                "summary": "Profile request",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -478,7 +478,7 @@
         },
         "/users/me/avatar": {
             "put": {
-                "description": "Обновление аватара пользователя (jpeg 250x250)",
+                "description": "Update user avatar (jpeg 250x250)",
                 "consumes": [
                     "application/json"
                 ],
@@ -486,9 +486,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Пользователи"
+                    "Users"
                 ],
-                "summary": "Обновление аватара пользователя",
+                "summary": "Update user avatar",
                 "parameters": [
                     {
                         "description": "avatar",
@@ -519,7 +519,7 @@
         },
         "/users/me/password": {
             "put": {
-                "description": "Изменение пароля пользователя",
+                "description": "Change user password",
                 "consumes": [
                     "application/json"
                 ],
@@ -527,12 +527,12 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Пользователи"
+                    "Users"
                 ],
-                "summary": "Изменение пароля",
+                "summary": "Change password",
                 "parameters": [
                     {
-                        "description": "Запрос на изменение пароля",
+                        "description": "Password change request",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -557,7 +557,7 @@
         },
         "/users/me/push": {
             "put": {
-                "description": "Обновление push id пользователя",
+                "description": "Update user push id",
                 "consumes": [
                     "application/json"
                 ],
@@ -565,12 +565,12 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Пользователи"
+                    "Users"
                 ],
-                "summary": "Обновление push id пользователя",
+                "summary": "Update user push id",
                 "parameters": [
                     {
-                        "description": "Запрос с push id",
+                        "description": "Request with push id",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -595,7 +595,7 @@
         },
         "/users/password/reset": {
             "post": {
-                "description": "Сброс пароля пользователя по email",
+                "description": "Reset user password by email",
                 "consumes": [
                     "application/json"
                 ],
@@ -603,12 +603,12 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Пользователи"
+                    "Users"
                 ],
-                "summary": "Сброс пароля",
+                "summary": "Password reset",
                 "parameters": [
                     {
-                        "description": "Запрос на сброс пароля",
+                        "description": "Password reset request",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -633,7 +633,7 @@
         },
         "/users/signUp": {
             "post": {
-                "description": "Регистрация пользователя email + password",
+                "description": "User registration email + password",
                 "consumes": [
                     "application/json"
                 ],
@@ -641,12 +641,12 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Пользователи"
+                    "Users"
                 ],
-                "summary": "Регистрация пользователя",
+                "summary": "User registration",
                 "parameters": [
                     {
-                        "description": "Запрос на регистрацию",
+                        "description": "Registration Request",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -671,7 +671,7 @@
         },
         "/zone/all": {
             "get": {
-                "description": "Получение списка зон для авторизованного пользователя",
+                "description": "Getting a list of zones for an authorized user",
                 "consumes": [
                     "application/json"
                 ],
@@ -679,9 +679,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Зоны"
+                    "Zones"
                 ],
-                "summary": "Список зон",
+                "summary": "Zone list",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -703,7 +703,7 @@
         },
         "/zone/delete/{id}": {
             "delete": {
-                "description": "Удаление зоны для авторизованного пользователя",
+                "description": "Deleting a zone for an authorized user",
                 "consumes": [
                     "application/json"
                 ],
@@ -711,13 +711,13 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Зоны"
+                    "Zones"
                 ],
-                "summary": "Удаление зоны",
+                "summary": "Deleting a zone",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "id зоны",
+                        "description": "id zone",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -738,7 +738,7 @@
         },
         "/zone/find/{id}": {
             "get": {
-                "description": "Загрузка зоны для авторизованного пользователя",
+                "description": "Loading zone for authorized user",
                 "consumes": [
                     "application/json"
                 ],
@@ -746,13 +746,13 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Зоны"
+                    "Zones"
                 ],
-                "summary": "Загрузка зоны",
+                "summary": "Loading zone",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "id зоны",
+                        "description": "id zone",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -777,7 +777,7 @@
         },
         "/zone/save": {
             "post": {
-                "description": "Создание зоны для авторизованного пользователя",
+                "description": "Creating a zone for an authorized user",
                 "consumes": [
                     "application/json"
                 ],
@@ -785,12 +785,12 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Зоны"
+                    "Zones"
                 ],
-                "summary": "Создание зоны",
+                "summary": "Creating a zone",
                 "parameters": [
                     {
-                        "description": "Запрос настройками зоны",
+                        "description": "Request with zone settings",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -819,7 +819,7 @@
         },
         "/zone/snap/{id}": {
             "put": {
-                "description": "Привязка зоны к списку трекеров",
+                "description": "Linking the zone to the tracker list",
                 "consumes": [
                     "application/json"
                 ],
@@ -827,9 +827,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Зоны"
+                    "Zones"
                 ],
-                "summary": "Привязка зоны",
+                "summary": "Zone binding",
                 "parameters": [
                     {
                         "type": "string",
@@ -839,7 +839,7 @@
                         "required": true
                     },
                     {
-                        "description": "Запрос привязки трекеров к зоне",
+                        "description": "Request linking trackers to a zone",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -864,7 +864,7 @@
         },
         "/zone/update/{id}": {
             "put": {
-                "description": "Обновление настроек зоны для авторизованного пользователя",
+                "description": "Updating zone settings for an authorized user",
                 "consumes": [
                     "application/json"
                 ],
@@ -872,9 +872,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Зоны"
+                    "Zones"
                 ],
-                "summary": "Обновление зоны",
+                "summary": "Zone update",
                 "parameters": [
                     {
                         "type": "string",
@@ -884,7 +884,7 @@
                         "required": true
                     },
                     {
-                        "description": "Запрос настройками зоны",
+                        "description": "Request with zone settings",
                         "name": "request",
                         "in": "body",
                         "required": true,

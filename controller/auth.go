@@ -31,16 +31,16 @@ func CreateAdminJWTMiddleware() (*jwt.GinJWTMiddleware) {
 }
 
 // AuthorizeUser godoc
-// @Summary Авторизация пользователя
-// @Description Авторизация пользователя
+// @Summary User Authorization
+// @Description User Authorization by Login/Password
 // @Accept json
 // @Produce json
-// @Param request body model.LoginRequest true "Логин пароль"
+// @Param request body model.LoginRequest true "Login: Password"
 // @Router /users/login [post]
 // @Success 200 {object} model.LoginResponse
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Пользователи
+// @Tags Users
 func getAuthenticator(c *gin.Context) (interface{}, error) {
 	var cred model.LoginRequest
 	if err := c.ShouldBind(&cred); err != nil {

@@ -7,8 +7,8 @@ import (
 )
 
 // TrackCreate godoc
-// @Summary Создание нового трекера
-// @Description Создание нового трекера для авторизованного пользователя
+// @Summary Create a new tracker
+// @Description Creating a new tracker for an authorized user
 // @Accept json
 // @Produce json
 // @Param request body model.TrackCreateRequest true "Запрос на создание треккера"
@@ -16,7 +16,7 @@ import (
 // @Success 200 {object} model.TrackCreateResponse
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Трекеры
+// @Tags Trackers
 func TrackCreate(c *gin.Context) {
 	req := model.TrackCreateRequest{UserId: getUserId(c)}
 	c.Bind(&req)
@@ -25,15 +25,15 @@ func TrackCreate(c *gin.Context) {
 }
 
 // TrackGetById godoc
-// @Summary Загрузить трекер
-// @Description Загрузка трекера по id
+// @Summary Load tracker
+// @Description Load tracker by id
 // @Produce json
-// @Param id path string true "id трекера"
+// @Param id path string true "id tracker"
 // @Router /trackers/find/{id} [get]
 // @Success 200 {object} model.Tracker
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Трекеры
+// @Tags Trackers
 func TrackGetById(c *gin.Context) {
 	name := c.Param("id")
 	result, err := service.GetTrackerById(name)
@@ -41,14 +41,14 @@ func TrackGetById(c *gin.Context) {
 }
 
 // TrackAll godoc
-// @Summary Загрузить трекеры
-// @Description Лист трекеров для пользователя
+// @Summary Load all trackers
+// @Description Load all trackers for an authorized user
 // @Produce json
 // @Router /trackers/all [get]
 // @Success 200 {array} model.Tracker
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Трекеры
+// @Tags Trackers
 func TrackAll(c *gin.Context) {
 	userId := getUserId(c)
 	result, err := service.GetAllTrackersForUser(userId)
@@ -56,8 +56,8 @@ func TrackAll(c *gin.Context) {
 }
 
 // TrackByIds godoc
-// @Summary Загрузить трекеры по id
-// @Description Лист выбранных трекеров для пользователя
+// @Summary Load custom trackers by ids
+// @Description Load custom trackers by ids for an authorized user
 // @Accept json
 // @Produce json
 // @Param request body model.TracksByIdsRequest true "Запрос на отдельные трекеры"
@@ -65,7 +65,7 @@ func TrackAll(c *gin.Context) {
 // @Success 200 {array} model.Tracker
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Трекеры
+// @Tags Trackers
 func TrackByIds(c *gin.Context) {
 	req := model.TracksByIdsRequest{}
 	c.Bind(&req)
@@ -74,16 +74,16 @@ func TrackByIds(c *gin.Context) {
 }
 
 // ZoneDeleteById godoc
-// @Summary Удаление трекера
-// @Description Удаление трекера для авторизованного пользователя, если трекер привязан к нескольким пользователям, то только отвязка
+// @Summary Delete tracker
+// @Description Delete the tracker for an authorized user, if the tracker is associated with several users, then only unlink
 // @Accept json
 // @Produce json
-// @Param id path string true "id трекера"
+// @Param id path string true "id tracker"
 // @Router /trackers/delete/{id} [delete]
 // @Success 200 "ok"
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Трекеры
+// @Tags Trackers
 func TrackDeleteById(c *gin.Context) {
 	trackId := c.Param("id")
 	userId := getUserId(c)
@@ -92,8 +92,8 @@ func TrackDeleteById(c *gin.Context) {
 }
 
 // TrackUpdate godoc
-// @Summary Обновление трекера
-// @Description Обновление свойств трекера для пользователя
+// @Summary Update tracker
+// @Description Update tracker properties for authorized user
 // @Accept json
 // @Produce json
 // @Param id path string true "id трекера"
@@ -102,7 +102,7 @@ func TrackDeleteById(c *gin.Context) {
 // @Success 200 "ok"
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Трекеры
+// @Tags Trackers
 func TrackUpdate(c *gin.Context) {
 	req := model.TrackPrefRequest{TrackId: c.Param("id"), UserId: getUserId(c)}
 	c.Bind(&req)
@@ -111,17 +111,17 @@ func TrackUpdate(c *gin.Context) {
 }
 
 // TrackerAvatar godoc
-// @Summary Обновление аватара трекера
-// @Description Обновление аватара трекера для пользователя (jpeg 250x250)
+// @Summary Update avatar tracker
+// @Description Update avatar tracker for authorized user (jpeg 250x250)
 // @Accept json
 // @Produce json
-// @Param id path string true "id трекера"
+// @Param id path string true "id tracker"
 // @Param avatar body file true "avatar"
 // @Router /trackers/avatar/{id} [put]
 // @Success 200 {object} model.AvatarIdResponse
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Трекеры
+// @Tags Trackers
 func TrackerAvatar(c *gin.Context) {
 	trackId := c.Param("id")
 	file, e := c.FormFile("avatar")
@@ -134,8 +134,8 @@ func TrackerAvatar(c *gin.Context) {
 }
 
 // TrackerHistory godoc
-// @Summary История трекера
-// @Description Получение истории для трекера за период
+// @Summary Tracker history
+// @Description Getting history for tracker for the period
 // @Accept json
 // @Produce json
 // @Param request body model.TracksHistRequest true "Запрос истории треккера"
@@ -143,7 +143,7 @@ func TrackerAvatar(c *gin.Context) {
 // @Success 200 {array} model.TrackHistoryResponse
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Трекеры
+// @Tags Trackers
 func TrackerHistory(c *gin.Context) {
 	req := model.TracksHistRequest{}
 	c.Bind(&req)

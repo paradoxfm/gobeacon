@@ -7,16 +7,16 @@ import (
 )
 
 // UserCreate godoc
-// @Summary Регистрация пользователя
-// @Description Регистрация пользователя email + password
+// @Summary User registration
+// @Description User registration email + password
 // @Accept json
 // @Produce json
-// @Param request body model.RegistrationRequest true "Запрос на регистрацию"
+// @Param request body model.RegistrationRequest true "Registration Request"
 // @Router /users/signUp [post]
 // @Success 200 "ok"
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Пользователи
+// @Tags Users
 func UserCreate(c *gin.Context) {
 	var req model.RegistrationRequest
 	c.Bind(&req)
@@ -26,16 +26,16 @@ func UserCreate(c *gin.Context) {
 }
 
 // UserResetPassword godoc
-// @Summary Сброс пароля
-// @Description Сброс пароля пользователя по email
+// @Summary Password reset
+// @Description Reset user password by email
 // @Accept json
 // @Produce json
-// @Param request body model.ResetPasswordRequest true "Запрос на сброс пароля"
+// @Param request body model.ResetPasswordRequest true "Password reset request"
 // @Router /users/password/reset [post]
 // @Success 200 "ok"
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Пользователи
+// @Tags Users
 func UserResetPassword(c *gin.Context) {
 	req := model.ResetPasswordRequest{}
 	c.Bind(&req)
@@ -44,16 +44,16 @@ func UserResetPassword(c *gin.Context) {
 }
 
 // UserChangePassword godoc
-// @Summary Изменение пароля
-// @Description Изменение пароля пользователя
+// @Summary Change password
+// @Description Change user password
 // @Accept json
 // @Produce json
-// @Param request body model.ChangePasswordRequest true "Запрос на изменение пароля"
+// @Param request body model.ChangePasswordRequest true "Password change request"
 // @Router /users/me/password [put]
 // @Success 200 "ok"
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Пользователи
+// @Tags Users
 func UserChangePassword(c *gin.Context) {
 	req := model.ChangePasswordRequest{UserId: getUserId(c)}
 	c.Bind(&req)
@@ -62,14 +62,14 @@ func UserChangePassword(c *gin.Context) {
 }
 
 // UserGetProfile godoc
-// @Summary Запрос профиля
-// @Description Получение профиля пользователя
+// @Summary Profile request
+// @Description Getting a user profile
 // @Produce json
 // @Router /users/me [get]
 // @Success 200 {object} model.ProfileResponse
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Пользователи
+// @Tags Users
 func UserGetProfile(c *gin.Context) {
 	req := model.GetProfileRequest{UserId: getUserId(c)}
 	c.Bind(&req)
@@ -78,8 +78,8 @@ func UserGetProfile(c *gin.Context) {
 }
 
 // UserUpdateAvatar godoc
-// @Summary Обновление аватара пользователя
-// @Description Обновление аватара пользователя (jpeg 250x250)
+// @Summary Update user avatar
+// @Description Update user avatar (jpeg 250x250)
 // @Accept json
 // @Produce json
 // @Param avatar body file true "avatar"
@@ -87,7 +87,7 @@ func UserGetProfile(c *gin.Context) {
 // @Success 200 {object} model.AvatarIdResponse
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Пользователи
+// @Tags Users
 func UserUpdateAvatar(c *gin.Context) {
 	file, e := c.FormFile("avatar")
 	if e != nil {
@@ -99,16 +99,16 @@ func UserUpdateAvatar(c *gin.Context) {
 }
 
 // UserUpdatePushId godoc
-// @Summary Обновление push id пользователя
-// @Description Обновление push id пользователя
+// @Summary Update user push id
+// @Description Update user push id
 // @Accept json
 // @Produce json
-// @Param request body model.UpdatePushRequest true "Запрос с push id"
+// @Param request body model.UpdatePushRequest true "Request with push id"
 // @Router /users/me/push [put]
 // @Success 200 "ok"
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Пользователи
+// @Tags Users
 func UserUpdatePushId(c *gin.Context) {
 	req := model.UpdatePushRequest{UserId: getUserId(c)}
 	c.Bind(&req)

@@ -8,16 +8,16 @@ import (
 )
 
 // HeartbeatPhone godoc
-// @Summary Прием координат от смартфона
-// @Description Принимает координаты от смартфона, происходит: сохранение и проверка на вхождение в неозоны, обновление последних данных трекера
+// @Summary Acceptance of coordinates from a smartphone
+// @Description Accepts coordinates from the smartphone, occurs: saving and checking for entry into neozones, updating the latest tracker data
 // @securityDefinitions.basic BasicAut
 // @Accept json
-// @Param request body model.Heartbeat true "Запрос с координатами и флагами устройства"
+// @Param request body model.Heartbeat true "Request with device coordinates and flags"
 // @Success 200 "ok"
 // @Router /heartbeat [post]
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Мониторинг
+// @Tags Monitoring
 func HeartbeatPhone(c *gin.Context) {
 	req := model.Heartbeat{}
 	if e := c.Bind(&req); e != nil {
@@ -30,15 +30,15 @@ func HeartbeatPhone(c *gin.Context) {
 }
 
 // HeartbeatPhone godoc
-// @Summary Загрузка аватарки по id
+// @Summary Loading avatar by id
 // @Accept json
 // @Produce json
-// @Param id path string true "id аватарки"
+// @Param id path string true "id avatar"
 // @Router /avatar/{id} [get]
 // @Success 200 {object} model.AvatarResponse
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Система
+// @Tags System
 func GetAvatar(c *gin.Context) {
 	id := c.Param("id")
 	result, err := service.GetAvatar(id)

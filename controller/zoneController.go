@@ -7,15 +7,15 @@ import (
 )
 
 // ZoneAllForUser godoc
-// @Summary Список зон
-// @Description Получение списка зон для авторизованного пользователя
+// @Summary Zone list
+// @Description Getting a list of zones for an authorized user
 // @Accept json
 // @Produce json
 // @Success 200 {array} model.GeoZoneResponse
 // @Router /zone/all [get]
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Зоны
+// @Tags Zones
 func ZoneAllForUser(c *gin.Context) {
 	req := model.ZoneAllRequest{UserId: getUserId(c)}
 	c.Bind(&req)
@@ -24,16 +24,16 @@ func ZoneAllForUser(c *gin.Context) {
 }
 
 // ZoneCreate godoc
-// @Summary Создание зоны
-// @Description Создание зоны для авторизованного пользователя
+// @Summary Creating a zone
+// @Description Creating a zone for an authorized user
 // @Accept json
 // @Produce json
-// @Param request body model.ZoneCreateRequest true "Запрос настройками зоны"
+// @Param request body model.ZoneCreateRequest true "Request with zone settings"
 // @Success 200 {object} model.GeoZoneResponse
 // @Router /zone/save [post]
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Зоны
+// @Tags Zones
 func ZoneCreate(c *gin.Context) {
 	req := model.ZoneCreateRequest{UserId: getUserId(c)}
 	c.Bind(&req)
@@ -43,17 +43,17 @@ func ZoneCreate(c *gin.Context) {
 }
 
 // ZoneUpdate godoc
-// @Summary Обновление зоны
-// @Description Обновление настроек зоны для авторизованного пользователя
+// @Summary Zone update
+// @Description Updating zone settings for an authorized user
 // @Accept json
 // @Produce json
 // @Param id path string true "id зоны"
-// @Param request body model.ZoneCreateRequest true "Запрос настройками зоны"
+// @Param request body model.ZoneCreateRequest true "Request with zone settings"
 // @Router /zone/update/{id} [put]
 // @Success 200 "ok"
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Зоны
+// @Tags Zones
 func ZoneUpdate(c *gin.Context) {
 	req := model.ZoneCreateRequest{UserId: getUserId(c)}
 	c.Bind(&req)
@@ -63,16 +63,16 @@ func ZoneUpdate(c *gin.Context) {
 }
 
 // ZoneDeleteById godoc
-// @Summary Удаление зоны
-// @Description Удаление зоны для авторизованного пользователя
+// @Summary Deleting a zone
+// @Description Deleting a zone for an authorized user
 // @Accept json
 // @Produce json
-// @Param id path string true "id зоны"
+// @Param id path string true "id zone"
 // @Router /zone/delete/{id} [delete]
 // @Success 200 "ok"
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Зоны
+// @Tags Zones
 func ZoneDeleteById(c *gin.Context) {
 	zoneId := c.Param("id")
 	err := service.ZoneDelete(zoneId)
@@ -80,16 +80,16 @@ func ZoneDeleteById(c *gin.Context) {
 }
 
 // ZoneGetById godoc
-// @Summary Загрузка зоны
-// @Description Загрузка зоны для авторизованного пользователя
+// @Summary Loading zone
+// @Description Loading zone for authorized user
 // @Accept json
 // @Produce json
-// @Param id path string true "id зоны"
+// @Param id path string true "id zone"
 // @Router /zone/find/{id} [get]
 // @Success 200 {object} model.GeoZoneResponse
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Зоны
+// @Tags Zones
 func ZoneGetById(c *gin.Context) {
 	zoneId := c.Param("id")
 	zn, err := service.ZoneGetById(zoneId)
@@ -97,17 +97,17 @@ func ZoneGetById(c *gin.Context) {
 }
 
 // ZoneSnapTrackList godoc
-// @Summary Привязка зоны
-// @Description Привязка зоны к списку трекеров
+// @Summary Zone binding
+// @Description Linking the zone to the tracker list
 // @Accept json
 // @Produce json
 // @Param id path string true "id зоны"
-// @Param request body model.ZoneSnapRequest true "Запрос привязки трекеров к зоне"
+// @Param request body model.ZoneSnapRequest true "Request linking trackers to a zone"
 // @Router /zone/snap/{id} [put]
 // @Success 200 "ok"
 // @Failure 400 "err"
 // @Failure 500 "err"
-// @Tags Зоны
+// @Tags Zones
 func ZoneSnapTrackList(c *gin.Context) {
 	zoneId := c.Param("id")
 	req := model.ZoneSnapRequest{UserId: getUserId(c)}
