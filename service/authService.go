@@ -4,6 +4,8 @@ import (
 	"github.com/appleboy/gin-jwt"
 	valid "github.com/asaskevich/govalidator"
 	"github.com/hlandau/passlib"
+	"github.com/labstack/gommon/log"
+	"github.com/sirupsen/logrus"
 	"gobeacon/code"
 	"gobeacon/db"
 	"gobeacon/model"
@@ -58,15 +60,17 @@ func ResetPassword(r *model.ResetPasswordRequest) (bool, []int) {
 			err = append(err, code.UserWithEmailNotFound) //пользователь не найден
 		} else {
 			newPwd := randomString(defaultPasswordLength)
-			send, _ := sendNewPassword(r.Email, newPwd)
+			send, erse := sendNewPassword(r.Email, newPwd)
 			if send {
 				hash, _ := hashPassword(newPwd)
+				logrus.WithFields(logrus.Fields{"hash": hash}).Info("New hash password")
 				dbErr := db.UpdateUserPassword(usr.Id.String(), hash)
 
 				if dbErr != nil { //ошибка обновления в базе
 					err = append(err, code.UserUpdatePwdUnknownError)
 				}
 			} else { // ошибка отправки email
+				log.Error(erse)
 				err = append(err, code.EmailSendError)
 			}
 		}

@@ -319,6 +319,12 @@
 			"revisionTime": "2016-02-15T19:45:13Z"
 		},
 		{
+			"checksumSHA1": "oYZHnI+E+6nOMi9RQzqqFQ8hazg=",
+			"path": "github.com/konsorten/go-windows-terminal-sequences",
+			"revision": "5c8c8bd35d3832f5d134ae1e1e375b69a4d25242",
+			"revisionTime": "2018-10-04T22:41:46Z"
+		},
+		{
 			"checksumSHA1": "yhRdcyFaeFIuXxIMglSBSaRQnZY=",
 			"path": "github.com/kr/pretty",
 			"revision": "73f6ac0b30a98e433b289500d779f50c1a6f0712",
@@ -443,6 +449,30 @@
 			"path": "github.com/scylladb/gocqlx/reflectx",
 			"revision": "f8424b00b9a917eb02d123df894b8a46b748e446",
 			"revisionTime": "2018-08-07T13:30:04Z"
+		},
+		{
+			"checksumSHA1": "a17wzoPn2afmCzgxRQ7yu6lbXUg=",
+			"path": "github.com/sirupsen/logrus",
+			"revision": "bcd833dfe83d3cebad139e4a29ed79cb2318bf95",
+			"revisionTime": "2018-11-01T07:39:56Z",
+			"version": "v1.2.0",
+			"versionExact": "v1.2.0"
+		},
+		{
+			"checksumSHA1": "J1soXD96ReAfJgdHiKPmcPaQajA=",
+			"path": "github.com/sirupsen/logrus/hooks/syslog",
+			"revision": "bcd833dfe83d3cebad139e4a29ed79cb2318bf95",
+			"revisionTime": "2018-11-01T07:39:56Z",
+			"version": "v1.2.0",
+			"versionExact": "v1.2.0"
+		},
+		{
+			"checksumSHA1": "2dhFM3p7MqKRPhQHGgKxwMdLhtg=",
+			"path": "github.com/sirupsen/logrus/internal/testutils",
+			"revision": "bcd833dfe83d3cebad139e4a29ed79cb2318bf95",
+			"revisionTime": "2018-11-01T07:39:56Z",
+			"version": "v1.2.0",
+			"versionExact": "v1.2.0"
 		},
 		{
 			"checksumSHA1": "N8JNeD2Bcto1jJBX8WDGA8QMr2E=",
@@ -595,6 +625,12 @@
 			"revisionTime": "2018-07-28T08:01:47Z"
 		},
 		{
+			"checksumSHA1": "4nPV7YdyHiVRSWaxpy6jHt/MTq4=",
+			"path": "golang.org/x/crypto/ssh/terminal",
+			"revision": "3d3f9f413869b949e48070b5bc593aa22cc2b8f2",
+			"revisionTime": "2018-11-10T06:03:37Z"
+		},
+		{
 			"checksumSHA1": "wRLo86qqt/7IwI8X43IjXLvveU0=",
 			"path": "golang.org/x/net/context",
 			"revision": "922f4815f713f213882e8ef45e0d315b164d705c",
@@ -635,6 +671,12 @@
 			"path": "golang.org/x/sys/unix",
 			"revision": "4ea2f632f6e912459fe60b26b1749377f0d889d5",
 			"revisionTime": "2018-08-21T03:36:55Z"
+		},
+		{
+			"checksumSHA1": "s+lofQ+SCdhmy0cQp9FpdQncuuI=",
+			"path": "golang.org/x/sys/windows",
+			"revision": "93218def8b18e66adbdab3eca8ec334700329f1f",
+			"revisionTime": "2018-11-16T16:03:55Z"
 		},
 		{
 			"checksumSHA1": "1EQgKS5xvMwLNIFsClpzEiD4Sno=",

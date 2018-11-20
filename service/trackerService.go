@@ -58,6 +58,9 @@ func GetAllTrackersForUser(userId string) (interface{}, []int) {
 	if e != nil {
 		err = append(err, code.DbErrorGetTracker)
 	}
+	if trackerList == nil {
+		trackerList = make([]model.Tracker, 0)
+	}
 	return trackerList, err
 }
 

@@ -18,6 +18,7 @@ func UserGetProfile(r *model.GetProfileRequest) (model.ProfileResponse, []int) {
 		return model.ProfileResponse{}, append(err, code.UserWithEmailNotFound) //пользователь не найден
 	}
 	rez := model.ProfileResponse{Id: usr.Id.String(), Email: usr.Email, Avatar: usr.Avatar}
+	rez.Trackers = make([]model.UserTracker, 0)
 	prefs, e := db.GetTrackPrefsByUser(r.UserId)
 	if e != nil {
 		return model.ProfileResponse{}, append(err, code.DbError)
