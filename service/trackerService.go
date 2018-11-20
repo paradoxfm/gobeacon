@@ -26,7 +26,7 @@ func CreateTracker(req *model.TrackCreateRequest) (string, []int) {
 	if len(devId) == 15 { // если прислали imei часов
 		req.Imei = req.DeviceId
 		req.DeviceId = req.DeviceId[4:14]
-		id, e = db.ExistTrackByDevice(req.DeviceId[4:14])
+		id, e = db.ExistTrackByDevice(req.DeviceId)
 	} else {
 		id, e = db.ExistTrackByDevice(devId)
 	}

@@ -111,7 +111,7 @@ func SaveHeartbeat(p *model.Heartbeat) ([]int) {
 	t, e := db.GetTrackerIdByDevice(p.DeviceId)
 	var err []int
 	if e != nil {
-		return append(err, code.DbError)
+		return err
 	}
 	pingDb := model.PingDb{TrackerId: t.Id, EventTime: p.DateTime, BatteryPower: float32(p.Power), Latitude: p.Latitude, Longitude: p.Longitude, SignalSource: getSignalId(p),}
 
