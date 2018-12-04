@@ -9,6 +9,7 @@ import (
 )
 
 var identityKey = "private_claim_id"
+var pwdKey = "private_claim_pwd"
 
 func CreateAdminJWTMiddleware() (*jwt.GinJWTMiddleware) {
 	authMiddleware := &jwt.GinJWTMiddleware{// the jwt middleware
@@ -18,12 +19,20 @@ func CreateAdminJWTMiddleware() (*jwt.GinJWTMiddleware) {
 		MaxRefresh:    0, // время действия токена после обновления
 		Authenticator: getAuthenticator,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			if v, ok := data.(string); ok {
+			if usr, ok := data.(model.UserDb); ok {
 				return jwt.MapClaims{
-					identityKey: v,
+					identityKey: usr.Id.String(),
+					pwdKey: usr.Password,
 				}
 			}
 			return jwt.MapClaims{}
+		},
+		Authorizator: func(data interface{}, c *gin.Context) bool {
+			claims := jwt.ExtractClaims(c)
+			//pld := c.Keys["JWT_PAYLOAD"].(map[interface{}]interface{})
+			id := claims[identityKey]
+			pwd := claims[pwdKey]
+			return service.UserExist(id.(string), pwd.(string))
 		},
 	}
 
@@ -46,5 +55,6 @@ func getAuthenticator(c *gin.Context) (interface{}, error) {
 	if err := c.ShouldBind(&cred); err != nil {
 		return "", jwt.ErrMissingLoginValues
 	}
-	return service.LoginUser(cred.Email, cred.Password)
+	user, e := service.LoginUser(cred.Email, cred.Password)
+	return user, e
 }

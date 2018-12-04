@@ -138,7 +138,7 @@ func TrackerAvatar(c *gin.Context) {
 // @Description Getting history for tracker for the period
 // @Accept json
 // @Produce json
-// @Param request body model.TracksHistRequest true "Запрос истории треккера"
+// @Param request body model.TracksHistRequest true "Request tracker history"
 // @Router /trackers/geo/history [post]
 // @Success 200 {array} model.TrackHistoryResponse
 // @Failure 400 "err"

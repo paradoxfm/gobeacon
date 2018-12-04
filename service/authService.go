@@ -92,12 +92,20 @@ func validateResetPassword(r *model.ResetPasswordRequest) []int {
 func LoginUser(email string, pwd string) (interface{}, error) {
 	usr, err := db.LoadUserByEmail(email)
 	if err != nil {
-		return "", jwt.ErrFailedAuthentication
+		return nil, jwt.ErrFailedAuthentication
 	}
 	if checkHash(pwd, usr.Password) {
-		return usr.Id.String(), nil
+		return usr, nil
 	}
-	return "", jwt.ErrFailedAuthentication
+	return nil, jwt.ErrFailedAuthentication
+}
+
+func UserExist(id string, pwdHash string) (bool) {
+	usr, err := db.LoadUserById(id)
+	if err != nil {
+		return false
+	}
+	return pwdHash == usr.Password
 }
 
 /*func convertErrorsToMessages(errs interface{}, errMsg []string) ([]string) {
