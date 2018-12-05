@@ -437,7 +437,7 @@ paths:
       - application/json
       description: Getting history for tracker for the period
       parameters:
-      - description: Запрос истории треккера
+      - description: Request tracker history
         in: body
         name: request
         required: true

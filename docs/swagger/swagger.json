@@ -333,7 +333,7 @@
                 "summary": "Tracker history",
                 "parameters": [
                     {
-                        "description": "Запрос истории треккера",
+                        "description": "Request tracker history",
                         "name": "request",
                         "in": "body",
                         "required": true,

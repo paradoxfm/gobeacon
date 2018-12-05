@@ -29,10 +29,15 @@ func CreateAdminJWTMiddleware() (*jwt.GinJWTMiddleware) {
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
 			claims := jwt.ExtractClaims(c)
-			//pld := c.Keys["JWT_PAYLOAD"].(map[interface{}]interface{})
 			id := claims[identityKey]
 			pwd := claims[pwdKey]
-			return service.UserExist(id.(string), pwd.(string))
+			exist := service.UserExist(id.(string), pwd.(string))
+			//exist = false
+			if !exist {
+				c.AbortWithStatus(401)
+				return false
+			}
+			return exist
 		},
 	}
 
