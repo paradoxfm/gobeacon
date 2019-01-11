@@ -146,8 +146,10 @@ func UpdateTrackAvatar(userId string, trackId string, blob []byte) (string, erro
 		return "", err
 	}
 
-	if e = deleteAvatar(avatarLink); e != nil {
-		return "", e
+	if len(avatarLink) > 0 {
+		if e = deleteAvatar(avatarLink); e != nil {
+			return "", e
+		}
 	}
 
 	return avaId, nil
