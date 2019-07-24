@@ -71,6 +71,7 @@ type Counter struct {
 	signal_source int,
 	latitude_last float,
 	longitude_last float,
+	on_charge boolean,
 	battery_power_last float,
 	signal_timestamp_last timestamp,
 	users set<UUID>,
@@ -86,6 +87,7 @@ type Tracker struct {
 	SignalSource        int        `db:"signal_source" json:"signal_source"`
 	LatitudeLast        float32    `db:"latitude_last" json:"latitude_last"`
 	LongitudeLast       float32    `db:"longitude_last" json:"longitude_last"`
+	OnCharge            bool       `db:"on_charge" json:"longitude_last"`
 	BatteryPowerLast    float32    `db:"battery_power_last" json:"battery_power_last"`
 	Users               []string   `db:"users"`
 	CreatedAt           time.Time  `db:"created_at" json:"created_at"`
@@ -146,5 +148,6 @@ type PingDb struct {
 	Latitude     float32    `db:"latitude" json:"latitude"`
 	Longitude    float32    `db:"longitude" json:"longitude"`
 	SignalSource int        `db:"signal_source"`
+	OnCharge     bool       `db:"on_charge"`
 	//ZoneId       gocql.UUID `db:"zone_id"`
 }

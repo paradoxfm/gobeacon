@@ -20,7 +20,7 @@ type AlarmConf struct {
 	Pref      model.TrackPref
 }
 
-func createPushData(trackId string) (map[string]AlarmConf) {
+func createPushData(trackId string) map[string]AlarmConf {
 	rez := make(map[string]AlarmConf)
 	trackPref, _ := db.GetTrackPrefsByTrack(trackId)
 	zones, _ := db.LoadZonesByTrackId(trackId)

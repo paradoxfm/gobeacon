@@ -48,6 +48,7 @@ type TrackHistoryResponse struct {
 	Date      time.Time `json:"datetime"`
 	Latitude  float32   `json:"latitude"`
 	Longitude float32   `json:"longitude"`
+	OnCharge  bool      `json:"on_charge"`
 }
 
 type TrackSnapZone struct {

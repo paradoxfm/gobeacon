@@ -122,7 +122,7 @@ func GetTrackHistory(r *model.TracksHistRequest) ([]model.TrackHistoryResponse, 
 		// фильтруем по расстоянию между точками
 		dist := p1.GreatCircleDistance(p2) * 1000
 		if dist >= 50 || i == len(ping)-1 { // 50 метров или последний
-			h := model.TrackHistoryResponse{Date: p.EventTime, Latitude: p.Latitude, Longitude: p.Longitude}
+			h := model.TrackHistoryResponse{Date: p.EventTime, Latitude: p.Latitude, Longitude: p.Longitude, OnCharge: p.OnCharge}
 			hist = append(hist, h)
 		}
 		prev = p

@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func WatchHandleMessage2(msg string) (interface{}) {
+func WatchHandleMessage2(msg string) interface{} {
 	commands := strings.FieldsFunc(msg, splitByChars)
 	var resp interface{}
 	for _, str := range commands {
@@ -27,7 +27,7 @@ func splitByChars(r rune) bool {
 	return r == '[' || r == ']'
 }
 
-func WatchHandleMessage(buff []byte) (interface{}) {
+func WatchHandleMessage(buff []byte) interface{} {
 	message := parseMessage(buff)
 	if message == nil {
 		return nil
@@ -44,12 +44,12 @@ func WatchHandleMessage(buff []byte) (interface{}) {
 	return nil
 }
 
-func createBase(message model.BaseRequest) (model.BaseResponse) {
+func createBase(message model.BaseRequest) model.BaseResponse {
 	return model.BaseResponse{Manufacter: message.Manufacter, EquipmentId: message.EquipmentId, Type: message.Type}
 }
 
 // гавно и лютая копипаста
-func parseMessage(buff []byte) (model.IBaseRequest) {
+func parseMessage(buff []byte) model.IBaseRequest {
 	// обработчик сообщений
 	// [3G*1208178692*0009*UPLOAD,30]
 	splitBuf := bytes.Split(buff, []byte(",")) // разбиваем по запятым
@@ -140,7 +140,7 @@ func CheckError(err error, msq string) {
 }
 
 // Пдоготовка сообщения для отправки в RabbitMQ
-func convertToHeartbeat(req model.IBaseRequest) (model.Heartbeat) {
+func convertToHeartbeat(req model.IBaseRequest) model.Heartbeat {
 	p := req.GetPositionData()
 	b := req.GetBase()
 	dt := p.Date

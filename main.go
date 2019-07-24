@@ -116,7 +116,7 @@ func createPhoneAdminApi() (*gin.Engine) {
 }
 
 //depreceated from 23.10.2018
-func createPhoneApi() (*gin.Engine) {
+func createPhoneApi() *gin.Engine {
 	r := gin.Default()
 	r.Use(gin.Recovery())
 	r.Use(gin.Logger())
@@ -127,7 +127,7 @@ func createPhoneApi() (*gin.Engine) {
 	return r
 }
 
-func createSwaggerApi() (*gin.Engine) {
+func createSwaggerApi() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Recovery())
 	authorized := r.Group("", gin.BasicAuth(gin.Accounts{

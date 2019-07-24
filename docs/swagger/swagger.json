@@ -994,6 +994,9 @@
                 "longitude": {
                     "type": "number"
                 },
+                "on_charge": {
+                    "type": "boolean"
+                },
                 "power": {
                     "type": "integer"
                 }
@@ -1095,6 +1098,9 @@
                 },
                 "longitude": {
                     "type": "number"
+                },
+                "on_charge": {
+                    "type": "boolean"
                 }
             }
         },
@@ -1131,7 +1137,7 @@
                     "type": "number"
                 },
                 "longitude_last": {
-                    "type": "number"
+                    "type": "boolean"
                 },
                 "signal_source": {
                     "type": "integer"

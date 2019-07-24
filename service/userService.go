@@ -107,13 +107,15 @@ func validateJpeg(data []byte) (bool, int) {
 	return true, -1
 }
 
-func SaveHeartbeat(p *model.Heartbeat) ([]int) {
+func SaveHeartbeat(p *model.Heartbeat) []int {
 	t, e := db.GetTrackerIdByDevice(p.DeviceId)
 	var err []int
 	if e != nil {
 		return err
 	}
-	pingDb := model.PingDb{TrackerId: t.Id, EventTime: p.DateTime, BatteryPower: float32(p.Power), Latitude: p.Latitude, Longitude: p.Longitude, SignalSource: getSignalId(p),}
+	pingDb := model.PingDb{TrackerId: t.Id, EventTime: p.DateTime, BatteryPower: float32(p.Power),
+		Latitude: p.Latitude, Longitude: p.Longitude, SignalSource: getSignalId(p),
+		OnCharge: p.OnCharge}
 
 	e = db.InsertPing(&pingDb)
 	if e != nil {
@@ -125,6 +127,7 @@ func SaveHeartbeat(p *model.Heartbeat) ([]int) {
 	t.LatitudeLast = pingDb.Latitude
 	t.LongitudeLast = pingDb.Longitude
 	t.BatteryPowerLast = pingDb.BatteryPower
+	t.OnCharge = p.OnCharge
 	if e := db.UpdateLastTracker(&t, p.DateTime); e != nil {
 		return append(err, code.DbError)
 	}

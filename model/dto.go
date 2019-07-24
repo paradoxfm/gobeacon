@@ -31,4 +31,5 @@ type Heartbeat struct {
 	DeviceId        string    `json:"device_id"`
 	IsLowPowerAlarm bool      `json:"is_low_power_alarm"`
 	IsSOSAlarm      bool      `json:"is_sos_alarm"`
+	OnCharge        bool      `json:"on_charge"`
 }
