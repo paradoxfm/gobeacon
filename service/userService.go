@@ -45,7 +45,7 @@ func ChangePassword(r *model.ChangePasswordRequest) ([]int) {
 		return append(err, code.DbError)
 	}
 	if !checkHash(r.OldPassword, userDb.Password) {
-		return append(err, code.InavlidCurrentPasswords)
+		return append(err, code.InvalidCurrentPasswords)
 	}
 	hash, _ := hashPassword(r.NewPassword)
 	e = db.UpdateUserPassword(r.UserId, hash)

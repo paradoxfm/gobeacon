@@ -88,6 +88,13 @@ type TracksHistRequest struct {
 	DateTo   time.Time `json:"date_end" example:"RFC3339"`
 }
 
+type BuySubscriptionRequest struct {
+	UserId   string    `json:"-"`
+	SubId    string    `json:"subscription_id"`
+	DateFrom time.Time `json:"date_start" example:"RFC3339"`
+	Accounts []string  `json:"email_link_accounts"`
+}
+
 type HeartbeatRequest struct {
 	Datetime     int64   `json:"datetime"`
 	IsGPSSource  bool    `json:"is_gps_source"`

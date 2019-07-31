@@ -151,3 +151,19 @@ type PingDb struct {
 	OnCharge     bool       `db:"on_charge"`
 	//ZoneId       gocql.UUID `db:"zone_id"`
 }
+
+type Subscription struct {
+	Id      gocql.UUID `db:"id"`
+	Enabled bool       `db:"enabled"`
+	Title   string     `db:"title"`
+	Length  int        `db:"length_days"`
+}
+
+type BuySubscription struct {
+	Id         gocql.UUID `db:"id"`
+	User       gocql.UUID `db:"user_id"`
+	Item       gocql.UUID `db:"subscription_id"`
+	BuyDate    time.Time  `db:"buy_date"`
+	EnableFrom time.Time  `db:"enable_from"`
+	EnableTo   time.Time  `db:"enable_to"`
+}

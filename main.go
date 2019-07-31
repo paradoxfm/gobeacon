@@ -46,7 +46,7 @@ func startTcpServer() {
 	go srv.ListenAndServe()
 }
 
-func createPhoneAdminApi() (*gin.Engine) {
+func createPhoneAdminApi() *gin.Engine {
 	auth := controller.CreateAdminJWTMiddleware()
 	r := gin.Default()
 	r.Use(gin.Recovery())
@@ -71,6 +71,17 @@ func createPhoneAdminApi() (*gin.Engine) {
 	{
 		sys.GET("/avatar/:id", controller.GetAvatar)
 	}
+
+	sub := v1.Group("/subscription") // api для подписок
+	{
+		sub.GET("/available-buy", controller.Subscriptions)
+		my := sub.Group("/my")
+		my.Use(mFunc)
+		my.POST("/buy", controller.BuySubscription)
+		my.GET("/current", controller.CurrentSubscription)
+		my.GET("/all", controller.AllActiveSubscription)
+	}
+
 	usr := v1.Group("/users") // api для пользователей
 	{
 		usr.POST("/signup", controller.UserCreate)

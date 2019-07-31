@@ -13,6 +13,8 @@ var session *gocql.Session
 
 var tUsers = "watch.users"
 var tTrackPref = "watch.user_track_prefs"
+var tSubscription = "watch.subscription"
+var tBuySubscription = "watch.buy_subscription"
 var tAvatars = "watch.files"
 var tTrackers = "watch.trackers"
 var tZones = "watch.geozones"

@@ -33,3 +33,9 @@ type Heartbeat struct {
 	IsSOSAlarm      bool      `json:"is_sos_alarm"`
 	OnCharge        bool      `json:"on_charge"`
 }
+
+type UserSubscription struct {
+	DateFrom time.Time
+	DateTo   time.Time
+	Title    string
+}

@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func InsertNewUser(email string, password string) (error) {
+func InsertNewUser(email string, password string) error {
 	stmt, _ := qb.Insert(tUsers).Columns("id", "email", "password", "created_at").ToCql()
 	q := session.Query(stmt)
 	err := q.Bind(gocql.TimeUUID(), email, password, time.Now()).Exec()
@@ -34,7 +34,7 @@ func LoadUserById(id string) (model.UserDb, error) {
 	return u, err
 }
 
-func UpdateUserPassword(userId string, hash string) (error) {
+func UpdateUserPassword(userId string, hash string) error {
 	stmt, names := qb.Update(tUsers).Set("password").Where(qb.Eq("id")).ToCql()
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": userId, "password": hash})
 
@@ -42,7 +42,7 @@ func UpdateUserPassword(userId string, hash string) (error) {
 	return err
 }
 
-func UpdateUserPushId(r *model.UpdatePushRequest) (error) {
+func UpdateUserPushId(r *model.UpdatePushRequest) error {
 	stmt, names := qb.Update(tUsers).Add("push_id").Set("updated_at").Where(qb.Eq("id")).ToCql()
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": r.UserId, "push_id": []string{r.PushId}, "updated_at": time.Now()})
 	err := q.ExecRelease()

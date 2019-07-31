@@ -27,7 +27,7 @@ const DbErrorUpdateUserPush = 2000013
 //Ошибка БД не удалось достать трекер из базы
 const DbErrorGetTracker = 2000014
 // Пароль не совпадает с подтверждением
-const InavlidCurrentPasswords = 2000015
+const InvalidCurrentPasswords = 2000015
 // Пароль не совпадает с подтверждением
 const ZoneCrossing = 2000016
 // Невозможно открыть файл
