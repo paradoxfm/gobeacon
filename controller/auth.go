@@ -11,7 +11,7 @@ import (
 var identityKey = "private_claim_id"
 var pwdKey = "private_claim_pwd"
 
-func CreateAdminJWTMiddleware() (*jwt.GinJWTMiddleware) {
+func CreateAdminJWTMiddleware() *jwt.GinJWTMiddleware {
 	authMiddleware := &jwt.GinJWTMiddleware{// the jwt middleware
 		Realm:         "jwt auth",
 		Key:           []byte("z%~3povvo2tF?L3mlcvmlzoTN6i7dl"),

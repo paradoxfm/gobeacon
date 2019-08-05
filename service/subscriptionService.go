@@ -1,10 +1,52 @@
 package service
 
 import (
+	"github.com/gocql/gocql"
 	"gobeacon/code"
 	"gobeacon/db"
 	"gobeacon/model"
+	"time"
 )
+
+const maxFamilyCount = 5
+
+func BuySubscription(req *model.BuySubscriptionRequest) []int {
+	var err []int
+	if len(req.Accounts) > maxFamilyCount - 1 {
+		return append(err, code.MaxSubscriptionCount)
+	}
+	users := make([]model.UserDb, len(req.Accounts) + 1)
+	var e error
+	users[len(users)], e = db.LoadUserById(req.UserId)
+	if e != nil {
+		return append(err, code.DbError)
+	}
+	for idx, acc := range req.Accounts {
+		users[idx], e = db.LoadUserByEmail(acc)
+		if e != nil {
+			return append(err, code.InvalidUserAccount)
+		}
+	}
+
+	sub, e := db.LoadSubscriptionById(req.SubId)
+	if e != nil {
+		return append(err, code.DbError)
+	}
+	if !sub.Enabled {
+		return append(err, code.DisabledSubscription)
+	}
+	dateTo := req.DateFrom.Add(time.Hour * time.Duration(sub.Length*24))
+	var subs = make([]model.BuySubscription, len(users))
+	for idx, usr := range users {
+		uuid, _ := gocql.RandomUUID()
+		subs[idx] = model.BuySubscription{Id: uuid, User: usr.Id, Item: sub.Id, BuyDate: time.Now(), EnableFrom: req.DateFrom, EnableTo: dateTo}
+	}
+	e = db.SaveSubscriptions(subs)
+	if e != nil {
+		return append(err, code.DbError)
+	}
+	return nil
+}
 
 func CurrentSubscription(userId string) ([]model.UserSubscription, []int) {
 	var err []int

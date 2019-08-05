@@ -2,15 +2,19 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"gobeacon/code"
 	"gobeacon/model"
 	"gobeacon/service"
 )
 
 func BuySubscription(c *gin.Context) {
 	//_ := getUserId(c)
-	var req model.RegistrationRequest
-	c.Bind(&req)
-
+	req := model.BuySubscriptionRequest{UserId:getUserId(c)}
+	if e := c.Bind(&req); e != nil {
+		sendResponse([]int{code.ParseRequest}, c)
+	}
+	err := service.BuySubscription(&req)
+	sendResponse(err, c)
 }
 
 func CurrentSubscription(c *gin.Context) {
