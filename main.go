@@ -75,7 +75,6 @@ func createPhoneAdminApi() *gin.Engine {
 	sub := v1.Group("/subscription") // api для подписок
 	{
 		sub.GET("/available-buy", controller.Subscriptions)
-		sub.POST("/signing-buy", controller.GetSubscriptionForBuy)
 		my := sub.Group("/my")
 		my.Use(mFunc)
 		my.POST("/buy", controller.BuySubscription)

@@ -10,6 +10,18 @@ definitions:
         example: base64
         type: string
     type: object
+  model.BuySubscriptionRequest:
+    properties:
+      date_start:
+        example: RFC3339
+        type: string
+      email_link_accounts:
+        items:
+          type: string
+        type: array
+      subscription_id:
+        type: string
+    type: object
   model.ChangePasswordRequest:
     properties:
       new_password:
@@ -279,6 +291,78 @@ paths:
       summary: Acceptance of coordinates from a smartphone
       tags:
       - Monitoring
+  /subscription/available-buy:
+    get:
+      consumes:
+      - application/json
+      description: Список подписок доступных для покупки
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: err
+      summary: Список подписок
+      tags:
+      - Subscription
+  /subscription/my/all:
+    get:
+      consumes:
+      - application/json
+      description: Подписки пользователя активная или те, которые будут активны в
+        будущем
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: err
+      summary: Подписки пользователя
+      tags:
+      - Subscription
+  /subscription/my/buy:
+    post:
+      consumes:
+      - application/json
+      description: Покупка подписки для авторизованного пользователя и его связанных
+        аккаунтов, в сумме не больше 5
+      parameters:
+      - description: Запрос на добавление подписки
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.BuySubscriptionRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Совершение покупки подписки
+      tags:
+      - Subscription
+  /subscription/my/current:
+    get:
+      consumes:
+      - application/json
+      description: Получить действующую подписку для пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: err
+      summary: Текущая подписка
+      tags:
+      - Subscription
   /trackers:
     post:
       consumes:

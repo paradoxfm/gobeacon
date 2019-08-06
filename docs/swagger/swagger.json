@@ -84,6 +84,113 @@
                 }
             }
         },
+        "/subscription/available-buy": {
+            "get": {
+                "description": "Список подписок доступных для покупки",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscription"
+                ],
+                "summary": "Список подписок",
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/subscription/my/all": {
+            "get": {
+                "description": "Подписки пользователя активная или те, которые будут активны в будущем",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscription"
+                ],
+                "summary": "Подписки пользователя",
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/subscription/my/buy": {
+            "post": {
+                "description": "Покупка подписки для авторизованного пользователя и его связанных аккаунтов, в сумме не больше 5",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscription"
+                ],
+                "summary": "Совершение покупки подписки",
+                "parameters": [
+                    {
+                        "description": "Запрос на добавление подписки",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.BuySubscriptionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "description": "err"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
+        "/subscription/my/current": {
+            "get": {
+                "description": "Получить действующую подписку для пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscription"
+                ],
+                "summary": "Текущая подписка",
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "err"
+                    }
+                }
+            }
+        },
         "/trackers": {
             "post": {
                 "description": "Creating a new tracker for an authorized user",
@@ -923,6 +1030,24 @@
                 "data": {
                     "type": "string",
                     "example": "base64"
+                }
+            }
+        },
+        "model.BuySubscriptionRequest": {
+            "type": "object",
+            "properties": {
+                "date_start": {
+                    "type": "string",
+                    "example": "RFC3339"
+                },
+                "email_link_accounts": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "subscription_id": {
+                    "type": "string"
                 }
             }
         },
