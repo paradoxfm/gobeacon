@@ -35,7 +35,8 @@ type Heartbeat struct {
 }
 
 type UserSubscription struct {
-	DateFrom time.Time
-	DateTo   time.Time
-	Title    string
+	DateFrom time.Time `json:"date_from"`
+	DateTo   time.Time `json:"date_to"`
+	Title    string    `json:"title"`
+	Trial    bool      `json:"trial"`
 }

@@ -12,26 +12,30 @@ const maxFamilyCount = 5
 
 func BuySubscription(req *model.BuySubscriptionRequest) []int {
 	var err []int
-	if len(req.Accounts) > maxFamilyCount - 1 {
-		return append(err, code.MaxSubscriptionCount)
-	}
-	users := make([]model.UserDb, len(req.Accounts) + 1)
 	var e error
-	users[len(users)], e = db.LoadUserById(req.UserId)
-	if e != nil {
-		return append(err, code.DbError)
-	}
-	for idx, acc := range req.Accounts {
-		users[idx], e = db.LoadUserByEmail(acc)
-		if e != nil {
-			return append(err, code.InvalidUserAccount)
-		}
-	}
 
 	sub, e := db.LoadSubscriptionById(req.SubId)
 	if e != nil {
 		return append(err, code.DbError)
 	}
+	if len(req.Accounts) > maxFamilyCount-1 {
+		return append(err, code.MaxSubscriptionCount)
+	}
+	var users []model.UserDb
+	if owner, e := db.LoadUserById(req.UserId); e == nil {
+		users = append(users, owner)
+	} else  {
+		return append(err, code.DbError)
+	}
+	if sub.Payable {
+		for idx, acc := range req.Accounts {
+			users[idx], e = db.LoadUserByEmail(acc)
+			if e != nil {
+				return append(err, code.InvalidUserAccount)
+			}
+		}
+	}
+
 	if !sub.Enabled {
 		return append(err, code.DisabledSubscription)
 	}
@@ -45,6 +49,11 @@ func BuySubscription(req *model.BuySubscriptionRequest) []int {
 	if e != nil {
 		return append(err, code.DbError)
 	}
+	if !sub.Payable {
+		if e := db.UpdateUserUsedTrial(req.UserId); e != nil {
+			return append(err, code.DbError)
+		}
+	}
 	return nil
 }
 
@@ -54,14 +63,14 @@ func CurrentSubscription(userId string) ([]model.UserSubscription, []int) {
 	if e != nil {
 		return nil, append(err, code.DbError)
 	}
-	subMap, err := getSubscriptionsMap(err)
+	subMap, err := getSubscriptionsMap(userId, err)
 	if err != nil {
 		return nil, err
 	}
 	rez := make([]model.UserSubscription, len(activeSubscriptions))
 	for i := 0; i < len(activeSubscriptions); i++ {
 		bs := activeSubscriptions[i]
-		rez[i] = model.UserSubscription{Title: subMap[bs.Item.String()], DateFrom: bs.EnableFrom, DateTo: bs.EnableTo}
+		rez[i] = model.UserSubscription{Title: subMap[bs.Item.String()], DateFrom: bs.EnableFrom, DateTo: bs.EnableTo, Trial: bs.Trial}
 	}
 	return rez, err
 }
@@ -72,7 +81,7 @@ func AllActiveSubscription(userId string) ([]model.UserSubscription, []int) {
 	if e != nil {
 		return nil, append(err, code.DbError)
 	}
-	subMap, err := getSubscriptionsMap(err)
+	subMap, err := getSubscriptionsMap(userId, err)
 	if err != nil {
 		return nil, err
 	}
@@ -85,8 +94,8 @@ func AllActiveSubscription(userId string) ([]model.UserSubscription, []int) {
 	return rez, err
 }
 
-func getSubscriptionsMap(err []int) (map[string]string, []int) {
-	subscriptions, err := Subscriptions()
+func getSubscriptionsMap(userId string, err []int) (map[string]string, []int) {
+	subscriptions, err := Subscriptions(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -98,11 +107,27 @@ func getSubscriptionsMap(err []int) (map[string]string, []int) {
 	return subMap, nil
 }
 
-func Subscriptions() ([]model.Subscription, []int) {
+func Subscriptions(userId string) ([]model.Subscription, []int) {
 	var err []int
+	userDb, eu := db.LoadUserById(userId)
+	if eu != nil {
+		return nil, append(err, code.DbError)
+	}
 	subscriptions, e := db.LoadSubscriptions()
 	if e != nil {
 		return nil, append(err, code.DbError)
 	}
-	return subscriptions, err
+	if userDb.UsedTrial {
+		var rez []model.Subscription
+		for i := 0; i < len(subscriptions); i++ {
+			s := subscriptions[i]
+			if !s.Payable {
+				continue
+			}
+			rez = append(rez, s)
+		}
+		return rez, err
+	} else {
+		return subscriptions, err
+	}
 }

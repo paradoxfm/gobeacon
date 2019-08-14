@@ -67,6 +67,7 @@ func AllActiveSubscription(c *gin.Context) {
 // @Failure 500 "err"
 // @Tags Subscription
 func Subscriptions(c *gin.Context) {
-	result, err := service.Subscriptions()
+	userId := getUserId(c)
+	result, err := service.Subscriptions(userId)
 	sendObjResponse(result, err, c)
 }

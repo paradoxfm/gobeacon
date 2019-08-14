@@ -6,7 +6,16 @@ import (
 	"gobeacon/model"
 	"time"
 )
+/*
+func LoadTrialSubscriptions(userId string) ([]model.BuySubscription, error) {
+	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("user_id")).Where(qb.Lt("trial")).AllowFiltering().Limit(1).ToCql()
+	var sub []model.BuySubscription
 
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId, "trial": true})
+	err := q.SelectRelease(&sub)
+	return sub, err
+}
+*/
 func SaveSubscriptions(data []model.BuySubscription) error {
 	stmt, names := qb.Insert(tBuySubscription).Columns("id", "user_id", "subscription_id", "buy_date", "enable_from", "enable_to").ToCql()
 	for _, bsub := range data {
@@ -28,7 +37,7 @@ func LoadSubscriptionById(id string) (model.Subscription, error) {
 }
 
 func LoadUserCurrentSubscriptions(userId string) ([]model.BuySubscription, error) {
-	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("user_id")).Where(qb.Lt("enable_to")).Where(qb.Gt("enable_from")).ToCql()
+	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("user_id")).Where(qb.Lt("enable_to")).Where(qb.Gt("enable_from")).AllowFiltering().ToCql()
 	var sub []model.BuySubscription
 
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId, "enable_to": time.Now(), "enable_from": time.Now()})
@@ -37,7 +46,7 @@ func LoadUserCurrentSubscriptions(userId string) ([]model.BuySubscription, error
 }
 
 func LoadUserSubscriptions(userId string) ([]model.BuySubscription, error) {
-	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("user_id")).Where(qb.Gt("enable_to")).ToCql()
+	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("user_id")).Where(qb.Gt("enable_to")).AllowFiltering().ToCql()
 	var sub []model.BuySubscription
 
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId, "enable_to": time.Now()})
@@ -46,7 +55,7 @@ func LoadUserSubscriptions(userId string) ([]model.BuySubscription, error) {
 }
 
 func LoadSubscriptions() ([]model.Subscription, error) {
-	stmt, names := qb.Select(tSubscription).Where(qb.Eq("enabled")).ToCql()
+	stmt, names := qb.Select(tSubscription).Where(qb.Eq("enabled")).AllowFiltering().ToCql()
 	var sub []model.Subscription
 
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"enabled": true})

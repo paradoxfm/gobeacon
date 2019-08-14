@@ -18,11 +18,12 @@ import (
 	PRIMARY KEY (id)
 );*/
 type UserDb struct {
-	Id       gocql.UUID `db:"id" json:"id"`
-	Email    string     `db:"email" json:"email"`
-	Password string     `db:"password" json:"password"`
-	Avatar   string     `db:"avatar" json:"avatar"`
-	PushId   []string   `db:"push_id" json:"push_id"`
+	Id        gocql.UUID `db:"id" json:"id"`
+	Email     string     `db:"email" json:"email"`
+	Password  string     `db:"password" json:"password"`
+	UsedTrial bool       `db:"used_trial" json:"used_trial"`
+	Avatar    string     `db:"avatar" json:"avatar"`
+	PushId    []string   `db:"push_id" json:"push_id"`
 	//Trackers map[gocql.UUID]UserTrackers `db:"trackers" json:"trackers"`
 
 	//Trackers map[gocql.UUID]UserTrackers `cql:"trackers" json:"trackers"`
@@ -155,6 +156,7 @@ type PingDb struct {
 type Subscription struct {
 	Id      gocql.UUID `db:"id"`
 	Enabled bool       `db:"enabled"`
+	Payable bool       `db:"payable"`
 	Title   string     `db:"title"`
 	Length  int        `db:"length_days"`
 }
@@ -166,4 +168,5 @@ type BuySubscription struct {
 	BuyDate    time.Time  `db:"buy_date"`
 	EnableFrom time.Time  `db:"enable_from"`
 	EnableTo   time.Time  `db:"enable_to"`
+	Trial      bool       `db:"trial"`
 }
