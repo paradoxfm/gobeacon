@@ -79,8 +79,8 @@ definitions:
       password:
         type: string
     required:
-    - email
     - password
+    - email
     type: object
   model.LoginResponse:
     properties:
