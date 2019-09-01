@@ -6,6 +6,7 @@ import (
 	"gobeacon/model"
 	"time"
 )
+
 /*
 func LoadTrialSubscriptions(userId string) ([]model.BuySubscription, error) {
 	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("user_id")).Where(qb.Lt("trial")).AllowFiltering().Limit(1).ToCql()
@@ -61,4 +62,20 @@ func LoadSubscriptions() ([]model.Subscription, error) {
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"enabled": true})
 	err := q.SelectRelease(&sub)
 	return sub, err
+}
+
+func LoadUserIdsByGroupBuy(groupId string) ([]string, error) {
+	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("group_id")).AllowFiltering().ToCql()
+
+	var sub []model.BuySubscription
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"group_id": groupId})
+	err := q.SelectRelease(&sub)
+	if err != nil {
+		return nil, err
+	}
+	rez := make([]string, len(sub))
+	for i := 0; i < len(sub); i++ {
+		rez[i] = sub[i].User.String()
+	}
+	return rez, err
 }

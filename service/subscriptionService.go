@@ -10,6 +10,28 @@ import (
 
 const maxFamilyCount = 5
 
+func GetAllAccountWithMySubscription(userId string) ([]model.UserBuySubResponse, []int) {
+	var err []int
+	activeSubscriptions, e := db.LoadUserCurrentSubscriptions(userId)
+	if e != nil {
+		return nil, append(err, code.DbError)
+	}
+	if len(activeSubscriptions) == 0 {
+		return nil, err
+	}
+	mySub := activeSubscriptions[0]
+	userIds, e := db.LoadUserIdsByGroupBuy(mySub.GroupId.String())
+	resp := make([]model.UserBuySubResponse, len(userIds))
+	for i, id := range userIds {
+		usr, e := db.LoadUserById(id)
+		if e != nil {
+			return nil, append(err, code.DbError)
+		}
+		resp[i] = model.UserBuySubResponse{Email: usr.Email}
+	}
+	return resp, nil
+}
+
 func BuySubscription(req *model.BuySubscriptionRequest) []int {
 	var err []int
 	var e error
@@ -24,7 +46,7 @@ func BuySubscription(req *model.BuySubscriptionRequest) []int {
 	var users []model.UserDb
 	if owner, e := db.LoadUserById(req.UserId); e == nil {
 		users = append(users, owner)
-	} else  {
+	} else {
 		return append(err, code.DbError)
 	}
 	if sub.Payable {
@@ -39,11 +61,12 @@ func BuySubscription(req *model.BuySubscriptionRequest) []int {
 	if !sub.Enabled {
 		return append(err, code.DisabledSubscription)
 	}
+	groupId, _ := gocql.RandomUUID()
 	dateTo := req.DateFrom.Add(time.Hour * time.Duration(sub.Length*24))
 	var subs = make([]model.BuySubscription, len(users))
 	for idx, usr := range users {
 		uuid, _ := gocql.RandomUUID()
-		subs[idx] = model.BuySubscription{Id: uuid, User: usr.Id, Item: sub.Id, BuyDate: time.Now(), EnableFrom: req.DateFrom, EnableTo: dateTo}
+		subs[idx] = model.BuySubscription{Id: uuid, User: usr.Id, Item: sub.Id, BuyDate: time.Now(), EnableFrom: req.DateFrom, EnableTo: dateTo, GroupId: groupId}
 	}
 	e = db.SaveSubscriptions(subs)
 	if e != nil {

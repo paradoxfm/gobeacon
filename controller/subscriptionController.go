@@ -7,6 +7,22 @@ import (
 	"gobeacon/service"
 )
 
+// CurrentGroupAccounts godoc
+// @Summary Получение списка пользователей текущей подписки
+// @Description Получение списка пользователей текущей подписки
+// @Accept json
+// @Produce json
+// @Router /subscription/my/group [get]
+// @Success 200 "ok"
+// @Failure 400 "err"
+// @Failure 500 "err"
+// @Tags Subscription
+func CurrentGroupAccounts(c *gin.Context) {
+	userId := getUserId(c)
+	result, err := service.GetAllAccountWithMySubscription(userId)
+	sendObjResponse(result, err, c)
+}
+
 // BuySubscription godoc
 // @Summary Совершение покупки подписки
 // @Description Покупка подписки для авторизованного пользователя и его связанных аккаунтов, в сумме не больше 5

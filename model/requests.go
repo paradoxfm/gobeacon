@@ -95,6 +95,11 @@ type BuySubscriptionRequest struct {
 	Accounts []string  `json:"email_link_accounts"`
 }
 
+type UserBuySubResponse struct {
+	Email string `json:"email"`
+	//Name  string `json:"name"`
+}
+
 type HeartbeatRequest struct {
 	Datetime     int64   `json:"datetime"`
 	IsGPSSource  bool    `json:"is_gps_source"`

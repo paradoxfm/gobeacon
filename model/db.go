@@ -165,6 +165,7 @@ type BuySubscription struct {
 	Id         gocql.UUID `db:"id"`
 	User       gocql.UUID `db:"user_id"`
 	Item       gocql.UUID `db:"subscription_id"`
+	GroupId    gocql.UUID `db:"group_id"`
 	BuyDate    time.Time  `db:"buy_date"`
 	EnableFrom time.Time  `db:"enable_from"`
 	EnableTo   time.Time  `db:"enable_to"`

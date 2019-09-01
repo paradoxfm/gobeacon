@@ -19,6 +19,18 @@
 			"revisionTime": "2017-08-10T14:37:23Z"
 		},
 		{
+			"checksumSHA1": "jb1ZndW+6+iw4MFVQJEM757ZEKI=",
+			"path": "github.com/alecthomas/template",
+			"revision": "fb15b899a75114aa79cc930e33c46b577cc664b1",
+			"revisionTime": "2019-07-18T01:26:54Z"
+		},
+		{
+			"checksumSHA1": "cJPPhdMhOWc+4d39qmPQkYIC/gE=",
+			"path": "github.com/alecthomas/template/parse",
+			"revision": "fb15b899a75114aa79cc930e33c46b577cc664b1",
+			"revisionTime": "2019-07-18T01:26:54Z"
+		},
+		{
 			"checksumSHA1": "RL1R/icfGIbJ6EVvcZ1zUGVGJLs=",
 			"path": "github.com/appleboy/gin-jwt",
 			"revision": "18c777042be3ecc5cb3bf79cd24cbd6b28683cdc",

@@ -50,6 +50,10 @@ func alarmsCheck(prev *model.Tracker, curr *model.Tracker, lowPowerAlarm bool, s
 			"message":      lowPowerMsgId,
 			"tracker_id":   curr.Id.String(),
 			"tracker_name": curr.Id.String(),
+			"notification": map[string]interface{}{
+				"title": "Оповещение",
+				"body":  "Низкий заряд батареи",
+			},
 		}
 		for userId, conf := range confList {
 			data["tracker_name"] = conf.TrackName
@@ -87,11 +91,21 @@ func checkZonesForUser(pOld *geo.Point, pNew *geo.Point, conf AlarmConf) {
 			if inZoneNew {
 				msgId = zoneMsgIn
 			}
+			var msgStr string
+			if msgId == zoneMsgIn {
+				msgStr = conf.TrackName + " зашел в зону "
+			} else {
+				msgStr = conf.TrackName + " вышел из зоны"
+			}
 			data := map[string]interface{}{
 				"message":      msgId,
 				"tracker_id":   conf.Pref.TrackId.String(),
 				"tracker_name": conf.TrackName,
 				"zone_name":    geoZone.Name,
+				"notification": map[string]interface{}{
+					"title": "Оповещение",
+					"body":  msgStr,
+				},
 			}
 			SendPushForUser(conf.UserId, conf.PushIds, data)
 			return
