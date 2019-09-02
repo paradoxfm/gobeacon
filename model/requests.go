@@ -95,6 +95,11 @@ type BuySubscriptionRequest struct {
 	Accounts []string  `json:"email_link_accounts"`
 }
 
+type AddSubscriptionRequest struct {
+	UserId   string    `json:"-"`
+	Accounts []string  `json:"email_link_accounts"`
+}
+
 type UserBuySubResponse struct {
 	Email string `json:"email"`
 	//Name  string `json:"name"`

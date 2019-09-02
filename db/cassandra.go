@@ -6,6 +6,7 @@ import (
 	"github.com/scylladb/gocqlx/qb"
 	"gobeacon/model"
 	"log"
+	"time"
 )
 
 var session *gocql.Session
@@ -20,7 +21,7 @@ var tZones = "watch.geozones"
 var tPings = "watch.track_ping"
 
 func init() {
-	/*conf := Config()
+	conf := Config()
 	cluster := gocql.NewCluster(conf.CassandraIp)
 	cluster.Authenticator = gocql.PasswordAuthenticator{
 		Username: conf.CassandraUser,
@@ -30,7 +31,7 @@ func init() {
 	cluster.ProtoVersion = 4
 	cluster.ReconnectInterval = 10 * time.Second
 	//go createSession(cluster)
-	createSession(cluster)*/
+	createSession(cluster)
 }
 
 func createSession(cluster *gocql.ClusterConfig) {

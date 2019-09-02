@@ -7,6 +7,26 @@ import (
 	"gobeacon/service"
 )
 
+// BuySubscription godoc
+// @Summary Добавление пользователей в подписку
+// @Description Добавление пользователей в текущую подписку, в сумме не больше 5
+// @Accept json
+// @Produce json
+// @Param request body model.AddSubscriptionRequest true "Запрос на добавление пользователей"
+// @Router /subscription/my/add [post]
+// @Success 200 "ok"
+// @Failure 400 "err"
+// @Failure 500 "err"
+// @Tags Subscription
+func AddUserToMySubscription(c *gin.Context) {
+	req := model.AddSubscriptionRequest{UserId:getUserId(c)}
+	if e := c.Bind(&req); e != nil {
+		sendResponse([]int{code.ParseRequest}, c)
+	}
+	err := service.AddUserToMySubscription(&req)
+	sendResponse(err, c)
+}
+
 // CurrentGroupAccounts godoc
 // @Summary Получение списка пользователей текущей подписки
 // @Description Получение списка пользователей текущей подписки

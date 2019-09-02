@@ -10,17 +10,49 @@ import (
 
 const maxFamilyCount = 5
 
+func AddUserToMySubscription(req *model.AddSubscriptionRequest) []int {
+	var err []int
+	active, e := db.LoadUserCurrentSubscriptions(req.UserId)
+	if e != nil {
+		return append(err, code.DbError)
+	}
+	if active == nil || len(active) == 0 {
+		return append(err, code.NoActiveSubscription)
+	}
+	userIds, e := db.LoadUserIdsByGroupBuy(active[0].GroupId.String())
+	if len(req.Accounts)+len(userIds) > maxFamilyCount {
+		return append(err, code.MaxSubscriptionCount)
+	}
+	users := make([]model.UserDb, len(req.Accounts))
+	for idx, acc := range req.Accounts {
+		users[idx], e = db.LoadUserByEmail(acc)
+		if e != nil {
+			return append(err, code.InvalidUserAccount)
+		}
+	}
+	var subs = make([]model.BuySubscription, len(users))
+	for idx, usr := range users {
+		uuid, _ := gocql.RandomUUID()
+		subs[idx] = model.BuySubscription{Id: uuid, User: usr.Id, Item: active[0].Item, BuyDate: active[0].BuyDate,
+			EnableFrom: active[0].EnableFrom, EnableTo: active[0].EnableTo, GroupId: active[0].GroupId}
+	}
+	e = db.SaveSubscriptions(subs)
+	if e != nil {
+		return append(err, code.DbError)
+	}
+	return nil
+}
+
 func GetAllAccountWithMySubscription(userId string) ([]model.UserBuySubResponse, []int) {
 	var err []int
-	activeSubscriptions, e := db.LoadUserCurrentSubscriptions(userId)
+	active, e := db.LoadUserCurrentSubscriptions(userId)
 	if e != nil {
 		return nil, append(err, code.DbError)
 	}
-	if len(activeSubscriptions) == 0 {
-		return nil, err
+	if active == nil || len(active) == 0 {
+		return nil, append(err, code.NoActiveSubscription)
 	}
-	mySub := activeSubscriptions[0]
-	userIds, e := db.LoadUserIdsByGroupBuy(mySub.GroupId.String())
+	userIds, e := db.LoadUserIdsByGroupBuy(active[0].GroupId.String())
 	resp := make([]model.UserBuySubResponse, len(userIds))
 	for i, id := range userIds {
 		usr, e := db.LoadUserById(id)

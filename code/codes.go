@@ -48,5 +48,7 @@ const MaxSubscriptionCount = 2000023
 const InvalidUserAccount = 2000024
 // Аккаунт не найден
 const DisabledSubscription = 2000025
+// Аккаунт не найден
+const NoActiveSubscription = 2000026
 //Ошибка БД
 const DbError = 2000100

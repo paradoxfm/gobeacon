@@ -20,14 +20,16 @@ func TestPush(t *testing.T) {
 		"tracker_id":   "Трекер тест",
 		"tracker_name": "Трекер тест",
 		"notification": map[string]interface{}{
-			"title": "",
-			"body": "",
+			"title": "Тест пуш",
+			"body": "Тест пуш",
 		},
 	}
 
 	// You can use PushMultiple or PushSingle
 	client.PushMultiple(pushId, data)
 	badRegistrations := client.CleanRegistrationIds()
+
+	log.Print("bad reg ")
 	log.Println(badRegistrations)
 
 	status, err := client.Send()
