@@ -82,7 +82,7 @@ func UserGetProfile(c *gin.Context) {
 // @Description Update user avatar (jpeg 250x250)
 // @Accept json
 // @Produce json
-// @Param avatar body file true "avatar"
+// @Param avatar formData file true "avatar"
 // @Router /users/me/avatar [put]
 // @Success 200 {object} model.AvatarIdResponse
 // @Failure 400 "err"

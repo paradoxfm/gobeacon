@@ -116,7 +116,7 @@ func TrackUpdate(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "id tracker"
-// @Param avatar body file true "avatar"
+// @Param avatar formData file true "avatar"
 // @Router /trackers/avatar/{id} [put]
 // @Success 200 {object} model.AvatarIdResponse
 // @Failure 400 "err"

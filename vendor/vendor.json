@@ -111,6 +111,12 @@
 			"revisionTime": "2018-10-03T17:30:13Z"
 		},
 		{
+			"checksumSHA1": "ZMHTc8fRcrz+zP0NLrgHnoSY4dg=",
+			"path": "github.com/gin-contrib/gzip",
+			"revision": "5602d8b438ea3941304664f096ae552230b401eb",
+			"revisionTime": "2019-08-27T14:40:29Z"
+		},
+		{
 			"checksumSHA1": "6h5IjwH/vo9EuLXKXhtu1i00oxY=",
 			"path": "github.com/gin-contrib/sse",
 			"revision": "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae",
@@ -493,10 +499,22 @@
 			"revisionTime": "2018-05-06T18:05:49Z"
 		},
 		{
-			"checksumSHA1": "aGYx2aWINgGu1zWF68qZcjQ1Lws=",
+			"checksumSHA1": "303wFycaTj7cHeFGckQPenKtGqk=",
+			"path": "github.com/swaggo/files",
+			"revision": "630677cd5c140664e2ff6b53e75c289877268c69",
+			"revisionTime": "2019-07-04T08:51:06Z"
+		},
+		{
+			"checksumSHA1": "2TKNtz/CGyBAh6MyfgDK/65kkJA=",
 			"path": "github.com/swaggo/gin-swagger",
-			"revision": "8cf3fa9932e247205d1cf2be6fd13a9d09ceb9a4",
-			"revisionTime": "2018-04-13T18:04:08Z"
+			"revision": "d488a692749fd254a12d1d1326caa3419953e82d",
+			"revisionTime": "2019-07-17T07:42:06Z"
+		},
+		{
+			"checksumSHA1": "4CNNibd20g17pVWAHb2YEBBNxnA=",
+			"path": "github.com/swaggo/gin-swagger/example/basic/docs",
+			"revision": "d488a692749fd254a12d1d1326caa3419953e82d",
+			"revisionTime": "2019-07-17T07:42:06Z"
 		},
 		{
 			"checksumSHA1": "SgwPaK7DWAavXH1cLexFlSzMoW8=",
@@ -507,8 +525,8 @@
 		{
 			"checksumSHA1": "XDluIz8fsqZBKH5Iz44/bc297QQ=",
 			"path": "github.com/swaggo/gin-swagger/swaggerFiles",
-			"revision": "8cf3fa9932e247205d1cf2be6fd13a9d09ceb9a4",
-			"revisionTime": "2018-04-13T18:04:08Z"
+			"revision": "d488a692749fd254a12d1d1326caa3419953e82d",
+			"revisionTime": "2019-07-17T07:42:06Z"
 		},
 		{
 			"checksumSHA1": "3/XYWJYmjHEGjcL9HL//dRqIaf4=",
@@ -575,6 +593,12 @@
 			"path": "github.com/ziutek/mymysql/native",
 			"revision": "6b05b0cf718f8ee11bc5e18fe78ea7cef0388dc6",
 			"revisionTime": "2018-08-27T08:56:28Z"
+		},
+		{
+			"checksumSHA1": "QAovW7H7ICK9z0hatpMSXhsl9qQ=",
+			"path": "gobeacon",
+			"revision": "d7bed28c8344dcf439901b820c26a922d6d6244f",
+			"revisionTime": "2019-09-02T10:49:28Z"
 		},
 		{
 			"checksumSHA1": "PPbovf0/b6fEYqu5kU9ENpVCUEY=",
