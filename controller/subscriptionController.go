@@ -7,6 +7,20 @@ import (
 	"gobeacon/service"
 )
 
+func ExtendSubscription(c *gin.Context) {
+	req := model.ValidateSubscriptionRequest{UserId: getUserId(c)}
+	if e := c.Bind(&req); e != nil {
+		sendResponse([]int{code.ParseRequest}, c)
+	}
+	if err := service.SendQueryApple(req.ReceiptData); err != nil {
+		sendResponse(err, c)
+	}
+	if e := service.ExtendSubscription(req.UserId); e != nil {
+		sendResponse(e, c)
+	}
+	sendResponse(nil, c)
+}
+
 // BuySubscription godoc
 // @Summary Добавление пользователей в подписку
 // @Description Добавление пользователей в текущую подписку, в сумме не больше 5
@@ -19,7 +33,7 @@ import (
 // @Failure 500 "err"
 // @Tags Subscription
 func AddUserToMySubscription(c *gin.Context) {
-	req := model.AddSubscriptionRequest{UserId:getUserId(c)}
+	req := model.AddSubscriptionRequest{UserId: getUserId(c)}
 	if e := c.Bind(&req); e != nil {
 		sendResponse([]int{code.ParseRequest}, c)
 	}
@@ -55,7 +69,7 @@ func CurrentGroupAccounts(c *gin.Context) {
 // @Failure 500 "err"
 // @Tags Subscription
 func BuySubscription(c *gin.Context) {
-	req := model.BuySubscriptionRequest{UserId:getUserId(c)}
+	req := model.BuySubscriptionRequest{UserId: getUserId(c)}
 	if e := c.Bind(&req); e != nil {
 		sendResponse([]int{code.ParseRequest}, c)
 	}

@@ -46,9 +46,15 @@ const ParseRequest = 2000022
 const MaxSubscriptionCount = 2000023
 // Аккаунт не найден
 const InvalidUserAccount = 2000024
-// Аккаунт не найден
+// Подписка неактивна
 const DisabledSubscription = 2000025
-// Аккаунт не найден
+// нет активных подписок
 const NoActiveSubscription = 2000026
+// Ошибка валидации подписки
+const ErrorValidateSubscription = 2000027
+// Ошибка http запроса валидации подписки
+const ErrorHttpSubscription = 2000028
+// Ошибка ответа http запроса валидации подписки
+const ErrorHttpResponseSubscription = 2000029
 //Ошибка БД
 const DbError = 2000100

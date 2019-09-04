@@ -1,6 +1,8 @@
 {
 	"server_port":"8170",
 	"server_key":"AAAAmnvkL7U:APA91bFfLD8rmv7fDYzsZCQ2RZCXsTfL8XHO5RPddvfeyZoqIswLkXvSUrghIRlIGaG4a7gv7d9Pb7cSUno4hA1VPgftSklB1A-w1afAinJXkWpI31djjsJkKdq4LNXr7BvTfB7mB_ZzXTxVw3W6gthum0_I7Ktfaw",
+	"apple_validation_key": "cad4c4cd404644e78e4eef0cd35b907f",
+	"apple_validation_url": "https://sandbox.itunes.apple.com/verifyReceipt",
     "cassandra_user":"watch",
     "cassandra_password":"qJXOFA%aUMgiwIYR2l%sl}*}9boe0Q2O7OfyKmS|",
 	"cassandra_ip":"185.93.111.59",

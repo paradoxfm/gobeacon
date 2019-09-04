@@ -1,14 +1,66 @@
 package service
 
 import (
+	"encoding/json"
 	"github.com/gocql/gocql"
 	"gobeacon/code"
 	"gobeacon/db"
 	"gobeacon/model"
+	"io/ioutil"
+	"net/http"
+	"net/url"
 	"time"
 )
 
 const maxFamilyCount = 5
+
+func ExtendSubscription(userId string) []int {
+	var err []int
+	active, e := db.LoadUserCurrentSubscriptions(userId)
+	if e != nil {
+		return append(err, code.DbError)
+	}
+	if active == nil || len(active) == 0 {
+		return append(err, code.NoActiveSubscription)
+	}
+	buySub, e := db.LoadBuySubscriptionByGroup(active[0].GroupId.String())
+	newBuySubs := make([]model.BuySubscription, len(buySub))
+	groupId, _ := gocql.RandomUUID()
+	for ind, bs := range buySub {
+		uuid, _ := gocql.RandomUUID()
+		now := time.Now()
+		dateTo := now.Add(time.Hour * time.Duration(30*24))
+		newBuySubs[ind] = model.BuySubscription{GroupId: groupId, Item: bs.Item, User: bs.User, Id: uuid, Trial: false, BuyDate: now, EnableFrom: now, EnableTo: dateTo}
+	}
+	if e = db.SaveSubscriptions(newBuySubs); e != nil {
+		return append(err, code.DbError)
+	}
+	return nil
+}
+
+func SendQueryApple(codeB64 string) []int {
+	cfg := Config()
+	resp, e := http.PostForm(cfg.AppleValidationUrl, url.Values{
+		"password":     {cfg.AppleValidationKey},
+		"receipt-data": {codeB64},
+	})
+	if e != nil {
+		return []int{code.ErrorHttpSubscription}
+	}
+	if resp == nil {
+		return []int{code.ErrorHttpResponseSubscription}
+	}
+	defer resp.Body.Close()
+	body, e := ioutil.ReadAll(resp.Body)
+	res := model.AppleReceiptResponse{}
+	if e = json.Unmarshal(body, &res); e != nil {
+		return []int{code.ErrorHttpResponseSubscription}
+	}
+	if res.Status != 0 {
+		return []int{code.ErrorHttpResponseSubscription}
+	}
+	return nil
+}
 
 func AddUserToMySubscription(req *model.AddSubscriptionRequest) []int {
 	var err []int
@@ -19,8 +71,8 @@ func AddUserToMySubscription(req *model.AddSubscriptionRequest) []int {
 	if active == nil || len(active) == 0 {
 		return append(err, code.NoActiveSubscription)
 	}
-	userIds, e := db.LoadUserIdsByGroupBuy(active[0].GroupId.String())
-	if len(req.Accounts)+len(userIds) > maxFamilyCount {
+	buySubs, e := db.LoadBuySubscriptionByGroup(active[0].GroupId.String())
+	if len(req.Accounts)+len(buySubs) > maxFamilyCount {
 		return append(err, code.MaxSubscriptionCount)
 	}
 	users := make([]model.UserDb, len(req.Accounts))
@@ -52,10 +104,10 @@ func GetAllAccountWithMySubscription(userId string) ([]model.UserBuySubResponse,
 	if active == nil || len(active) == 0 {
 		return nil, append(err, code.NoActiveSubscription)
 	}
-	userIds, e := db.LoadUserIdsByGroupBuy(active[0].GroupId.String())
-	resp := make([]model.UserBuySubResponse, len(userIds))
-	for i, id := range userIds {
-		usr, e := db.LoadUserById(id)
+	buySub, e := db.LoadBuySubscriptionByGroup(active[0].GroupId.String())
+	resp := make([]model.UserBuySubResponse, len(buySub))
+	for i, bs := range buySub {
+		usr, e := db.LoadUserById(bs.User.String())
 		if e != nil {
 			return nil, append(err, code.DbError)
 		}

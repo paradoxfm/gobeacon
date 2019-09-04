@@ -841,6 +841,12 @@
 			"revisionTime": "2015-10-29T11:39:54Z"
 		},
 		{
+			"checksumSHA1": "ttzwPM6dCaTx0GmyKzVDE6f46JY=",
+			"path": "gopkg.in/hlandau/passlib.v1",
+			"revision": "b833d45cabf4a5151d9f955811216c6e7e377537",
+			"revisionTime": "2018-06-01T22:37:32Z"
+		},
+		{
 			"checksumSHA1": "ap7H0L8QyZFcDMbgUxtV18LAaKM=",
 			"path": "gopkg.in/hlandau/passlib.v1/abstract",
 			"revision": "b833d45cabf4a5151d9f955811216c6e7e377537",

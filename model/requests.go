@@ -96,8 +96,18 @@ type BuySubscriptionRequest struct {
 }
 
 type AddSubscriptionRequest struct {
-	UserId   string    `json:"-"`
-	Accounts []string  `json:"email_link_accounts"`
+	UserId   string   `json:"-"`
+	Accounts []string `json:"email_link_accounts"`
+}
+
+type ValidateSubscriptionRequest struct {
+	UserId      string `json:"-"`
+	ReceiptData string `json:"receipt_data"`
+}
+
+type AppleReceiptResponse struct {
+	Status    int    `json:"status"`
+	Exception string `json:"exception"`
 }
 
 type UserBuySubResponse struct {

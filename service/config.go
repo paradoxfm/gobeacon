@@ -10,6 +10,8 @@ var config *Configuration
 
 type Configuration struct {
 	ServerKey string `json:"server_key"`
+	AppleValidationKey string `json:"apple_validation_key"`
+	AppleValidationUrl string `json:"apple_validation_url"`
 }
 
 func Config() *Configuration {

@@ -64,7 +64,7 @@ func LoadSubscriptions() ([]model.Subscription, error) {
 	return sub, err
 }
 
-func LoadUserIdsByGroupBuy(groupId string) ([]string, error) {
+func LoadBuySubscriptionByGroup(groupId string) ([]model.BuySubscription, error) {
 	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("group_id")).AllowFiltering().ToCql()
 
 	var sub []model.BuySubscription
@@ -73,9 +73,10 @@ func LoadUserIdsByGroupBuy(groupId string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	rez := make([]string, len(sub))
+	return sub, nil
+	/*rez := make([]string, len(sub))
 	for i := 0; i < len(sub); i++ {
 		rez[i] = sub[i].User.String()
 	}
-	return rez, err
+	return rez, err*/
 }

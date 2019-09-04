@@ -3,12 +3,12 @@ package service
 import (
 	"github.com/appleboy/gin-jwt"
 	valid "github.com/asaskevich/govalidator"
-	"github.com/hlandau/passlib"
 	"github.com/labstack/gommon/log"
 	"github.com/sirupsen/logrus"
 	"gobeacon/code"
 	"gobeacon/db"
 	"gobeacon/model"
+	"gopkg.in/hlandau/passlib.v1"
 	"math/rand"
 	"time"
 )
@@ -100,7 +100,7 @@ func LoginUser(email string, pwd string) (interface{}, error) {
 	return nil, jwt.ErrFailedAuthentication
 }
 
-func UserExist(id string, pwdHash string) (bool) {
+func UserExist(id string, pwdHash string) bool {
 	usr, err := db.LoadUserById(id)
 	if err != nil {
 		return false
