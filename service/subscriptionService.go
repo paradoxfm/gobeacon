@@ -21,7 +21,12 @@ func ExtendSubscription(userId string) []int {
 		return append(err, code.DbError)
 	}
 	if active == nil || len(active) == 0 {
-		return append(err, code.NoActiveSubscription)
+		if active, e = db.LoadUserLastSubscriptions(userId); e != nil {
+			return append(err, code.DbError)
+		}
+		if active == nil || len(active) == 0 {
+			return append(err, code.NoActiveSubscription)
+		}
 	}
 	buySub, e := db.LoadBuySubscriptionByGroup(active[0].GroupId.String())
 	newBuySubs := make([]model.BuySubscription, len(buySub))
@@ -38,28 +43,28 @@ func ExtendSubscription(userId string) []int {
 	return nil
 }
 
-func SendQueryApple(codeB64 string) []int {
+func SendQueryApple(codeB64 string) (*model.AppleReceiptResponse, []int) {
 	cfg := Config()
 	resp, e := http.PostForm(cfg.AppleValidationUrl, url.Values{
 		"password":     {cfg.AppleValidationKey},
 		"receipt-data": {codeB64},
 	})
 	if e != nil {
-		return []int{code.ErrorHttpSubscription}
+		return nil, []int{code.ErrorHttpSubscription}
 	}
 	if resp == nil {
-		return []int{code.ErrorHttpResponseSubscription}
+		return nil, []int{code.ErrorHttpResponseSubscription}
 	}
 	defer resp.Body.Close()
 	body, e := ioutil.ReadAll(resp.Body)
 	res := model.AppleReceiptResponse{}
 	if e = json.Unmarshal(body, &res); e != nil {
-		return []int{code.ErrorHttpResponseSubscription}
+		return nil, []int{code.ErrorHttpResponseSubscription}
 	}
 	if res.Status != 0 {
-		return []int{code.ErrorHttpResponseSubscription}
+		return nil, []int{code.ErrorHttpResponseSubscription}
 	}
-	return nil
+	return &res, nil
 }
 
 func AddUserToMySubscription(req *model.AddSubscriptionRequest) []int {

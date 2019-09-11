@@ -1,27 +1,44 @@
 ### авторизация
-POST http://localhost:8070/api/v1/users/login
+POST http://91.201.55.77:8070/api/v1/users/login
 Content-Type: application/json
 
 {
 	"email": "evs343@ya.ru",
 	"password": "password"
 }
+### авторизация
+POST http://91.201.55.77:8070/api/v1/users/login
+Content-Type: application/json
+
+{
+	"email": "a.alex@appsgroup.ru",
+	"password": "test123"
+}
 
 ### запрос профиля
 GET http://localhost:8070/api/v1/users/me
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYxODMwNzYsIm9yaWdfaWF0IjoxNTM3NzgzMDc2LCJwcml2YXRlX2NsYWltX2lkIjoiNTRkOTYyM2MtMTFhZi0xMWU4LWEyN2QtNTQ1MjAwN2Q4NzdlIn0.b2GMV1o-WTl8kEdvlqug_UT5MOp5tyZW7iS3N_0FiHY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzNTYxNjAzNzIsIm9yaWdfaWF0IjoxNTY3NzYwMzcyLCJwcml2YXRlX2NsYWltX2lkIjoiZjc2ZGRkYTctYzk2Ny0xMWU3LWE5MzAtNTQ1MjAwN2Q4NzdlIiwicHJpdmF0ZV9jbGFpbV9wd2QiOiIkczIkMTYzODQkOCQxJEpoSm93WFlOWTZYL0NIQWZ3Y2IrRER5YiRlem1WcWRtVm4ycStWbkdtM2xkLzMvemoraWQ4WkdISWt0RXVqMHFPVzNVPSJ9.F6FeEa3aKTgC7LFhMLO-8YRNj-9ZQ5JBs2cgoRv5OLg
 
 ###
 
 ### запрос истории
-GET http://localhost:8070/api/v1/trackers/geo/history/
+POST http://91.201.55.77:8070/api/v1/trackers/geo/history
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzMjYxODMwNzYsIm9yaWdfaWF0IjoxNTM3NzgzMDc2LCJwcml2YXRlX2NsYWltX2lkIjoiNTRkOTYyM2MtMTFhZi0xMWU4LWEyN2QtNTQ1MjAwN2Q4NzdlIn0.b2GMV1o-WTl8kEdvlqug_UT5MOp5tyZW7iS3N_0FiHY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzNTYxNjEwNjIsIm9yaWdfaWF0IjoxNTY3NzYxMDYyLCJwcml2YXRlX2NsYWltX2lkIjoiZjc2ZGRkYTctYzk2Ny0xMWU3LWE5MzAtNTQ1MjAwN2Q4NzdlIiwicHJpdmF0ZV9jbGFpbV9wd2QiOiIkczIkMTYzODQkOCQxJEpoSm93WFlOWTZYL0NIQWZ3Y2IrRER5YiRlem1WcWRtVm4ycStWbkdtM2xkLzMvemoraWQ4WkdISWt0RXVqMHFPVzNVPSJ9.xESyxe-9OveB30pKSBleAaXL3uMlnynwjmEUAGpMJQg
+
 {
-	"tracker_id": 9e95aa86-bb0e-11e8-8aec-5452007d877e,
-	"date_start":"",
-	"date_end":"2018-12-04T15:30:45Z"
+	"tracker_id": "1dba0753-c8fc-11e7-a92d-5452007d877e",
+	"date_start":"2019-03-20T08:30:00Z",
+	"date_end":"2019-03-20T08:34:00Z"
+}
+### запрос истории
+POST http://91.201.55.77:8070/api/v1/trackers//custom
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIzNTYxNjEwNjIsIm9yaWdfaWF0IjoxNTY3NzYxMDYyLCJwcml2YXRlX2NsYWltX2lkIjoiZjc2ZGRkYTctYzk2Ny0xMWU3LWE5MzAtNTQ1MjAwN2Q4NzdlIiwicHJpdmF0ZV9jbGFpbV9wd2QiOiIkczIkMTYzODQkOCQxJEpoSm93WFlOWTZYL0NIQWZ3Y2IrRER5YiRlem1WcWRtVm4ycStWbkdtM2xkLzMvemoraWQ4WkdISWt0RXVqMHFPVzNVPSJ9.xESyxe-9OveB30pKSBleAaXL3uMlnynwjmEUAGpMJQg
+
+{
+	"ids": ["1dba0753-c8fc-11e7-a92d-5452007d877e"]
 }
 
 ###

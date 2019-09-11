@@ -106,8 +106,9 @@ type ValidateSubscriptionRequest struct {
 }
 
 type AppleReceiptResponse struct {
-	Status    int    `json:"status"`
-	Exception string `json:"exception"`
+	Status     int       `json:"status"`
+	Exception  string    `json:"exception"`
+	Expiration time.Time `json:"expires_date"`
 }
 
 type UserBuySubResponse struct {

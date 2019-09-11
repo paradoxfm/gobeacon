@@ -1,24 +1,31 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/douglasmakey/go-fcm"
-	"gobeacon/service"
+	"gobeacon/model"
 	"log"
 	"testing"
 )
 
-func TestPush(t *testing.T) {
-	client := fcm.NewClient(service.Config().ServerKey)
+func TestJson(t *testing.T) {
+	res := model.AppleReceiptResponse{}
+	body := []byte("{}")
+	if e := json.Unmarshal(body, &res); e != nil {
+		return
+	}
+	log.Print(res)
+}
 
+func TestPush(t *testing.T) {
+	client := fcm.NewClient("")
+
+	//
 	pushId := []string{
-		"efucSs6EJuE:APA91bFgtVcsjDxzphJROz8czIssVUy0r53addXJAuuaienMMttNpdDKO4ofKczB0e0BKuLEbCaEZGBSA7ynojmwYExcoVir_BwIX1r30GgYzGS3BnQoxIAyI1D3pDttOZ8Rm_UoDiOl",
+		"f9dUgUE7YBI:APA91bGg5Eb9biUvVDQx8nOMNaQhAekgPa4w49cHeTwWGgTeAYREjSA8BYecDZyEmWgscPWFVZDmeglC7LWrn6z68wMbQae1S94RmNogeX4y51QsGSjm-kFHfNN4VIaHFcOefemt7fOW",
 	}
 
 	data := map[string]interface{}{
-		"message":      2001,
-		"content_available": true,
-		"tracker_id":   "Трекер тест",
-		"tracker_name": "Трекер тест",
 		"notification": map[string]interface{}{
 			"title": "Тест пуш",
 			"body": "Тест пуш",

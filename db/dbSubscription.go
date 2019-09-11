@@ -46,6 +46,15 @@ func LoadUserCurrentSubscriptions(userId string) ([]model.BuySubscription, error
 	return sub, err
 }
 
+func LoadUserLastSubscriptions(userId string) ([]model.BuySubscription, error) {
+	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("user_id")).Where(qb.Lt("enable_to")).AllowFiltering().ToCql()
+	var sub []model.BuySubscription
+
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId, "enable_to": time.Now()})
+	err := q.SelectRelease(&sub)
+	return sub, err
+}
+
 func LoadUserSubscriptions(userId string) ([]model.BuySubscription, error) {
 	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("user_id")).Where(qb.Gt("enable_to")).AllowFiltering().ToCql()
 	var sub []model.BuySubscription

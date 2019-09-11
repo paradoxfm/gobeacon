@@ -5,18 +5,32 @@ import (
 	"gobeacon/code"
 	"gobeacon/model"
 	"gobeacon/service"
+	"time"
 )
 
+// ExtendSubscription godoc
+// @Summary Продление подписки для пользователей apple
+// @Description Продление подписки для пользователей apple, отправка запроса валидации
+// @Accept json
+// @Produce json
+// @Param request body model.ValidateSubscriptionRequest true "Запрос на продление"
+// @Router /subscription/my/extend [post]
+// @Success 200 "ok"
+// @Failure 400 "err"
+// @Failure 500 "err"
+// @Tags Subscription
 func ExtendSubscription(c *gin.Context) {
 	req := model.ValidateSubscriptionRequest{UserId: getUserId(c)}
 	if e := c.Bind(&req); e != nil {
 		sendResponse([]int{code.ParseRequest}, c)
 	}
-	if err := service.SendQueryApple(req.ReceiptData); err != nil {
-		sendResponse(err, c)
-	}
-	if e := service.ExtendSubscription(req.UserId); e != nil {
-		sendResponse(e, c)
+	if appl, err := service.SendQueryApple(req.ReceiptData); err != nil {
+		if !appl.Expiration.IsZero() && time.Now().After(appl.Expiration) {
+			if e := service.ExtendSubscription(req.UserId); e != nil {
+				sendResponse(e, c)
+				return
+			}
+		}
 	}
 	sendResponse(nil, c)
 }
