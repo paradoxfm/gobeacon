@@ -23,13 +23,17 @@ func ExtendSubscription(c *gin.Context) {
 	req := model.ValidateSubscriptionRequest{UserId: getUserId(c)}
 	if e := c.Bind(&req); e != nil {
 		sendResponse([]int{code.ParseRequest}, c)
+		return
 	}
-	if appl, err := service.SendQueryApple(req.ReceiptData); err != nil {
-		if !appl.Expiration.IsZero() && time.Now().After(appl.Expiration) {
-			if e := service.ExtendSubscription(req.UserId); e != nil {
-				sendResponse(e, c)
-				return
-			}
+	appl, err := service.SendQueryApple(req.ReceiptData)
+	if err != nil {
+		sendResponse(err, c)
+		return
+	}
+	if !appl.Expiration.IsZero() && time.Now().After(appl.Expiration) {
+		if e := service.ExtendSubscription(req.UserId); e != nil {
+			sendResponse(e, c)
+			return
 		}
 	}
 	sendResponse(nil, c)

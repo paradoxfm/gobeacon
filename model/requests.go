@@ -90,7 +90,7 @@ type TracksHistRequest struct {
 
 type BuySubscriptionRequest struct {
 	UserId   string    `json:"-"`
-	SubId    string    `json:"subscription_id"`
+	SubId    string    `json:"subscription_id" binding:"required"`
 	DateFrom time.Time `json:"date_start" example:"RFC3339"`
 	Accounts []string  `json:"email_link_accounts"`
 }
@@ -102,7 +102,7 @@ type AddSubscriptionRequest struct {
 
 type ValidateSubscriptionRequest struct {
 	UserId      string `json:"-"`
-	ReceiptData string `json:"receipt_data"`
+	ReceiptData string `json:"receipt_data" binding:"required"`
 }
 
 type AppleReceiptResponse struct {

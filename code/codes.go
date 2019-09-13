@@ -56,5 +56,7 @@ const ErrorValidateSubscription = 2000027
 const ErrorHttpSubscription = 2000028
 // Ошибка ответа http запроса валидации подписки
 const ErrorHttpResponseSubscription = 2000029
+// Пользователь уже использовал триал
+const UsedTrial = 2000030
 //Ошибка БД
 const DbError = 2000100

@@ -62,7 +62,7 @@ func SendQueryApple(codeB64 string) (*model.AppleReceiptResponse, []int) {
 		return nil, []int{code.ErrorHttpResponseSubscription}
 	}
 	if res.Status != 0 {
-		return nil, []int{code.ErrorHttpResponseSubscription}
+		return nil, []int{code.ErrorHttpResponseSubscription, res.Status}
 	}
 	return &res, nil
 }
@@ -125,6 +125,10 @@ func BuySubscription(req *model.BuySubscriptionRequest) []int {
 	var err []int
 	var e error
 
+	if req.DateFrom.IsZero() {
+		req.DateFrom = time.Now()
+	}
+
 	sub, e := db.LoadSubscriptionById(req.SubId)
 	if e != nil {
 		return append(err, code.DbError)
@@ -133,10 +137,14 @@ func BuySubscription(req *model.BuySubscriptionRequest) []int {
 		return append(err, code.MaxSubscriptionCount)
 	}
 	var users []model.UserDb
-	if owner, e := db.LoadUserById(req.UserId); e == nil {
+	owner, e := db.LoadUserById(req.UserId)
+	if e == nil {
 		users = append(users, owner)
 	} else {
 		return append(err, code.DbError)
+	}
+	if !sub.Payable && owner.UsedTrial {
+		return append(err, code.UsedTrial)
 	}
 	if sub.Payable {
 		for idx, acc := range req.Accounts {
@@ -174,6 +182,9 @@ func CurrentSubscription(userId string) ([]model.UserSubscription, []int) {
 	activeSubscriptions, e := db.LoadUserCurrentSubscriptions(userId)
 	if e != nil {
 		return nil, append(err, code.DbError)
+	}
+	if activeSubscriptions == nil {
+		return nil, append(err, code.NoActiveSubscription)
 	}
 	subMap, err := getSubscriptionsMap(userId, err)
 	if err != nil {

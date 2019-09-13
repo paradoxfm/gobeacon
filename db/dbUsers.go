@@ -26,7 +26,7 @@ func LoadUserByEmail(email string) (model.UserDb, error) {
 }
 
 func LoadUserById(id string) (model.UserDb, error) {
-	stmt, names := qb.Select(tUsers).Columns("id", "email", "password", "avatar").Where(qb.Eq("id")).Limit(1).ToCql()
+	stmt, names := qb.Select(tUsers).Columns("id", "email", "password", "avatar", "used_trial").Where(qb.Eq("id")).Limit(1).ToCql()
 	var u model.UserDb
 
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": id,})
@@ -50,7 +50,7 @@ func UpdateUserPushId(r *model.UpdatePushRequest) error {
 }
 
 func UpdateUserUsedTrial(userId string) error {
-	stmt, names := qb.Update(tUsers).Add("used_trial").Set("updated_at").Where(qb.Eq("id")).ToCql()
+	stmt, names := qb.Update(tUsers).Set("used_trial").Set("updated_at").Where(qb.Eq("id")).ToCql()
 	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"id": userId, "used_trial": true, "updated_at": time.Now()})
 	err := q.ExecRelease()
 	return err

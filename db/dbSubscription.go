@@ -18,7 +18,7 @@ func LoadTrialSubscriptions(userId string) ([]model.BuySubscription, error) {
 }
 */
 func SaveSubscriptions(data []model.BuySubscription) error {
-	stmt, names := qb.Insert(tBuySubscription).Columns("id", "user_id", "subscription_id", "buy_date", "enable_from", "enable_to").ToCql()
+	stmt, names := qb.Insert(tBuySubscription).Columns("id", "user_id", "subscription_id", "buy_date", "enable_from", "enable_to", "group_id").ToCql()
 	for _, bsub := range data {
 		e := gocqlx.Query(session.Query(stmt), names).BindStruct(&bsub).ExecRelease()
 		if e != nil {
@@ -38,10 +38,11 @@ func LoadSubscriptionById(id string) (model.Subscription, error) {
 }
 
 func LoadUserCurrentSubscriptions(userId string) ([]model.BuySubscription, error) {
-	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("user_id")).Where(qb.Lt("enable_to")).Where(qb.Gt("enable_from")).AllowFiltering().ToCql()
+	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("user_id")).Where(qb.Gt("enable_to")).Where(qb.Lt("enable_from")).AllowFiltering().ToCql()
 	var sub []model.BuySubscription
 
-	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId, "enable_to": time.Now(), "enable_from": time.Now()})
+	now := time.Now()
+	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId, "enable_to": now, "enable_from": now})
 	err := q.SelectRelease(&sub)
 	return sub, err
 }
