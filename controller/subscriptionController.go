@@ -22,21 +22,26 @@ import (
 func ExtendSubscription(c *gin.Context) {
 	req := model.ValidateSubscriptionRequest{UserId: getUserId(c)}
 	if e := c.Bind(&req); e != nil {
-		sendResponse([]int{code.ParseRequest}, c)
+		sendObjResponse(nil, []int{code.ParseRequest}, c)
 		return
 	}
-	appl, err := service.SendQueryApple(req.ReceiptData)
+	appl, err := service.SendQueryApple(req.UseSandbox, req.ReceiptData)
 	if err != nil {
-		sendResponse(err, c)
+		sendObjResponse(nil, err, c)
 		return
 	}
 	if !appl.Expiration.IsZero() && time.Now().After(appl.Expiration) {
-		if e := service.ExtendSubscription(req.UserId); e != nil {
-			sendResponse(e, c)
+		if err = service.ExtendSubscription(req.UserId); err != nil {
+			sendObjResponse(nil, err, c)
 			return
 		}
 	}
-	sendResponse(nil, c)
+	resp, err := service.GetCurrentBuySubscription(req.UserId)
+	if err != nil {
+		sendObjResponse(nil, err, c)
+		return
+	}
+	sendObjResponse(resp, nil, c)
 }
 
 // BuySubscription godoc
@@ -54,9 +59,14 @@ func AddUserToMySubscription(c *gin.Context) {
 	req := model.AddSubscriptionRequest{UserId: getUserId(c)}
 	if e := c.Bind(&req); e != nil {
 		sendResponse([]int{code.ParseRequest}, c)
+		return
 	}
 	err := service.AddUserToMySubscription(&req)
-	sendResponse(err, c)
+	if err != nil {
+		sendResponse(err, c)
+		return
+	}
+	sendObjResponse(gin.H{"status": "OK"}, nil, c)
 }
 
 // CurrentGroupAccounts godoc
@@ -89,10 +99,14 @@ func CurrentGroupAccounts(c *gin.Context) {
 func BuySubscription(c *gin.Context) {
 	req := model.BuySubscriptionRequest{UserId: getUserId(c)}
 	if e := c.Bind(&req); e != nil {
-		sendResponse([]int{code.ParseRequest}, c)
+		sendObjResponse(nil, []int{code.ParseRequest}, c)
+		return
 	}
-	err := service.BuySubscription(&req)
-	sendResponse(err, c)
+	if err := service.BuySubscription(&req); err != nil {
+		sendObjResponse(nil, err, c)
+		return
+	}
+	sendObjResponse(gin.H{"status": "OK"}, nil, c)
 }
 
 // CurrentSubscription godoc

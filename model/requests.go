@@ -102,6 +102,7 @@ type AddSubscriptionRequest struct {
 
 type ValidateSubscriptionRequest struct {
 	UserId      string `json:"-"`
+	UseSandbox  bool   `json:"sandbox_mode"`
 	ReceiptData string `json:"receipt_data" binding:"required"`
 }
 
@@ -113,6 +114,11 @@ type AppleReceiptResponse struct {
 
 type UserBuySubResponse struct {
 	Email string `json:"email"`
+	//Name  string `json:"name"`
+}
+
+type UserBuySubIdResponse struct {
+	Id string `json:"id"`
 	//Name  string `json:"name"`
 }
 

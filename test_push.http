@@ -1,0 +1,15 @@
+
+### авторизация
+POST https://fcm.googleapis.com/fcm/send
+Content-Type: application/json
+Authorization: key=AAAAx4QiqSs:APA91bEePfWk_qqiXZO1HZEOxYLA5637LETQOzc3oWAEowTx9UeQv0TNnduIjynHH42usdZkl5ZJoP1QnDi37NY9-T6gfBTh2KmqXhhqiZVU3nS8lFT1_R1LAjs7DKrSXutJpOkkletR
+
+{
+  "to":"f9dUgUE7YBI:APA91bGg5Eb9biUvVDQx8nOMNaQhAekgPa4w49cHeTwWGgTeAYREjSA8BYecDZyEmWgscPWFVZDmeglC7LWrn6z68wMbQae1S94RmNogeX4y51QsGSjm-kFHfNN4VIaHFcOefemt7fOW",
+  "notification": {
+    "title": "Тест уведомлений",
+    "body": "Текст тестового уведомления"
+  }
+}
+
+###

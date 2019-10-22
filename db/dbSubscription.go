@@ -7,16 +7,6 @@ import (
 	"time"
 )
 
-/*
-func LoadTrialSubscriptions(userId string) ([]model.BuySubscription, error) {
-	stmt, names := qb.Select(tBuySubscription).Where(qb.Eq("user_id")).Where(qb.Lt("trial")).AllowFiltering().Limit(1).ToCql()
-	var sub []model.BuySubscription
-
-	q := gocqlx.Query(session.Query(stmt), names).BindMap(qb.M{"user_id": userId, "trial": true})
-	err := q.SelectRelease(&sub)
-	return sub, err
-}
-*/
 func SaveSubscriptions(data []model.BuySubscription) error {
 	stmt, names := qb.Insert(tBuySubscription).Columns("id", "user_id", "subscription_id", "buy_date", "enable_from", "enable_to", "group_id").ToCql()
 	for _, bsub := range data {

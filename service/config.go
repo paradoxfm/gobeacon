@@ -9,9 +9,10 @@ import (
 var config *Configuration
 
 type Configuration struct {
-	ServerKey string `json:"server_key"`
-	AppleValidationKey string `json:"apple_validation_key"`
-	AppleValidationUrl string `json:"apple_validation_url"`
+	ServerKey                 string `json:"server_key"`
+	AppleValidationKey        string `json:"apple_validation_key"`
+	AppleValidationUrl        string `json:"apple_validation_url"`
+	AppleValidationUrlSandbox string `json:"apple_validation_url_sandbox"`
 }
 
 func Config() *Configuration {

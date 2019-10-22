@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func getUserId(c *gin.Context) (string) {
+func getUserId(c *gin.Context) string {
 	claims := jwt.ExtractClaims(c)
 	if val, ok := claims["private_claim_id"]; ok {
 		return val.(string)

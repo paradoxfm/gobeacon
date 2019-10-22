@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"encoding/json"
 	"github.com/gocql/gocql"
 	"gobeacon/code"
@@ -8,7 +9,6 @@ import (
 	"gobeacon/model"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"time"
 )
 
@@ -43,12 +43,18 @@ func ExtendSubscription(userId string) []int {
 	return nil
 }
 
-func SendQueryApple(codeB64 string) (*model.AppleReceiptResponse, []int) {
+func SendQueryApple(useSandbox bool, codeB64 string) (*model.AppleReceiptResponse, []int) {
 	cfg := Config()
-	resp, e := http.PostForm(cfg.AppleValidationUrl, url.Values{
-		"password":     {cfg.AppleValidationKey},
-		"receipt-data": {codeB64},
-	})
+	var uri string
+	if useSandbox {
+		uri = cfg.AppleValidationUrlSandbox
+	} else {
+		uri = cfg.AppleValidationUrl
+	}
+
+	values := map[string]interface{}{"password": cfg.AppleValidationKey, "receipt-data": codeB64, "exclude-old-transactions": true}
+	jsonValue, _ := json.Marshal(values)
+	resp, e := http.Post(uri, "application/json", bytes.NewBuffer(jsonValue))
 	if e != nil {
 		return nil, []int{code.ErrorHttpSubscription}
 	}
@@ -119,6 +125,18 @@ func GetAllAccountWithMySubscription(userId string) ([]model.UserBuySubResponse,
 		resp[i] = model.UserBuySubResponse{Email: usr.Email}
 	}
 	return resp, nil
+}
+
+func GetCurrentBuySubscription(userId string) (interface{}, []int) {
+	var err []int
+	active, e := db.LoadUserCurrentSubscriptions(userId)
+	if e != nil {
+		return nil, append(err, code.DbError)
+	}
+	if active == nil || len(active) == 0 {
+		return model.UserBuySubIdResponse{}, nil
+	}
+	return model.UserBuySubIdResponse{Id: active[0].Id.String()}, nil
 }
 
 func BuySubscription(req *model.BuySubscriptionRequest) []int {

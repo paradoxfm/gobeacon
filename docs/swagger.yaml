@@ -1,0 +1,988 @@
+definitions:
+  model.AddSubscriptionRequest:
+    properties:
+      email_link_accounts:
+        items:
+          type: string
+        type: array
+    type: object
+  model.AvatarIdResponse:
+    properties:
+      url:
+        type: string
+    type: object
+  model.AvatarResponse:
+    properties:
+      data:
+        example: base64
+        type: string
+    type: object
+  model.BuySubscriptionRequest:
+    properties:
+      date_start:
+        example: RFC3339
+        type: string
+      email_link_accounts:
+        items:
+          type: string
+        type: array
+      subscription_id:
+        type: string
+    required:
+    - subscription_id
+    type: object
+  model.ChangePasswordRequest:
+    properties:
+      new_password:
+        type: string
+      old_password:
+        type: string
+      userId:
+        type: string
+    type: object
+  model.GeoZoneResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      points:
+        items:
+          $ref: '#/definitions/model.ZonePoint'
+        type: array
+      trackers:
+        items:
+          type: string
+        type: array
+    type: object
+  model.Heartbeat:
+    properties:
+      datetime:
+        description: RFC3339
+        example: RFC3339
+        type: string
+      device_id:
+        type: string
+      is_gps_source:
+        type: boolean
+      is_gsm_source:
+        type: boolean
+      is_low_power_alarm:
+        type: boolean
+      is_sos_alarm:
+        type: boolean
+      is_wifi_source:
+        type: boolean
+      latitude:
+        type: number
+      longitude:
+        type: number
+      on_charge:
+        type: boolean
+      power:
+        type: integer
+    type: object
+  model.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  model.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  model.ProfileResponse:
+    properties:
+      avatar:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      trackers:
+        items:
+          $ref: '#/definitions/model.UserTracker'
+        type: array
+    type: object
+  model.RegistrationRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      сonfirm:
+        type: string
+    type: object
+  model.ResetPasswordRequest:
+    properties:
+      email:
+        type: string
+    type: object
+  model.TrackCreateRequest:
+    properties:
+      equipment_id:
+        example: device id
+        type: string
+      name:
+        type: string
+    type: object
+  model.TrackCreateResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  model.TrackHistoryResponse:
+    properties:
+      datetime:
+        type: string
+      latitude:
+        type: number
+      longitude:
+        type: number
+      on_charge:
+        type: boolean
+    type: object
+  model.TrackPrefRequest:
+    properties:
+      name:
+        type: string
+      offset:
+        type: integer
+    type: object
+  model.Tracker:
+    properties:
+      battery_power_last:
+        type: number
+      created_at:
+        type: string
+      device_id:
+        type: string
+      device_type:
+        type: integer
+      id:
+        type: string
+      latitude_last:
+        type: number
+      longitude_last:
+        type: boolean
+      signal_source:
+        type: integer
+      signal_timestamp_last:
+        type: string
+      updated_at:
+        type: string
+      users:
+        items:
+          type: string
+        type: array
+    type: object
+  model.TracksByIdsRequest:
+    properties:
+      ids:
+        items:
+          type: string
+        type: array
+    type: object
+  model.TracksHistRequest:
+    properties:
+      date_end:
+        example: RFC3339
+        type: string
+      date_start:
+        example: RFC3339
+        type: string
+      tracker_id:
+        type: string
+    type: object
+  model.UpdatePushRequest:
+    properties:
+      push_id:
+        type: string
+    type: object
+  model.UserTracker:
+    properties:
+      avatar:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      offset:
+        type: integer
+    type: object
+  model.ValidateSubscriptionRequest:
+    properties:
+      receipt_data:
+        type: string
+      sandbox_mode:
+        type: boolean
+    required:
+    - receipt_data
+    type: object
+  model.ZoneCreateRequest:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      points:
+        items:
+          $ref: '#/definitions/model.ZonePoint'
+        type: array
+      userId:
+        type: string
+    type: object
+  model.ZonePoint:
+    properties:
+      latitude:
+        type: number
+      longitude:
+        type: number
+    type: object
+  model.ZoneSnapRequest:
+    properties:
+      trackers:
+        items:
+          type: string
+        type: array
+    type: object
+info:
+  contact:
+    email: paradoxfm@mail.ru
+    name: API Support
+  description: This is api for beacon services
+  license: {}
+  title: Swagger API
+  version: "1.0"
+paths:
+  /avatar/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: id avatar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AvatarResponse'
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Loading avatar by id
+      tags:
+      - System
+  /heartbeat:
+    post:
+      consumes:
+      - application/json
+      description: 'Accepts coordinates from the smartphone, occurs: saving and checking
+        for entry into neozones, updating the latest tracker data'
+      parameters:
+      - description: Request with device coordinates and flags
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.Heartbeat'
+          type: object
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Acceptance of coordinates from a smartphone
+      tags:
+      - Monitoring
+  /subscription/available-buy:
+    get:
+      consumes:
+      - application/json
+      description: Список подписок доступных для покупки
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: err
+      summary: Список подписок
+      tags:
+      - Subscription
+  /subscription/my/add:
+    post:
+      consumes:
+      - application/json
+      description: Добавление пользователей в текущую подписку, в сумме не больше
+        5
+      parameters:
+      - description: Запрос на добавление пользователей
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.AddSubscriptionRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Добавление пользователей в подписку
+      tags:
+      - Subscription
+  /subscription/my/all:
+    get:
+      consumes:
+      - application/json
+      description: Подписки пользователя активная или те, которые будут активны в
+        будущем
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: err
+      summary: Подписки пользователя
+      tags:
+      - Subscription
+  /subscription/my/buy:
+    post:
+      consumes:
+      - application/json
+      description: Покупка подписки для авторизованного пользователя и его связанных
+        аккаунтов, в сумме не больше 5
+      parameters:
+      - description: Запрос на добавление подписки
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.BuySubscriptionRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Совершение покупки подписки
+      tags:
+      - Subscription
+  /subscription/my/current:
+    get:
+      consumes:
+      - application/json
+      description: Получить действующую подписку для пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: err
+      summary: Текущая подписка
+      tags:
+      - Subscription
+  /subscription/my/extend:
+    post:
+      consumes:
+      - application/json
+      description: Продление подписки для пользователей apple, отправка запроса валидации
+      parameters:
+      - description: Запрос на продление
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ValidateSubscriptionRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Продление подписки для пользователей apple
+      tags:
+      - Subscription
+  /subscription/my/group:
+    get:
+      consumes:
+      - application/json
+      description: Получение списка пользователей текущей подписки
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Получение списка пользователей текущей подписки
+      tags:
+      - Subscription
+  /trackers:
+    post:
+      consumes:
+      - application/json
+      description: Creating a new tracker for an authorized user
+      parameters:
+      - description: Запрос на создание треккера
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.TrackCreateRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.TrackCreateResponse'
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Create a new tracker
+      tags:
+      - Trackers
+  /trackers/all:
+    get:
+      description: Load all trackers for an authorized user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Tracker'
+            type: array
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Load all trackers
+      tags:
+      - Trackers
+  /trackers/avatar/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update avatar tracker for authorized user (jpeg 250x250)
+      parameters:
+      - description: id tracker
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: avatar
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AvatarIdResponse'
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Update avatar tracker
+      tags:
+      - Trackers
+  /trackers/custom:
+    post:
+      consumes:
+      - application/json
+      description: Load custom trackers by ids for an authorized user
+      parameters:
+      - description: Запрос на отдельные трекеры
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.TracksByIdsRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Tracker'
+            type: array
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Load custom trackers by ids
+      tags:
+      - Trackers
+  /trackers/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete the tracker for an authorized user, if the tracker is associated
+        with several users, then only unlink
+      parameters:
+      - description: id tracker
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Delete tracker
+      tags:
+      - Trackers
+  /trackers/find/{id}:
+    get:
+      description: Load tracker by id
+      parameters:
+      - description: id tracker
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Tracker'
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Load tracker
+      tags:
+      - Trackers
+  /trackers/geo/history:
+    post:
+      consumes:
+      - application/json
+      description: Getting history for tracker for the period
+      parameters:
+      - description: Request tracker history
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.TracksHistRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.TrackHistoryResponse'
+            type: array
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Tracker history
+      tags:
+      - Trackers
+  /trackers/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update tracker properties for authorized user
+      parameters:
+      - description: id трекера
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Запрос на редактирование трекера
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.TrackPrefRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Update tracker
+      tags:
+      - Trackers
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: User Authorization by Login/Password
+      parameters:
+      - description: 'Login: Password'
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.LoginResponse'
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: User Authorization
+      tags:
+      - Users
+  /users/me:
+    get:
+      description: Getting a user profile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProfileResponse'
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Profile request
+      tags:
+      - Users
+  /users/me/avatar:
+    put:
+      consumes:
+      - application/json
+      description: Update user avatar (jpeg 250x250)
+      parameters:
+      - description: avatar
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AvatarIdResponse'
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Update user avatar
+      tags:
+      - Users
+  /users/me/password:
+    put:
+      consumes:
+      - application/json
+      description: Change user password
+      parameters:
+      - description: Password change request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ChangePasswordRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Change password
+      tags:
+      - Users
+  /users/me/push:
+    put:
+      consumes:
+      - application/json
+      description: Update user push id
+      parameters:
+      - description: Request with push id
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdatePushRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Update user push id
+      tags:
+      - Users
+  /users/password/reset:
+    post:
+      consumes:
+      - application/json
+      description: Reset user password by email
+      parameters:
+      - description: Password reset request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ResetPasswordRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Password reset
+      tags:
+      - Users
+  /users/signUp:
+    post:
+      consumes:
+      - application/json
+      description: User registration email + password
+      parameters:
+      - description: Registration Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegistrationRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: User registration
+      tags:
+      - Users
+  /zone/all:
+    get:
+      consumes:
+      - application/json
+      description: Getting a list of zones for an authorized user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.GeoZoneResponse'
+            type: array
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Zone list
+      tags:
+      - Zones
+  /zone/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deleting a zone for an authorized user
+      parameters:
+      - description: id zone
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Deleting a zone
+      tags:
+      - Zones
+  /zone/find/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Loading zone for authorized user
+      parameters:
+      - description: id zone
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GeoZoneResponse'
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Loading zone
+      tags:
+      - Zones
+  /zone/save:
+    post:
+      consumes:
+      - application/json
+      description: Creating a zone for an authorized user
+      parameters:
+      - description: Request with zone settings
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ZoneCreateRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GeoZoneResponse'
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Creating a zone
+      tags:
+      - Zones
+  /zone/snap/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Linking the zone to the tracker list
+      parameters:
+      - description: id зоны
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request linking trackers to a zone
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ZoneSnapRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Zone binding
+      tags:
+      - Zones
+  /zone/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Updating zone settings for an authorized user
+      parameters:
+      - description: id зоны
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request with zone settings
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ZoneCreateRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: err
+        "500":
+          description: err
+      summary: Zone update
+      tags:
+      - Zones
+swagger: "2.0"
